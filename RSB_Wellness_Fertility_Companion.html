@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#E8DFF5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>RSB Wellness — Women's Fertility & Continuity of Care Companion</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.85em' font-size='85'%3E%F0%9F%8C%BF%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* =========================================================
+     RSB WELLNESS — DESIGN TOKENS
+  ========================================================= */
+  :root{
+    --cream:#FDFBF7;
+    --lavender:#E8DFF5;
+    --lavender-deep:#9C84C9;
+    --lavender-soft:#F1EBFA;
+    --sage:#4A5D4E;
+    --sage-dark:#37463A;
+    --sage-light:#A9B9AC;
+    --gold:#D4AF37;
+    --gold-soft:#F3E8C7;
+    --ink:#332E2C;
+    --ink-soft:#74695F;
+    --white:#FFFFFF;
+    --red:#B3433D;
+    --red-bg:#FBEAE8;
+    --red-ink:#7A2E2A;
+    --radius-sm:8px;
+    --radius:12px;
+    --radius-lg:20px;
+    --shadow-sm:0 2px 10px rgba(74,93,78,0.08);
+    --shadow-md:0 10px 28px rgba(74,93,78,0.14);
+    --font-display:'Fraunces', Georgia, serif;
+    --font-body:'Work Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html,body{ background:var(--sage-dark); }
+  body{
+    min-height:100vh;
+    min-height:100dvh;
+    display:flex;
+    justify-content:center;
+    font-family:var(--font-body);
+    color:var(--ink);
+    -webkit-tap-highlight-color:transparent;
+    -webkit-text-size-adjust:100%;
+  }
+  img,svg{ display:block; }
+  button{ font-family:inherit; cursor:pointer; border:none; background:none; color:inherit; }
+  input,select,textarea{ font-family:inherit; color:inherit; }
+  a{ color:inherit; text-decoration:none; }
+  ul{ list-style:none; }
+  :focus-visible{ outline:2px solid var(--gold); outline-offset:2px; border-radius:4px; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.001ms !important; transition-duration:0.001ms !important; }
+  }
+
+  /* =========================================================
+     APP SHELL
+  ========================================================= */
+  .app{
+    width:100%;
+    max-width:480px;
+    min-height:100vh;
+    min-height:100dvh;
+    background:var(--cream);
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    box-shadow:var(--shadow-md);
+    overflow:hidden;
+  }
+
+  /* ---------- Header ---------- */
+  .app-header{
+    padding:18px 20px 16px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    background:linear-gradient(165deg, var(--lavender) 0%, var(--cream) 78%);
+    border-bottom:1px solid rgba(212,175,55,0.25);
+    flex-shrink:0;
+  }
+  .logo-mark{ width:42px; height:42px; flex-shrink:0; color:var(--sage); }
+  .header-text h1{
+    font-family:var(--font-display);
+    font-size:1.18rem;
+    font-weight:600;
+    color:var(--sage-dark);
+    line-height:1.2;
+    letter-spacing:0.1px;
+  }
+  .header-text p{
+    font-size:0.74rem;
+    color:var(--ink-soft);
+    margin-top:3px;
+    letter-spacing:0.2px;
+  }
+
+  /* ---------- Scrollable main ---------- */
+  .app-main{
+    flex:1;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    padding:20px 18px 6px;
+    scroll-behavior:smooth;
+  }
+  .tab-panel{ display:none; }
+  .tab-panel.active{ display:block; animation:fadeIn 0.3s ease; }
+  @keyframes fadeIn{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:translateY(0); } }
+
+  .panel-intro{ margin-bottom:16px; }
+  .panel-intro .eyebrow{
+    font-size:0.68rem; text-transform:uppercase; letter-spacing:1.4px;
+    color:var(--gold); font-weight:700; margin-bottom:5px;
+  }
+  .panel-intro h2{
+    font-family:var(--font-display); font-size:1.32rem; color:var(--sage-dark);
+    font-weight:600; line-height:1.25; margin-bottom:6px;
+  }
+  .panel-intro p{ font-size:0.84rem; color:var(--ink-soft); line-height:1.5; }
+
+  /* ---------- Card ---------- */
+  .card{
+    background:var(--white);
+    border-radius:var(--radius-lg);
+    padding:18px;
+    margin-bottom:16px;
+    box-shadow:var(--shadow-sm);
+    border:1px solid rgba(232,223,245,0.7);
+  }
+  .card h3.card-title{
+    font-family:var(--font-display); font-size:1.02rem; color:var(--sage-dark);
+    font-weight:600; margin-bottom:12px; display:flex; align-items:center; gap:8px;
+  }
+  .card h3.card-title svg{ width:19px; height:19px; color:var(--gold); flex-shrink:0; stroke:currentColor; }
+
+  /* ---------- Form fields ---------- */
+  .field{ margin-bottom:14px; }
+  .field:last-child{ margin-bottom:0; }
+  .field label{
+    display:block; font-size:0.79rem; font-weight:600; color:var(--ink);
+    margin-bottom:6px;
+  }
+  .field .hint{ font-size:0.71rem; color:var(--ink-soft); margin-top:5px; line-height:1.4; }
+  .field input[type=date], .field input[type=time], .field input[type=number], .field select{
+    width:100%; padding:12px 14px; border:1.5px solid var(--lavender);
+    border-radius:var(--radius); font-size:0.92rem; color:var(--ink);
+    background:var(--cream); transition:border-color .2s, box-shadow .2s; appearance:none;
+  }
+  .field select{
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%234A5D4E' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 14px center; padding-right:34px;
+  }
+  .field input:focus, .field select:focus{
+    outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(212,175,55,0.14);
+  }
+  .range-row{ display:flex; align-items:center; gap:12px; }
+  input[type=range]{ flex:1; accent-color:var(--sage); height:4px; }
+  .range-value{
+    min-width:46px; text-align:center; font-weight:700; color:var(--sage-dark);
+    background:var(--lavender); border-radius:999px; padding:6px 0; font-size:0.85rem;
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    width:100%; padding:14px 18px; border-radius:var(--radius);
+    font-size:0.92rem; font-weight:700; letter-spacing:0.2px;
+    transition:transform .15s, box-shadow .15s, opacity .15s;
+  }
+  .btn svg{ width:18px; height:18px; flex-shrink:0; }
+  .btn:active{ transform:scale(0.97); }
+  .btn-primary{ background:var(--sage); color:#fff; box-shadow:var(--shadow-sm); }
+  .btn-gold{ background:linear-gradient(135deg, var(--gold), #BD9530); color:#fff; box-shadow:0 6px 16px rgba(212,175,55,.32); }
+  .btn-ghost{ background:var(--lavender); color:var(--sage-dark); }
+  .btn-outline{ background:transparent; border:1.5px solid var(--sage); color:var(--sage-dark); }
+  .btn-row{ display:flex; gap:10px; margin-top:4px; }
+  .btn-row .btn{ width:auto; flex:1; }
+  .btn[disabled]{ opacity:0.55; pointer-events:none; }
+
+  /* ---------- Badges ---------- */
+  .badge{
+    display:inline-flex; align-items:center; gap:4px; font-size:0.66rem; font-weight:700;
+    padding:4px 10px; border-radius:999px; white-space:nowrap;
+  }
+  .badge-now{ background:var(--gold-soft); color:#8A6B1F; }
+  .badge-done{ background:var(--lavender); color:var(--sage-dark); }
+  .badge-upcoming{ background:#F0F0EA; color:var(--ink-soft); }
+
+  /* ---------- Cycle wheel ---------- */
+  .wheel-wrap{ display:flex; justify-content:center; margin:6px 0 16px; }
+  .wheel{ position:relative; width:208px; height:208px; }
+  .wheel-ring{
+    width:100%; height:100%; border-radius:50%;
+    background:conic-gradient(var(--lavender-deep) 0% 100%);
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,0.03);
+  }
+  .wheel-hole{
+    position:absolute; inset:26px; background:var(--white); border-radius:50%;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    box-shadow:inset 0 0 0 1px rgba(212,175,55,.22), var(--shadow-sm);
+    text-align:center; padding:6px;
+  }
+  .wheel-hole .day-num{ font-family:var(--font-display); font-size:2.05rem; color:var(--sage-dark); font-weight:600; line-height:1; }
+  .wheel-hole .day-label{ font-size:0.66rem; color:var(--ink-soft); margin-top:3px; }
+  .wheel-hole .phase-tag{ margin-top:9px; font-size:0.68rem; font-weight:700; padding:4px 12px; border-radius:999px; color:#fff; }
+  .marker-wrap{ position:absolute; inset:0; transition:transform .4s ease; }
+  .marker-dot{
+    position:absolute; top:1px; left:50%; width:15px; height:15px; margin-left:-7.5px;
+    border-radius:50%; background:var(--white); border:3px solid var(--gold);
+    box-shadow:0 2px 6px rgba(0,0,0,.22); animation:pulseDot 2.4s ease-in-out infinite;
+  }
+  @keyframes pulseDot{ 0%,100%{ box-shadow:0 0 0 0 rgba(212,175,55,.35),0 2px 6px rgba(0,0,0,.22); } 50%{ box-shadow:0 0 0 6px rgba(212,175,55,0),0 2px 6px rgba(0,0,0,.22); } }
+  .wheel-legend{ display:flex; justify-content:center; gap:16px; flex-wrap:wrap; margin-top:4px; font-size:0.68rem; color:var(--ink-soft); }
+  .wheel-legend span{ display:inline-flex; align-items:center; gap:6px; }
+  .legend-dot{ width:9px; height:9px; border-radius:50%; display:inline-block; }
+  .legend-dot.sage{ background:var(--sage); }
+  .legend-dot.gold{ background:var(--gold); }
+  .legend-dot.lavender{ background:var(--lavender-deep); }
+
+  /* ---------- Recommendation cards ---------- */
+  .reco-card{
+    border-radius:var(--radius-lg); padding:18px; color:#fff; display:none;
+    box-shadow:var(--shadow-md);
+  }
+  .reco-card.show{ display:block; animation:fadeIn .35s ease; }
+  .reco-card.phase-sage{ background:linear-gradient(150deg, var(--sage) 0%, #2E3B31 100%); }
+  .reco-card.phase-gold{ background:linear-gradient(150deg, #D9B65A 0%, #B8902B 100%); }
+  .reco-card.phase-lavender{ background:linear-gradient(150deg, #A98FD1 0%, #7E63AC 100%); }
+  .reco-card .reco-eyebrow{ font-size:0.66rem; text-transform:uppercase; letter-spacing:1.2px; opacity:.85; font-weight:700; margin-bottom:6px; }
+  .reco-card h4{ font-family:var(--font-display); font-size:1.12rem; font-weight:600; margin-bottom:10px; line-height:1.3; }
+  .reco-card ul.tips-list{ font-size:0.81rem; line-height:1.55; opacity:.97; margin-bottom:14px; padding-left:2px; }
+  .reco-card ul.tips-list li{ padding-left:16px; position:relative; margin-bottom:5px; }
+  .reco-card ul.tips-list li::before{ content:'✦'; position:absolute; left:0; opacity:.8; font-size:0.7rem; top:2px; }
+  .reco-card .product-box{ background:rgba(255,255,255,.16); border-radius:var(--radius); padding:13px 14px; backdrop-filter:blur(2px); }
+  .reco-card .product-name{ font-weight:700; font-size:0.86rem; margin-bottom:4px; }
+  .reco-card .product-desc{ font-size:0.77rem; line-height:1.48; opacity:.95; }
+
+  /* ---------- Red flag box ---------- */
+  .redflag-box{
+    border:2px solid var(--red); background:var(--red-bg); border-radius:var(--radius-lg);
+    padding:16px; margin-bottom:18px;
+  }
+  .redflag-box h3{
+    color:var(--red); font-family:var(--font-display); font-size:0.98rem; font-weight:700;
+    display:flex; align-items:center; gap:8px; margin-bottom:10px; line-height:1.3;
+  }
+  .redflag-box h3 svg{ width:19px; height:19px; flex-shrink:0; }
+  .redflag-box .rf-sub{ font-size:0.78rem; font-weight:700; color:var(--red-ink); margin-bottom:4px; margin-top:10px; }
+  .redflag-box .rf-sub:first-of-type{ margin-top:0; }
+  .redflag-box p.rf-text{ font-size:0.81rem; line-height:1.5; color:var(--red-ink); }
+  .redflag-box .action-text{ font-size:0.81rem; font-weight:700; color:var(--red); margin:12px 0 10px; line-height:1.45; }
+  .redflag-box .emergency-btn{
+    display:flex; align-items:center; justify-content:center; gap:8px; width:100%;
+    background:var(--red); color:#fff; padding:13px 16px; border-radius:var(--radius);
+    font-size:0.87rem; font-weight:700; box-shadow:0 6px 16px rgba(179,67,61,.3);
+  }
+  .redflag-box .emergency-btn svg{ width:17px; height:17px; }
+
+  /* ---------- Note / disclaimer box ---------- */
+  .note-box{
+    background:var(--lavender-soft); border:1px solid rgba(156,132,201,0.3); border-radius:var(--radius);
+    padding:12px 14px; font-size:0.77rem; color:var(--sage-dark); line-height:1.5; margin-top:12px;
+    display:flex; gap:9px; align-items:flex-start;
+  }
+  .note-box svg{ flex-shrink:0; width:17px; height:17px; margin-top:1px; color:var(--lavender-deep); }
+  .note-box.gold-note{ background:var(--gold-soft); border-color:rgba(212,175,55,.35); color:#6B521C; }
+  .note-box.gold-note svg{ color:var(--gold); }
+
+  /* ---------- Timeline (ANC / KF / KN) ---------- */
+  .timeline-item{ display:flex; gap:12px; padding:13px 0; border-bottom:1px solid rgba(74,93,78,.09); }
+  .timeline-item:last-child{ border-bottom:none; padding-bottom:0; }
+  .timeline-item:first-child{ padding-top:2px; }
+  .timeline-marker{
+    width:36px; height:36px; border-radius:50%; background:var(--lavender); color:var(--sage-dark);
+    display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.76rem;
+    flex-shrink:0; margin-top:1px;
+  }
+  .timeline-item.is-now .timeline-marker{ background:var(--gold); color:#fff; }
+  .timeline-item.is-done .timeline-marker{ background:var(--sage); color:#fff; }
+  .timeline-content{ flex:1; min-width:0; }
+  .timeline-content .t-title{
+    font-weight:700; font-size:0.87rem; color:var(--ink); display:flex; justify-content:space-between;
+    align-items:center; gap:8px; flex-wrap:wrap;
+  }
+  .timeline-content .t-range{ font-size:0.78rem; color:var(--ink-soft); margin-top:3px; }
+  .timeline-content .t-note{ font-size:0.74rem; color:var(--sage); margin-top:4px; font-style:italic; line-height:1.4; }
+  .timeline-empty{ font-size:0.82rem; color:var(--ink-soft); padding:8px 2px; }
+
+  /* ---------- Divider w/ label ---------- */
+  .divider-label{
+    display:flex; align-items:center; gap:10px; margin:22px 0 14px; color:var(--ink-soft);
+    font-size:0.72rem; text-transform:uppercase; letter-spacing:1px; font-weight:700;
+  }
+  .divider-label::before, .divider-label::after{ content:''; flex:1; height:1px; background:rgba(74,93,78,.15); }
+
+  /* ---------- CTA banner (persistent) ---------- */
+  .cta-banner{
+    margin:0 14px 10px; padding:12px 13px; background:var(--gold-soft);
+    border:1px solid var(--gold); border-radius:var(--radius); display:flex;
+    align-items:center; gap:10px; flex-shrink:0;
+  }
+  .cta-banner p{ flex:1; font-size:0.74rem; color:var(--sage-dark); line-height:1.35; font-weight:500; }
+  .cta-banner .wa-btn{
+    flex-shrink:0; display:flex; align-items:center; gap:6px; background:var(--sage);
+    color:#fff; padding:9px 13px; border-radius:999px; font-size:0.76rem; font-weight:700;
+    box-shadow:var(--shadow-sm);
+  }
+  .cta-banner .wa-btn svg{ width:14px; height:14px; }
+
+  /* ---------- Bottom tab bar ---------- */
+  .tab-bar{
+    display:flex; border-top:1px solid rgba(74,93,78,0.12); background:var(--white);
+    padding:7px 8px calc(7px + env(safe-area-inset-bottom)); flex-shrink:0;
+  }
+  .tab-btn{
+    flex:1; display:flex; flex-direction:column; align-items:center; gap:3px;
+    padding:7px 4px; border-radius:var(--radius); color:var(--ink-soft);
+    font-size:0.66rem; font-weight:600; letter-spacing:0.1px; transition:color .2s, background .2s;
+  }
+  .tab-btn svg{ width:21px; height:21px; stroke:currentColor; }
+  .tab-btn.active{ color:var(--sage-dark); background:var(--lavender); }
+
+  /* ---------- Toast ---------- */
+  .toast{
+    position:absolute; left:50%; bottom:92px; transform:translateX(-50%) translateY(16px);
+    background:var(--ink); color:#fff; padding:11px 18px; border-radius:999px;
+    font-size:0.8rem; box-shadow:var(--shadow-md); opacity:0; pointer-events:none;
+    transition:opacity .25s, transform .25s; z-index:50; max-width:88%; text-align:center;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+  .toast.error{ background:var(--red); }
+  .toast.success{ background:var(--sage); }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ============ HEADER ============ -->
+  <header class="app-header">
+    <svg class="logo-mark" viewBox="0 0 48 48" fill="none">
+      <path d="M24 42C24 42 10 33 10 19C10 12 16 7 22 9C20 16 21 24 24 30C27 24 28 16 26 9C32 7 38 12 38 19C38 33 24 42 24 42Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M24 30V42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <div class="header-text">
+      <h1>RSB Wellness</h1>
+      <p>Pendamping Kesuburan &amp; Perawatan Berkelanjutan Anda</p>
+    </div>
+  </header>
+
+  <!-- ============ MAIN SCROLL AREA ============ -->
+  <main class="app-main" id="appMain">
+
+    <!-- ===================================================
+         TAB 1 — MASA SUBUR & SIKLUS
+    ==================================================== -->
+    <section class="tab-panel active" id="panel-cycle">
+      <div class="panel-intro">
+        <div class="eyebrow">Masa Subur &amp; Siklus</div>
+        <h2>Kenali Ritme Tubuh Anda</h2>
+        <p>Catat Hari Pertama Haid Terakhir (HPHT) Anda untuk melihat perkiraan siklus, masa subur, dan dukungan yang sesuai untuk fase Anda saat ini.</p>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18"/><path d="M8 2.5v4M16 2.5v4"/><circle cx="12" cy="14.5" r="2"/></svg>
+          Data Siklus Anda
+        </h3>
+        <div class="field">
+          <label for="hpht-input">Hari Pertama Haid Terakhir (HPHT)</label>
+          <input type="date" id="hpht-input">
+        </div>
+        <div class="field">
+          <label for="cycle-length-range">Rata-rata Panjang Siklus Haid</label>
+          <div class="range-row">
+            <input type="range" id="cycle-length-range" min="21" max="45" value="28">
+            <span class="range-value" id="cycle-length-value">28 hari</span>
+          </div>
+          <p class="hint">Jika belum yakin, biarkan pada angka 28 hari (rata-rata umum).</p>
+        </div>
+        <button class="btn btn-primary" id="btn-hitung-siklus">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          Hitung Siklus Saya
+        </button>
+      </div>
+
+      <div id="siklus-hasil" style="display:none;">
+        <div class="wheel-wrap">
+          <div class="wheel">
+            <div class="wheel-ring" id="wheel-ring"></div>
+            <div class="marker-wrap" id="wheel-marker-wrap">
+              <div class="marker-dot"></div>
+            </div>
+            <div class="wheel-hole">
+              <span class="day-num" id="wheel-day-num">1</span>
+              <span class="day-label" id="wheel-day-label">Hari siklus ke-</span>
+              <span class="phase-tag" id="wheel-phase-tag">—</span>
+            </div>
+          </div>
+        </div>
+        <div class="wheel-legend">
+          <span><i class="legend-dot sage"></i>Menstruasi &amp; PMS</span>
+          <span><i class="legend-dot gold"></i>Masa Subur</span>
+          <span><i class="legend-dot lavender"></i>Fase Tenang</span>
+        </div>
+
+        <div class="card" style="margin-top:18px;">
+          <h3 class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.4-9.6-9C.8 8.4 2.4 4 6.6 4c2 0 3.6 1.2 4.4 2.6C11.8 5.2 13.4 4 15.4 4 19.6 4 21.2 8.4 19.6 12 17 16.6 12 21 12 21z"/></svg>
+            Perkiraan Penting
+          </h3>
+          <div class="timeline-item" style="border-bottom:none;">
+            <div class="timeline-marker">📅</div>
+            <div class="timeline-content">
+              <div class="t-title">Estimasi Haid Berikutnya</div>
+              <div class="t-range" id="hasil-haid-berikutnya">—</div>
+            </div>
+          </div>
+          <div class="timeline-item" style="border-bottom:none;">
+            <div class="timeline-marker">🌸</div>
+            <div class="timeline-content">
+              <div class="t-title">Estimasi Jendela Masa Subur</div>
+              <div class="t-range" id="hasil-masa-subur">—</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reco-card phase-sage" id="reco-sage">
+          <div class="reco-eyebrow">Fase Menstruasi &amp; PMS</div>
+          <h4>Saatnya Meredakan &amp; Menyeimbangkan</h4>
+          <ul class="tips-list">
+            <li>Kompres hangat pada perut bagian bawah untuk meredakan kram.</li>
+            <li>Perbanyak air putih dan kurangi konsumsi kafein berlebih.</li>
+            <li>Gerakan ringan seperti stretching atau yoga lembut membantu melancarkan peredaran darah.</li>
+            <li>Istirahat cukup; dengarkan sinyal tubuh Anda tanpa memaksakan diri.</li>
+          </ul>
+          <div class="product-box">
+            <div class="product-name">🌿 RSB Wellness — Varian Bawang Dayak</div>
+            <div class="product-desc">Diramu dari warisan leluhur Dayak Kalimantan, Bawang Dayak (Eleutherine palmifolia) dikenal kaya flavonoid dan saponin yang secara tradisional dipercaya membantu menjaga kesehatan hormonal wanita dan mendukung keteraturan siklus haid.</div>
+          </div>
+        </div>
+
+        <div class="reco-card phase-gold" id="reco-gold">
+          <div class="reco-eyebrow">Fase Ovulasi &amp; Masa Subur</div>
+          <h4>Jendela Subur Anda Sedang Terbuka</h4>
+          <ul class="tips-list">
+            <li>Cukupi waktu tidur dan kelola stres sebaik mungkin.</li>
+            <li>Konsumsi makanan kaya antioksidan, folat, dan zat besi.</li>
+            <li>Hindari rokok, asap rokok, dan konsumsi alkohol.</li>
+            <li>Bila sedang berencana hamil, ini saat yang baik secara biologis; bila belum berencana hamil, diskusikan kontrasepsi yang sesuai dengan Bidan.</li>
+          </ul>
+          <div class="product-box">
+            <div class="product-name">🌺 RSB Wellness — Varian Rosella</div>
+            <div class="product-desc">Tinggi antosianin dan vitamin C yang berperan sebagai antioksidan, secara tradisional dipercaya membantu melawan radikal bebas dan mendukung kualitas sel telur sebagai bagian dari gaya hidup sehat menjelang masa subur.</div>
+          </div>
+        </div>
+
+        <div class="reco-card phase-lavender" id="reco-lavender">
+          <div class="reco-eyebrow">Fase Luteal &amp; Mood Swing</div>
+          <h4>Fase Tenang, Waktunya Menjaga Mood</h4>
+          <ul class="tips-list">
+            <li>Luangkan waktu untuk diri sendiri — journaling atau aromaterapi ringan dapat membantu.</li>
+            <li>Kurangi konsumsi gula berlebih yang dapat memperburuk mood swing.</li>
+            <li>Olahraga ringan dan tidur teratur membantu menstabilkan emosi.</li>
+            <li>Bicarakan perasaan Anda dengan pasangan atau orang terdekat agar tetap didukung.</li>
+          </ul>
+          <div class="product-box">
+            <div class="product-name">💜 RSB Wellness — Varian Telang</div>
+            <div class="product-desc">Bunga telang kaya flavonoid yang secara tradisional dipercaya membantu menenangkan sistem saraf, meredakan kecemasan ringan, dan menjaga kestabilan mood secara alami pada fase ini.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="note-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M12 11v5"/></svg>
+        <span>Estimasi pada kalkulator ini bersifat edukatif berdasarkan rata-rata siklus dan tidak menggantikan diagnosis medis. Siklus setiap wanita dapat berbeda — untuk perencanaan kehamilan maupun pemilihan kontrasepsi, tetap konsultasikan dengan Bidan atau Dokter Anda.</span>
+      </div>
+    </section>
+
+    <!-- ===================================================
+         TAB 2 — ALARM PENGINGAT KB
+    ==================================================== -->
+    <section class="tab-panel" id="panel-kb">
+      <div class="panel-intro">
+        <div class="eyebrow">Alarm Pengingat KB</div>
+        <h2>Jangan Sampai Terlewat</h2>
+        <p>Atur pengingat jadwal KB Anda agar metode kontrasepsi tetap bekerja optimal dan terjadwal dengan baik.</p>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+          Atur Jenis KB Anda
+        </h3>
+        <div class="field">
+          <label for="kb-type">Jenis KB</label>
+          <select id="kb-type">
+            <option value="suntik1">KB Suntik 1 Bulan</option>
+            <option value="suntik3">KB Suntik 3 Bulan</option>
+            <option value="pil">KB Pil Harian</option>
+          </select>
+        </div>
+        <div class="field" id="kb-date-field">
+          <label for="kb-last-date" id="kb-date-label">Tanggal Terakhir Suntik</label>
+          <input type="date" id="kb-last-date">
+        </div>
+        <div class="field" id="pill-time-wrapper" style="display:none;">
+          <label for="kb-pill-time">Jam berapa Anda ingin diingatkan setiap hari?</label>
+          <input type="time" id="kb-pill-time" value="08:00">
+        </div>
+
+        <div class="card" id="kb-result" style="display:none; background:var(--lavender-soft); box-shadow:none; border:1px solid rgba(156,132,201,.3); margin-bottom:0;">
+          <div class="timeline-item" style="border-bottom:none; padding:0;">
+            <div class="timeline-marker">⏰</div>
+            <div class="timeline-content">
+              <div class="t-title" id="kb-result-title">—</div>
+              <div class="t-range" id="kb-result-detail">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+          Aktifkan Pengingat
+        </h3>
+        <button class="btn btn-gold" id="btn-aktifkan-alarm">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+          Aktifkan Alarm Pengingat di HP
+        </button>
+        <div class="btn-row">
+          <button class="btn btn-outline" id="btn-tambah-kalender">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18"/><path d="M8 2.5v4M16 2.5v4"/></svg>
+            Tambah ke Kalender
+          </button>
+        </div>
+        <div class="toast-inline" id="kb-alarm-status" style="font-size:0.78rem; color:var(--sage-dark); margin-top:10px; line-height:1.4;"></div>
+        <p class="hint" style="margin-top:6px;">Catatan: notifikasi browser bekerja paling stabil di Android Chrome selama halaman ini tetap terbuka. Pada iPhone/Safari, gunakan tombol "Tambah ke Kalender" agar pengingat tetap muncul di kalender HP Anda.</p>
+      </div>
+
+      <div class="note-box gold-note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M12 11v5"/></svg>
+        <span><strong>Catatan Bidan:</strong> Pastikan Anda telah berkonsultasi dengan Bidan Klinik RSB Wellness untuk memilih metode KB yang paling cocok dengan kondisi tubuh dan status menyusui Anda.</span>
+      </div>
+
+      <div class="note-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+        <span><strong>Metode Amenore Laktasi (MAL):</strong> Bila Anda menyusui eksklusif (ASI saja), bayi berusia kurang dari 6 bulan, dan belum mengalami haid kembali, menyusui penuh secara konsisten dapat menjadi metode KB alami sementara. Begitu salah satu syarat ini tidak terpenuhi lagi, segera diskusikan metode KB lanjutan dengan Bidan.</span>
+      </div>
+    </section>
+
+    <!-- ===================================================
+         TAB 3 — PENGINGAT KUNJUNGAN MATERNAL & BAYI
+    ==================================================== -->
+    <section class="tab-panel" id="panel-visit">
+      <div class="panel-intro">
+        <div class="eyebrow">Kunjungan Maternal &amp; Bayi</div>
+        <h2>Jadwal Perawatan Berkelanjutan</h2>
+        <p>Rentang waktu kunjungan berikut mengikuti standar Buku KIA terbaru — fleksibel sebagai jendela waktu, bukan tanggal pasti, agar Anda tidak perlu cemas.</p>
+      </div>
+
+      <div class="redflag-box">
+        <h3>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 21h20L12 2z"/><path d="M12 9v5M12 17v.01"/></svg>
+          Tanda Bahaya (Red Flags)
+        </h3>
+        <div class="rf-sub">Tanda Bahaya Ibu Nifas</div>
+        <p class="rf-text">Perdarahan hebat lewat jalan lahir, demam tinggi, pusing hebat disertai pandangan kabur, atau payudara bengkak, merah, dan sangat nyeri.</p>
+        <div class="rf-sub">Tanda Bahaya Bayi Baru Lahir</div>
+        <p class="rf-text">Bayi tampak kuning, malas menyusu/tidak mau menetek, tali pusat berbau/bernanah/kemerahan, atau napas cepat dan merintih.</p>
+        <p class="action-text">Jika menemukan salah satu tanda di atas, JANGAN MENUNGGU jadwal kunjungan. Segera bawa ke faskes atau klik tombol darurat di bawah ini.</p>
+        <a class="emergency-btn" href="https://wa.me/6287791299376?text=Halo%20Bidan%20RSB%20Wellness%2C%20ini%20kondisi%20DARURAT.%20Saya%2Fbayi%20saya%20mengalami%20tanda%20bahaya%20dan%20membutuhkan%20bantuan%20segera." target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.87.5 3.62 1.43 5.13L2 22l5.13-1.5a9.8 9.8 0 004.91 1.32h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm5.78 14.1c-.24.68-1.4 1.32-1.92 1.4-.49.08-1.1.11-1.78-.11-.41-.13-.93-.3-1.6-.59-2.82-1.22-4.66-4.04-4.8-4.23-.14-.19-1.15-1.53-1.15-2.91 0-1.39.73-2.07.99-2.35.26-.28.56-.35.75-.35.19 0 .38 0 .54.01.17.01.41-.07.64.49.24.58.81 1.99.88 2.14.07.14.12.31.02.5-.1.19-.15.31-.29.47-.14.17-.3.37-.43.5-.14.13-.28.28-.12.55.16.27.71 1.18 1.53 1.91 1.05.93 1.94 1.22 2.21 1.36.27.14.43.12.59-.05.16-.16.69-.8.87-1.08.18-.27.36-.22.6-.13.24.09 1.55.73 1.81.86.27.13.45.2.51.31.07.11.07.65-.17 1.33z"/></svg>
+          Hubungi Darurat via WhatsApp
+        </a>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18"/><path d="M8 2.5v4M16 2.5v4"/></svg>
+          Kunjungan Kehamilan (ANC)
+        </h3>
+        <p style="font-size:0.79rem; color:var(--ink-soft); margin-bottom:12px; line-height:1.45;">Minimal 6 kali pemeriksaan selama hamil: 2 kali di trimester 1, 1 kali di trimester 2, dan 3 kali di trimester 3.</p>
+        <div class="field">
+          <label for="anc-hpht">Hari Pertama Haid Terakhir (HPHT)</label>
+          <input type="date" id="anc-hpht">
+        </div>
+        <button class="btn btn-primary" id="btn-hitung-anc">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          Hitung Jadwal ANC
+        </button>
+        <div id="anc-results" style="margin-top:6px;"></div>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          Kunjungan Nifas Ibu (KF) &amp; Neonatal Bayi (KN)
+        </h3>
+        <p style="font-size:0.79rem; color:var(--ink-soft); margin-bottom:12px; line-height:1.45;">Masukkan tanggal persalinan untuk melihat jadwal kunjungan nifas Anda dan kunjungan neonatal bayi Anda sekaligus.</p>
+        <div class="field">
+          <label for="birth-date">Tanggal Persalinan / Kelahiran Bayi</label>
+          <input type="date" id="birth-date">
+        </div>
+        <button class="btn btn-primary" id="btn-hitung-kfkn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          Hitung Jadwal KF &amp; KN
+        </button>
+
+        <div class="divider-label" id="kf-divider" style="display:none;">Kunjungan Nifas Ibu</div>
+        <div id="kf-results"></div>
+
+        <div class="divider-label" id="kn-divider" style="display:none;">Kunjungan Neonatal Bayi</div>
+        <div id="kn-results"></div>
+      </div>
+
+      <div class="note-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M12 11v5"/></svg>
+        <span>Rentang tanggal di atas adalah estimasi jendela kunjungan, bukan jadwal kaku. Tetap hubungi Bidan RSB Wellness untuk konfirmasi jadwal pasti sesuai kondisi Anda.</span>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ TOAST ============ -->
+  <div class="toast" id="toast"></div>
+
+  <!-- ============ PERSISTENT CTA ============ -->
+  <div class="cta-banner">
+    <p>Butuh konsultasi lebih lanjut seputar kesuburan, KB, kehamilan, nifas, atau bayi baru lahir?</p>
+    <a class="wa-btn" href="https://wa.me/6287791299376?text=Halo%20Bidan%20RSB%20Wellness%2C%20saya%20ingin%20berkonsultasi%20mengenai%20kesehatan%20reproduksi%20/%20jadwal%20kunjungan%20saya." target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.87.5 3.62 1.43 5.13L2 22l5.13-1.5a9.8 9.8 0 004.91 1.32h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm5.78 14.1c-.24.68-1.4 1.32-1.92 1.4-.49.08-1.1.11-1.78-.11-.41-.13-.93-.3-1.6-.59-2.82-1.22-4.66-4.04-4.8-4.23-.14-.19-1.15-1.53-1.15-2.91 0-1.39.73-2.07.99-2.35.26-.28.56-.35.75-.35.19 0 .38 0 .54.01.17.01.41-.07.64.49.24.58.81 1.99.88 2.14.07.14.12.31.02.5-.1.19-.15.31-.29.47-.14.17-.3.37-.43.5-.14.13-.28.28-.12.55.16.27.71 1.18 1.53 1.91 1.05.93 1.94 1.22 2.21 1.36.27.14.43.12.59-.05.16-.16.69-.8.87-1.08.18-.27.36-.22.6-.13.24.09 1.55.73 1.81.86.27.13.45.2.51.31.07.11.07.65-.17 1.33z"/></svg>
+      Chat Bidan
+    </a>
+  </div>
+
+  <!-- ============ BOTTOM TAB BAR ============ -->
+  <nav class="tab-bar">
+    <button class="tab-btn active" data-tab="panel-cycle">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+      Siklus
+    </button>
+    <button class="tab-btn" data-tab="panel-kb">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+      Alarm KB
+    </button>
+    <button class="tab-btn" data-tab="panel-visit">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      Kunjungan
+    </button>
+  </nav>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* =========================================================
+     0. STORAGE WRAPPER (graceful fallback)
+     Catatan: localStorage dapat gagal di lingkungan preview
+     ter-sandbox. Wrapper ini selalu menyimpan juga ke memori
+     in-memory sehingga fitur tetap berjalan walau localStorage
+     tidak tersedia, dan tetap memanfaatkan localStorage penuh
+     ketika file ini dijalankan/di-hosting di browser sungguhan.
+  ========================================================= */
+  const Store = {
+    _mem:{},
+    set(key, val){
+      this._mem[key] = val;
+      try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){ /* sandboxed env, ignore */ }
+    },
+    get(key, fallback=null){
+      try{
+        const raw = localStorage.getItem(key);
+        if(raw !== null){ const parsed = JSON.parse(raw); this._mem[key] = parsed; return parsed; }
+      }catch(e){ /* ignore, fall through to memory */ }
+      return (key in this._mem) ? this._mem[key] : fallback;
+    }
+  };
+
+  /* =========================================================
+     1. UTILITIES
+  ========================================================= */
+  const BULAN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+
+  function parseDateInput(str){
+    if(!str) return null;
+    const parts = str.split('-').map(Number);
+    if(parts.length !== 3) return null;
+    return new Date(parts[0], parts[1]-1, parts[2]);
+  }
+  function stripTime(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+  function addDays(date, days){ const d = new Date(date); d.setDate(d.getDate()+days); return d; }
+  function daysBetween(a,b){ const MS = 24*60*60*1000; return Math.round((stripTime(b) - stripTime(a))/MS); }
+  function formatDateID(d){ return `${d.getDate()} ${BULAN[d.getMonth()]} ${d.getFullYear()}`; }
+  function formatRangeID(start,end){
+    if(start.getFullYear()===end.getFullYear() && start.getMonth()===end.getMonth()){
+      return `${start.getDate()}–${end.getDate()} ${BULAN[start.getMonth()]} ${start.getFullYear()}`;
+    } else if(start.getFullYear()===end.getFullYear()){
+      return `${start.getDate()} ${BULAN[start.getMonth()]} – ${end.getDate()} ${BULAN[end.getMonth()]} ${start.getFullYear()}`;
+    }
+    return `${formatDateID(start)} – ${formatDateID(end)}`;
+  }
+  function todayStripped(){ return stripTime(new Date()); }
+  function setMaxToday(inputEl){ inputEl.max = todayStripped().toISOString().slice(0,10); }
+
+  function showToast(msg, type){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast show' + (type === 'error' ? ' error' : type === 'success' ? ' success' : '');
+    clearTimeout(window.__toastTimer);
+    window.__toastTimer = setTimeout(()=>{ t.classList.remove('show'); }, 3400);
+  }
+
+  function createTimelineItem(opts){
+    const wrap = document.createElement('div');
+    wrap.className = 'timeline-item' + (opts.statusClass ? ' ' + opts.statusClass : '');
+    const marker = document.createElement('div');
+    marker.className = 'timeline-marker';
+    marker.textContent = opts.code;
+    const content = document.createElement('div');
+    content.className = 'timeline-content';
+
+    const titleRow = document.createElement('div');
+    titleRow.className = 't-title';
+    const titleSpan = document.createElement('span');
+    titleSpan.textContent = opts.label;
+    titleRow.appendChild(titleSpan);
+    const badge = document.createElement('span');
+    badge.className = 'badge ' + opts.badgeClass;
+    badge.textContent = opts.badgeText;
+    titleRow.appendChild(badge);
+
+    const rangeDiv = document.createElement('div');
+    rangeDiv.className = 't-range';
+    rangeDiv.textContent = opts.rangeText;
+
+    content.appendChild(titleRow);
+    content.appendChild(rangeDiv);
+
+    if(opts.noteText){
+      const noteDiv = document.createElement('div');
+      noteDiv.className = 't-note';
+      noteDiv.textContent = opts.noteText;
+      content.appendChild(noteDiv);
+    }
+
+    wrap.appendChild(marker);
+    wrap.appendChild(content);
+    return wrap;
+  }
+
+  function statusFor(daysElapsedStart, daysElapsedEnd, refDays){
+    if(refDays > daysElapsedEnd) return {cls:'is-done', badge:'badge-done', text:'Sudah Lewat'};
+    if(refDays >= daysElapsedStart && refDays <= daysElapsedEnd) return {cls:'is-now', badge:'badge-now', text:'Saatnya Sekarang'};
+    return {cls:'', badge:'badge-upcoming', text:'Akan Datang'};
+  }
+
+  /* =========================================================
+     2. TAB NAVIGATION
+  ========================================================= */
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+      document.getElementById('appMain').scrollTop = 0;
+    });
+  });
+
+  /* =========================================================
+     3. TAB 1 — MASA SUBUR & SIKLUS
+  ========================================================= */
+  const hphtInput = document.getElementById('hpht-input');
+  const cycleRange = document.getElementById('cycle-length-range');
+  const cycleValueLabel = document.getElementById('cycle-length-value');
+  const btnHitungSiklus = document.getElementById('btn-hitung-siklus');
+  const siklusHasil = document.getElementById('siklus-hasil');
+
+  setMaxToday(hphtInput);
+  cycleRange.addEventListener('input', ()=>{ cycleValueLabel.textContent = cycleRange.value + ' hari'; });
+
+  function buildWheelGradient(b1,b2,b3,b4,cycleLen){
+    const p = d => (d/cycleLen*100).toFixed(2)+'%';
+    return `conic-gradient(
+      var(--sage) 0% ${p(b1)},
+      var(--lavender-deep) ${p(b1)} ${p(b2)},
+      var(--gold) ${p(b2)} ${p(b3)},
+      var(--lavender-deep) ${p(b3)} ${p(b4)},
+      var(--sage) ${p(b4)} 100%
+    )`;
+  }
+
+  function hitungSiklus(){
+    const hphtVal = hphtInput.value;
+    if(!hphtVal){ showToast('Mohon isi tanggal HPHT terlebih dahulu.', 'error'); return; }
+    const cycleLen = parseInt(cycleRange.value, 10) || 28;
+    const hpht = parseDateInput(hphtVal);
+    const today = todayStripped();
+
+    let daysSince = daysBetween(hpht, today);
+    if(daysSince < 0){ showToast('Tanggal HPHT tidak boleh di masa depan.', 'error'); return; }
+
+    const cycleIndex = Math.floor(daysSince / cycleLen);
+    const currentCycleStart = addDays(hpht, cycleIndex * cycleLen);
+    const cycleDay = daysSince - cycleIndex * cycleLen + 1;
+
+    const nextPeriod = addDays(currentCycleStart, cycleLen);
+
+    const ovulationDayNum = Math.max(1, cycleLen - 14);
+    let fertileStart = Math.max(1, ovulationDayNum - 5);
+    let fertileEnd = Math.min(cycleLen, ovulationDayNum + 1);
+    let mensesEnd = Math.min(5, Math.max(1, fertileStart - 1));
+    let pmsStart = Math.max(fertileEnd + 1, cycleLen - 4);
+
+    const b1 = mensesEnd;
+    const b2 = fertileStart - 1;
+    const b3 = fertileEnd;
+    const b4 = pmsStart - 1;
+
+    const fertileStartDate = addDays(currentCycleStart, fertileStart - 1);
+    const fertileEndDate = addDays(currentCycleStart, fertileEnd - 1);
+
+    let phase;
+    if(cycleDay <= b1 || cycleDay > b4){ phase = 'sage'; }
+    else if(cycleDay > b2 && cycleDay <= b3){ phase = 'gold'; }
+    else { phase = 'lavender'; }
+
+    // Render wheel
+    document.getElementById('wheel-ring').style.background = buildWheelGradient(b1,b2,b3,b4,cycleLen);
+    const angle = (cycleDay - 1) / cycleLen * 360;
+    document.getElementById('wheel-marker-wrap').style.transform = `rotate(${angle}deg)`;
+    document.getElementById('wheel-day-num').textContent = cycleDay;
+    document.getElementById('wheel-day-label').textContent = `dari siklus ${cycleLen} hari`;
+
+    const phaseTagEl = document.getElementById('wheel-phase-tag');
+    const phaseMeta = {
+      sage:{ text:'Menstruasi & PMS', bg:'var(--sage)' },
+      gold:{ text:'Masa Subur', bg:'var(--gold)' },
+      lavender:{ text:'Fase Tenang', bg:'var(--lavender-deep)' }
+    };
+    phaseTagEl.textContent = phaseMeta[phase].text;
+    phaseTagEl.style.background = phaseMeta[phase].bg;
+
+    // Render text results
+    document.getElementById('hasil-haid-berikutnya').textContent = formatDateID(nextPeriod);
+    document.getElementById('hasil-masa-subur').textContent = formatRangeID(fertileStartDate, fertileEndDate);
+
+    // Render recommendation card
+    ['sage','gold','lavender'].forEach(p=>{
+      document.getElementById('reco-' + p).classList.toggle('show', p === phase);
+    });
+
+    siklusHasil.style.display = 'block';
+  }
+
+  btnHitungSiklus.addEventListener('click', hitungSiklus);
+
+  /* =========================================================
+     4. TAB 2 — ALARM PENGINGAT KB
+  ========================================================= */
+  const kbType = document.getElementById('kb-type');
+  const kbDateLabel = document.getElementById('kb-date-label');
+  const kbLastDate = document.getElementById('kb-last-date');
+  const pillTimeWrapper = document.getElementById('pill-time-wrapper');
+  const kbPillTime = document.getElementById('kb-pill-time');
+  const kbResultBox = document.getElementById('kb-result');
+  const kbResultTitle = document.getElementById('kb-result-title');
+  const kbResultDetail = document.getElementById('kb-result-detail');
+  const btnAktifkanAlarm = document.getElementById('btn-aktifkan-alarm');
+  const btnTambahKalender = document.getElementById('btn-tambah-kalender');
+  const kbAlarmStatus = document.getElementById('kb-alarm-status');
+
+  setMaxToday(kbLastDate);
+
+  let currentKbCalc = null;
+
+  function onKbTypeChange(){
+    const type = kbType.value;
+    if(type === 'pil'){
+      kbDateLabel.textContent = 'Tanggal Mulai Minum Pil';
+      pillTimeWrapper.style.display = 'block';
+    } else {
+      kbDateLabel.textContent = type === 'suntik1' ? 'Tanggal Terakhir Suntik (1 Bulan)' : 'Tanggal Terakhir Suntik (3 Bulan)';
+      pillTimeWrapper.style.display = 'none';
+    }
+    recalcKb();
+  }
+
+  function recalcKb(){
+    const type = kbType.value;
+    const lastDateVal = kbLastDate.value;
+    if(!lastDateVal){ kbResultBox.style.display = 'none'; currentKbCalc = null; return; }
+    const lastDate = parseDateInput(lastDateVal);
+    const today = todayStripped();
+    if(daysBetween(lastDate, today) < 0){
+      showToast('Tanggal tidak boleh di masa depan.', 'error');
+      kbResultBox.style.display = 'none'; currentKbCalc = null; return;
+    }
+
+    if(type === 'suntik1' || type === 'suntik3'){
+      const addDaysCount = type === 'suntik1' ? 30 : 90;
+      const nextDate = addDays(lastDate, addDaysCount);
+      const sisaHari = daysBetween(today, nextDate);
+      kbResultTitle.textContent = type === 'suntik1' ? 'Jadwal Suntik KB Berikutnya' : 'Jadwal Suntik KB Berikutnya';
+      kbResultDetail.textContent = `${formatDateID(nextDate)}` + (sisaHari >= 0 ? ` (${sisaHari} hari lagi)` : ' (sudah lewat — segera kembali ke Bidan)');
+      currentKbCalc = { type, nextDate: nextDate, label: type === 'suntik1' ? 'KB Suntik 1 Bulan' : 'KB Suntik 3 Bulan' };
+    } else {
+      const pillTimeVal = kbPillTime.value || '08:00';
+      kbResultTitle.textContent = 'Pengingat Pil KB Harian';
+      kbResultDetail.textContent = `Anda akan diingatkan setiap hari pukul ${pillTimeVal}`;
+      currentKbCalc = { type, pillTime: pillTimeVal, startDate: lastDate, label: 'KB Pil Harian' };
+    }
+    kbResultBox.style.display = 'block';
+  }
+
+  kbType.addEventListener('change', onKbTypeChange);
+  kbLastDate.addEventListener('change', recalcKb);
+  kbPillTime.addEventListener('change', recalcKb);
+
+  function checkKbReminder(){
+    const cfg = Store.get('kbReminderConfig');
+    if(!cfg) return;
+    const now = new Date();
+    const todayKey = now.toISOString().slice(0,10);
+
+    if(cfg.type === 'pil'){
+      const [h,m] = cfg.pillTime.split(':').map(Number);
+      const fireKey = 'pil-' + todayKey + '-' + cfg.pillTime;
+      if(now.getHours() === h && now.getMinutes() === m){
+        const lastFired = Store.get('kbLastFired');
+        if(lastFired !== fireKey){
+          fireNotif('Waktunya Minum Pil KB 💜', 'Jangan lupa minum pil KB harian Anda ya, Bunda.');
+          Store.set('kbLastFired', fireKey);
+        }
+      }
+    } else {
+      const next = new Date(cfg.nextDate);
+      if(stripTime(now).getTime() === stripTime(next).getTime()){
+        const fireKey = 'suntik-' + todayKey;
+        const lastFired = Store.get('kbLastFired');
+        if(lastFired !== fireKey){
+          fireNotif('Waktunya Kembali Suntik KB ⏰', 'Hari ini adalah jadwal Anda untuk kembali suntik KB ke Klinik RSB Wellness.');
+          Store.set('kbLastFired', fireKey);
+        }
+      }
+    }
+  }
+
+  function fireNotif(title, body){
+    if('Notification' in window && Notification.permission === 'granted'){
+      try{ new Notification(title, { body }); }catch(e){ /* some mobile browsers restrict this */ }
+    }
+  }
+
+  function startReminderLoop(){
+    if(window.__kbInterval) clearInterval(window.__kbInterval);
+    window.__kbInterval = setInterval(checkKbReminder, 30000);
+    checkKbReminder();
+  }
+
+  btnAktifkanAlarm.addEventListener('click', async ()=>{
+    if(!currentKbCalc){ showToast('Mohon lengkapi data KB Anda terlebih dahulu.', 'error'); return; }
+    if(!('Notification' in window)){
+      showToast('Browser ini tidak mendukung notifikasi. Gunakan tombol "Tambah ke Kalender" sebagai gantinya.', 'error');
+      return;
+    }
+    let permission = Notification.permission;
+    if(permission === 'default'){
+      permission = await Notification.requestPermission();
+    }
+    if(permission !== 'granted'){
+      kbAlarmStatus.textContent = 'Izin notifikasi tidak diberikan. Anda tetap dapat menggunakan tombol "Tambah ke Kalender" agar tidak lupa.';
+      showToast('Izin notifikasi ditolak.', 'error');
+      return;
+    }
+
+    const config = currentKbCalc.type === 'pil'
+      ? { type:'pil', pillTime: currentKbCalc.pillTime }
+      : { type: currentKbCalc.type, nextDate: currentKbCalc.nextDate.toISOString() };
+
+    Store.set('kbReminderConfig', config);
+    startReminderLoop();
+    kbAlarmStatus.textContent = '✅ Alarm pengingat aktif selama halaman ini terbuka di browser Anda.';
+    showToast('Alarm pengingat berhasil diaktifkan!', 'success');
+  });
+
+  // Resume reminder loop on load if a config already exists
+  window.addEventListener('load', ()=>{
+    const cfg = Store.get('kbReminderConfig');
+    if(cfg && 'Notification' in window && Notification.permission === 'granted'){
+      startReminderLoop();
+    }
+  });
+
+  function pad(n){ return String(n).padStart(2,'0'); }
+  function fmtICSDate(d){ return `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}`; }
+  function fmtICSDateTime(d,h,m){ return `${fmtICSDate(d)}T${pad(h)}${pad(m)}00`; }
+
+  function downloadICS(opts){
+    const lines = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//RSB Wellness//Companion//ID','BEGIN:VEVENT'];
+    lines.push(`UID:${opts.uid}-${Date.now()}@rsbwellness`);
+    lines.push(`DTSTAMP:${fmtICSDate(new Date())}T000000Z`);
+
+    if(opts.allDay){
+      lines.push(`DTSTART;VALUE=DATE:${fmtICSDate(opts.date)}`);
+      lines.push(`DTEND;VALUE=DATE:${fmtICSDate(addDays(opts.date,1))}`);
+    } else {
+      lines.push(`DTSTART:${fmtICSDateTime(opts.date, opts.hour, opts.minute)}`);
+      lines.push('DURATION:PT10M');
+    }
+    lines.push(`SUMMARY:${opts.title}`);
+    lines.push(`DESCRIPTION:${opts.description.replace(/\n/g,'\\n')}`);
+    if(opts.recurringDaily) lines.push('RRULE:FREQ=DAILY');
+    lines.push('BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:Pengingat','TRIGGER:PT0M','END:VALARM');
+    lines.push('END:VEVENT','END:VCALENDAR');
+
+    const blob = new Blob([lines.join('\r\n')], { type:'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `${opts.uid}.ics`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url), 2000);
+  }
+
+  btnTambahKalender.addEventListener('click', ()=>{
+    if(!currentKbCalc){ showToast('Mohon lengkapi data KB Anda terlebih dahulu.', 'error'); return; }
+    if(currentKbCalc.type === 'pil'){
+      const [h,m] = currentKbCalc.pillTime.split(':').map(Number);
+      downloadICS({
+        uid:'rsb-kb-pil',
+        title:'Waktunya Minum Pil KB — RSB Wellness',
+        description:'Jangan lupa minum pil KB harian Anda ya, Bunda.',
+        date: todayStripped(),
+        hour:h, minute:m,
+        recurringDaily:true,
+        allDay:false
+      });
+    } else {
+      downloadICS({
+        uid:'rsb-kb-suntik',
+        title: currentKbCalc.label + ' — RSB Wellness',
+        description:'Hari ini adalah jadwal Anda untuk kembali suntik KB ke Klinik RSB Wellness.',
+        date: currentKbCalc.nextDate,
+        allDay:true
+      });
+    }
+    showToast('File kalender (.ics) sedang diunduh.', 'success');
+  });
+
+  /* =========================================================
+     5. TAB 3 — ANC / KF / KN
+  ========================================================= */
+  const ancHpht = document.getElementById('anc-hpht');
+  const birthDateInput = document.getElementById('birth-date');
+  setMaxToday(ancHpht);
+  setMaxToday(birthDateInput);
+
+  const ANC_SCHEDULE = [
+    { code:'K1', label:'Kunjungan 1 — Trimester 1', weekStart:4,  weekEnd:8  },
+    { code:'K2', label:'Kunjungan 2 — Trimester 1', weekStart:9,  weekEnd:12 },
+    { code:'K3', label:'Kunjungan 3 — Trimester 2', weekStart:18, weekEnd:24 },
+    { code:'K4', label:'Kunjungan 4 — Trimester 3', weekStart:28, weekEnd:31 },
+    { code:'K5', label:'Kunjungan 5 — Trimester 3', weekStart:32, weekEnd:36 },
+    { code:'K6', label:'Kunjungan 6 — Trimester 3', weekStart:37, weekEnd:40 },
+  ];
+
+  document.getElementById('btn-hitung-anc').addEventListener('click', ()=>{
+    const val = ancHpht.value;
+    if(!val){ showToast('Mohon isi tanggal HPHT terlebih dahulu.', 'error'); return; }
+    const hpht = parseDateInput(val);
+    const today = todayStripped();
+    const gestDays = daysBetween(hpht, today);
+    if(gestDays < 0){ showToast('Tanggal HPHT tidak boleh di masa depan.', 'error'); return; }
+
+    const container = document.getElementById('anc-results');
+    container.innerHTML = '';
+
+    ANC_SCHEDULE.forEach(item=>{
+      const dStart = item.weekStart * 7;
+      const dEnd = item.weekEnd * 7 + 6;
+      const rangeStart = addDays(hpht, dStart);
+      const rangeEnd = addDays(hpht, dEnd);
+      const st = statusFor(dStart, dEnd, gestDays);
+      container.appendChild(createTimelineItem({
+        code: item.code,
+        label: item.label,
+        badgeClass: st.badge,
+        badgeText: st.text,
+        rangeText: formatRangeID(rangeStart, rangeEnd),
+        statusClass: st.cls
+      }));
+    });
+
+    const eddDate = addDays(hpht, 280);
+    const gestWeeks = Math.floor(gestDays/7);
+    const gestRemDays = gestDays % 7;
+    const infoLine = document.createElement('p');
+    infoLine.style.fontSize = '0.78rem';
+    infoLine.style.color = 'var(--sage-dark)';
+    infoLine.style.marginTop = '10px';
+    infoLine.style.fontWeight = '600';
+    infoLine.textContent = `Usia kehamilan saat ini: ±${gestWeeks} minggu ${gestRemDays} hari · Estimasi tanggal persalinan (HPL): ${formatDateID(eddDate)}`;
+    container.appendChild(infoLine);
+  });
+
+  const KF_SCHEDULE = [
+    { code:'KF1', label:'KF 1', dayStart:1, dayEnd:2,  note:null },
+    { code:'KF2', label:'KF 2', dayStart:3, dayEnd:7,  note:'Direkomendasikan RSB Wellness Varian Bawang Dayak untuk membantu mempercepat involusi rahim dan menyeimbangkan hormon pasca-melahirkan.' },
+    { code:'KF3', label:'KF 3', dayStart:8, dayEnd:28, note:null },
+    { code:'KF4', label:'KF 4', dayStart:29, dayEnd:42, note:null },
+  ];
+  const KN_SCHEDULE = [
+    { code:'KN1', label:'KN 1', desc:'Usia 6–48 jam setelah lahir', dayStart:0, dayEnd:2 },
+    { code:'KN2', label:'KN 2', desc:'Usia 3–7 hari setelah lahir', dayStart:3, dayEnd:7 },
+    { code:'KN3', label:'KN 3', desc:'Usia 8–28 hari setelah lahir', dayStart:8, dayEnd:28 },
+  ];
+
+  document.getElementById('btn-hitung-kfkn').addEventListener('click', ()=>{
+    const val = birthDateInput.value;
+    if(!val){ showToast('Mohon isi tanggal persalinan terlebih dahulu.', 'error'); return; }
+    const birthDate = parseDateInput(val);
+    const today = todayStripped();
+    const ageDays = daysBetween(birthDate, today);
+    if(ageDays < 0){ showToast('Tanggal persalinan tidak boleh di masa depan.', 'error'); return; }
+
+    const kfContainer = document.getElementById('kf-results');
+    const knContainer = document.getElementById('kn-results');
+    kfContainer.innerHTML = '';
+    knContainer.innerHTML = '';
+
+    KF_SCHEDULE.forEach(item=>{
+      const rangeStart = addDays(birthDate, item.dayStart);
+      const rangeEnd = addDays(birthDate, item.dayEnd);
+      const st = statusFor(item.dayStart, item.dayEnd, ageDays);
+      kfContainer.appendChild(createTimelineItem({
+        code: item.code,
+        label: item.label,
+        badgeClass: st.badge,
+        badgeText: st.text,
+        rangeText: formatRangeID(rangeStart, rangeEnd),
+        statusClass: st.cls,
+        noteText: item.note
+      }));
+    });
+
+    KN_SCHEDULE.forEach(item=>{
+      const rangeStart = addDays(birthDate, item.dayStart);
+      const rangeEnd = addDays(birthDate, item.dayEnd);
+      const st = statusFor(item.dayStart, item.dayEnd, ageDays);
+      knContainer.appendChild(createTimelineItem({
+        code: item.code,
+        label: item.label,
+        badgeClass: st.badge,
+        badgeText: st.text,
+        rangeText: formatRangeID(rangeStart, rangeEnd),
+        statusClass: st.cls,
+        noteText: item.desc
+      }));
+    });
+
+    document.getElementById('kf-divider').style.display = 'flex';
+    document.getElementById('kn-divider').style.display = 'flex';
+  });
+
+})();
+</script>
+</body>
+</html>

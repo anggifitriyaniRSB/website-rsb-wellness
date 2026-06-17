@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>RSB Wellness — Maternal Journey & Wellness Companion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#FDFBF7;--cream-mid:#F5EFE6;--cream-dark:#EDE4D8;
+  --lav:#E8DFF5;--lav-mid:#C5B3E3;
+  --purple:#7D5A9E;--purple-deep:#5B3F7A;
+  --sage:#D8E2DC;--sage-mid:#A8BFB5;--sage-deep:#4A5D4E;
+  --gold:#D4AF37;--gold-lt:#EDD87A;
+  --text:#2A2333;--text-mid:#5A4E6A;--text-soft:#8A7D9A;
+  --white:#FFF;
+  --sh-sm:0 2px 12px rgba(125,90,158,0.08);
+  --sh-md:0 6px 32px rgba(125,90,158,0.13);
+  --r:14px;--rl:22px;--tr:.35s cubic-bezier(.4,0,.2,1);
+}
+html{scroll-behavior:smooth}
+body{font-family:"DM Sans",sans-serif;background:var(--cream);color:var(--text);min-height:100vh;overflow-x:hidden;line-height:1.7}
+body::before{content:"";position:fixed;top:-120px;right:-120px;width:480px;height:480px;border-radius:50%;background:radial-gradient(circle,rgba(232,223,245,.45) 0%,transparent 70%);pointer-events:none;z-index:0}
+body::after{content:"";position:fixed;bottom:-100px;left:-100px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(216,226,220,.5) 0%,transparent 70%);pointer-events:none;z-index:0}
+.pw{position:relative;z-index:1;max-width:700px;margin:0 auto;padding:0 16px 60px}
+/* HEADER */
+.hdr{text-align:center;padding:48px 20px 32px}
+.badge{display:inline-block;font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold-lt);padding:5px 18px;border-radius:100px;margin-bottom:18px;background:rgba(212,175,55,.06)}
+.brand{font-family:"Cormorant Garamond",serif;font-size:clamp(38px,10vw,62px);font-weight:300;color:var(--text);line-height:1.05;margin-bottom:4px}
+.brand span{color:var(--purple);font-style:italic}
+.brand-sub{font-size:12px;font-weight:400;letter-spacing:1.8px;text-transform:uppercase;color:var(--sage-deep);opacity:.85;margin-bottom:16px}
+.divr{display:flex;align-items:center;justify-content:center;gap:14px;margin:16px auto}
+.divr::before,.divr::after{content:"";width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--gold-lt))}
+.divr::after{background:linear-gradient(90deg,var(--gold-lt),transparent)}
+.slogan{font-family:"Cormorant Garamond",serif;font-size:clamp(15px,4vw,19px);font-style:italic;font-weight:300;color:var(--text-mid)}
+/* INTRO */
+.intro{text-align:center;padding:8px 0 28px}
+.intro h2{font-family:"Cormorant Garamond",serif;font-size:clamp(20px,6vw,28px);font-weight:500;color:var(--text);margin-bottom:8px}
+.intro p{font-size:14px;color:var(--text-soft);max-width:480px;margin:0 auto;line-height:1.8}
+/* TABS */
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:32px}
+.tab{border:1.5px solid var(--cream-dark);background:var(--white);border-radius:var(--r);padding:14px 6px;text-align:center;cursor:pointer;transition:all var(--tr);display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:var(--sh-sm);position:relative;overflow:hidden}
+.tab::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,var(--lav),var(--cream));opacity:0;transition:opacity var(--tr)}
+.tab:hover::before{opacity:.5}
+.tab.active{border-color:var(--purple);background:linear-gradient(135deg,var(--lav) 0%,var(--white) 100%);box-shadow:var(--sh-md),0 0 0 2px var(--lav-mid)}
+.tab.active::before{opacity:0}
+.ti{font-size:22px;position:relative;z-index:1;transition:transform var(--tr)}
+.tab:hover .ti,.tab.active .ti{transform:scale(1.1)}
+.tl{font-size:10.5px;font-weight:600;color:var(--text-mid);position:relative;z-index:1;line-height:1.25}
+.tab.active .tl{color:var(--purple)}
+.ts{font-size:8.5px;color:var(--text-soft);position:relative;z-index:1}
+/* PANELS */
+.qpanel{display:none;opacity:0}
+.qpanel.visible{display:block;animation:fsi .4s ease forwards}
+@keyframes fsi{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+/* PHASE HEADER */
+.phdr{display:flex;align-items:center;gap:14px;margin-bottom:20px;padding:16px 20px;background:linear-gradient(135deg,var(--lav),var(--cream));border-radius:var(--r);border:1px solid var(--lav-mid)}
+.phdr-ic{font-size:30px}
+.phdr-tx h2{font-family:"Cormorant Garamond",serif;font-size:21px;font-weight:500;color:var(--purple-deep);margin-bottom:2px}
+.phdr-tx p{font-size:12px;color:var(--text-soft)}
+/* TRIMESTER NAV */
+.tnav{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}
+.tnav-btn{padding:14px 8px;border-radius:var(--r);border:1.5px solid var(--cream-dark);background:var(--white);cursor:pointer;text-align:center;transition:all var(--tr)}
+.tnav-btn:hover{border-color:var(--lav-mid);background:var(--lav)}
+.tnav-btn.act{border-color:var(--purple);background:var(--lav);box-shadow:0 0 0 2px rgba(125,90,158,.18)}
+.tn{font-family:"Cormorant Garamond",serif;font-size:26px;font-weight:500;color:var(--purple-deep);display:block;line-height:1}
+.tl2{font-size:10px;color:var(--text-soft);display:block;margin-top:3px}
+.tnav-btn.act .tn{color:var(--purple)}
+.tnav-btn.act .tl2{color:var(--purple-deep);font-weight:600}
+/* TRI PANELS */
+.tpanel{display:none}
+.tpanel.vis{display:block;animation:fsi .35s ease forwards}
+/* FORM CARD */
+.fc{background:var(--white);border-radius:var(--rl);padding:24px 22px;margin-bottom:18px;box-shadow:var(--sh-sm);border:1px solid var(--cream-dark)}
+.fc-t{font-family:"Cormorant Garamond",serif;font-size:18px;font-weight:500;color:var(--purple-deep);margin-bottom:5px;display:flex;align-items:center;gap:8px}
+.fc-h{font-size:12.5px;color:var(--text-soft);margin-bottom:16px}
+/* OPTIONS */
+.og{display:flex;flex-direction:column;gap:9px;margin-bottom:8px}
+.ob{display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:var(--r);border:1.5px solid var(--cream-dark);background:var(--cream);cursor:pointer;transition:all var(--tr);text-align:left;width:100%}
+.ob:hover{border-color:var(--lav-mid);background:var(--lav);transform:translateY(-1px);box-shadow:var(--sh-sm)}
+.ob.sel{border-color:var(--purple);background:linear-gradient(135deg,var(--lav),#f0eaf9);box-shadow:0 0 0 2px rgba(125,90,158,.18)}
+.oi{width:34px;height:34px;background:var(--white);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.06)}
+.ob.sel .oi{background:var(--lav)}
+.ot{flex:1}
+.ot strong{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:1px}
+.ot span{font-size:11.5px;color:var(--text-soft);line-height:1.4}
+.ock{width:20px;height:20px;border-radius:50%;border:2px solid var(--cream-dark);display:flex;align-items:center;justify-content:center;transition:all var(--tr);flex-shrink:0;font-size:11px;color:transparent}
+.ob.sel .ock{border-color:var(--purple);background:var(--purple);color:#fff}
+/* SUBMIT */
+.sub{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:15px 24px;border-radius:var(--r);border:none;background:linear-gradient(135deg,var(--purple),var(--purple-deep));color:#fff;font-family:"DM Sans",sans-serif;font-size:14.5px;font-weight:600;cursor:pointer;transition:all var(--tr);box-shadow:0 6px 24px rgba(125,90,158,.32);margin-top:10px}
+.sub:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(125,90,158,.42)}
+.sub.baby-btn{background:linear-gradient(135deg,#E07B54,#C05030)}
+/* VALIDATE */
+.vm{background:#fff2f2;border:1px solid #ffc2c2;border-radius:var(--r);padding:11px 14px;font-size:12.5px;color:#c0392b;margin-top:10px;display:none;align-items:center;gap:8px}
+.vm.show{display:flex}
+/* RESULT */
+.rs{display:none;margin-top:20px}
+.rs.vis{display:block;animation:fsi .5s ease forwards}
+/* VISIT BANNER */
+.vb{display:flex;align-items:flex-start;gap:12px;background:linear-gradient(135deg,var(--lav),#f5f0fd);border:1px solid var(--lav-mid);border-radius:var(--r);padding:12px 16px;margin-bottom:16px}
+.vb-ic{font-size:19px;flex-shrink:0;margin-top:1px}
+.vb-tx{font-size:12px;color:var(--purple-deep);line-height:1.55}
+.vb-tx strong{display:block;font-size:10.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px;color:var(--purple)}
+/* TIPS */
+.tb{background:linear-gradient(135deg,var(--sage),#c8dbd0);border-radius:var(--rl);padding:20px 20px 20px 24px;margin-bottom:18px;border-left:4px solid var(--sage-deep);position:relative;overflow:hidden}
+.tb::after{content:"🌿";position:absolute;right:14px;top:12px;font-size:28px;opacity:.2}
+.tbl{font-size:9.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--sage-deep);margin-bottom:7px}
+.tb h3{font-family:"Cormorant Garamond",serif;font-size:17px;font-weight:500;color:var(--sage-deep);margin-bottom:9px}
+.tb p{font-size:13px;color:#3a4d40;line-height:1.75}
+.tl3{list-style:none;margin-top:9px}
+.tl3 li{font-size:12.5px;color:#3a4d40;padding:4px 0 4px 18px;position:relative;line-height:1.6}
+.tl3 li::before{content:"✦";position:absolute;left:0;color:var(--sage-deep);font-size:8px;top:7px}
+.wb{background:linear-gradient(135deg,#fff8e7,#fef3d0);border-radius:var(--r);padding:12px 14px 12px 18px;margin-top:12px;border-left:3px solid var(--gold);font-size:12px;color:#7a5e00;line-height:1.6}
+.wb strong{display:block;font-weight:700;margin-bottom:3px;color:#5c4400}
+/* BABY TIPS */
+.tb.baby-tb{background:linear-gradient(135deg,#fde8dc,#f5c4a8);border-left-color:#C05030}
+.tb.baby-tb .tbl{color:#8B3520}
+.tb.baby-tb h3{color:#8B3520}
+.tb.baby-tb p,.tb.baby-tb .tl3 li{color:#5c2a18}
+.tb.baby-tb::after{content:"👶"}
+/* REC LABEL */
+.rl{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.rll{flex:1;height:1px;background:linear-gradient(90deg,var(--gold-lt),transparent)}
+.rlr{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold-lt))}
+.rlt{font-size:9.5px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);white-space:nowrap}
+/* PRODUCT CARD */
+.pc{background:var(--white);border-radius:var(--rl);overflow:hidden;box-shadow:var(--sh-md);border:1px solid var(--cream-dark);margin-bottom:14px;position:relative}
+.pc::before{content:"";position:absolute;top:0;right:0;width:60px;height:60px;background:linear-gradient(225deg,var(--gold-lt) 0%,transparent 60%);opacity:.25;border-top-right-radius:var(--rl)}
+.pc-hd{padding:20px 20px 0;display:flex;align-items:flex-start;gap:14px}
+.pc-em{width:58px;height:58px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;box-shadow:0 4px 12px rgba(0,0,0,.08);background:linear-gradient(135deg,var(--lav),var(--cream))}
+.pc-tg{flex:1}
+.pc-var{font-size:9.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:3px}
+.pc-nm{font-family:"Cormorant Garamond",serif;font-size:21px;font-weight:500;color:var(--text);line-height:1.2;margin-bottom:3px}
+.pc-tag{font-size:11.5px;color:var(--purple);font-style:italic;font-family:"Cormorant Garamond",serif}
+.pc-gb{margin:16px 20px 0;height:1px;background:linear-gradient(90deg,var(--gold-lt),transparent)}
+.pc-bd{padding:14px 20px 20px}
+.bts{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+.bt{font-size:10.5px;font-weight:500;padding:3px 10px;border-radius:100px;background:var(--lav);color:var(--purple-deep);border:1px solid var(--lav-mid)}
+.pc-ds{font-size:13px;color:var(--text-mid);line-height:1.8;margin-bottom:16px}
+.wa{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:13px 18px;border-radius:var(--r);border:none;background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;font-family:"DM Sans",sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;text-decoration:none;transition:all var(--tr);box-shadow:0 6px 18px rgba(37,211,102,.28)}
+.wa:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(37,211,102,.38)}
+/* KIA */
+.kia{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
+.kb{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:600;padding:4px 11px;border-radius:100px;background:linear-gradient(135deg,var(--sage),#c8dbd0);color:var(--sage-deep);border:1px solid var(--sage-mid);letter-spacing:.3px}
+/* CONSULT */
+.cwrap{margin-top:44px}
+.cb{background:linear-gradient(135deg,var(--purple-deep),#3A2558);border-radius:var(--rl);padding:28px 24px;text-align:center;position:relative;overflow:hidden}
+.cb::before{content:"";position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.06)}
+.cb::after{content:"";position:absolute;bottom:-40px;left:-40px;width:160px;height:160px;border-radius:50%;background:rgba(212,175,55,.08)}
+.cb-ic{font-size:34px;margin-bottom:12px;position:relative;z-index:1}
+.cb h3{font-family:"Cormorant Garamond",serif;font-size:21px;font-weight:400;color:#fff;margin-bottom:8px;position:relative;z-index:1;line-height:1.3}
+.cb p{font-size:13px;color:rgba(255,255,255,.72);line-height:1.7;margin-bottom:22px;position:relative;z-index:1;max-width:400px;margin-left:auto;margin-right:auto}
+.cb-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 28px;border-radius:var(--r);border:none;background:linear-gradient(135deg,var(--gold-lt),var(--gold));color:var(--text);font-family:"DM Sans",sans-serif;font-size:13.5px;font-weight:700;cursor:pointer;text-decoration:none;transition:all var(--tr);box-shadow:0 8px 24px rgba(212,175,55,.35);position:relative;z-index:1}
+.cb-btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(212,175,55,.5)}
+/* FOOTER */
+.ft{text-align:center;padding:28px 20px 16px;margin-top:48px;border-top:1px solid var(--cream-dark)}
+.ft-logo{font-family:"Cormorant Garamond",serif;font-size:17px;color:var(--purple);font-style:italic;margin-bottom:5px}
+.ft-gold{display:inline-block;margin:12px 0 4px;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--gold);opacity:.8}
+.ft p{font-size:11px;color:var(--text-soft);letter-spacing:.4px;line-height:1.7}
+.dual-note{text-align:center;font-size:12px;color:var(--text-soft);font-style:italic;margin-bottom:10px}
+@media(max-width:480px){.tabs{grid-template-columns:repeat(2,1fr)}.ts{display:none}}
+@media(max-width:340px){.tabs{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="pw">
+<header class="hdr">
+  <div class="badge">✦ Wellness Companion Digital ✦</div>
+  <h1 class="brand">RSB <span>Wellness</span></h1>
+  <p class="brand-sub">Nature & Wellness · Fermentasi Alami Kearifan Lokal Kalimantan</p>
+  <div class="divr"><span style="font-size:17px;color:var(--gold)">🌿</span></div>
+  <p class="slogan">"Sehat dari Dalam, Berdaya dari Komunitas"</p>
+</header>
+<div class="intro">
+  <h2>Maternal Journey & Wellness Companion</h2>
+  <p>Panduan klinis kebidanan yang dipersonalisasi, dipadukan dengan seluruh lini produk wellness RSB untuk mendampingi setiap fase perjalanan menjadi ibu.</p>
+</div>
+<div class="tabs" role="tablist">
+  <button class="tab" id="tab-pregnancy" onclick="showPhase('pregnancy')"><span class="ti">🤰</span><span class="tl">Fase Kehamilan</span><span class="ts">Per Trimester</span></button>
+  <button class="tab" id="tab-labor" onclick="showPhase('labor')"><span class="ti">🌸</span><span class="tl">Fase Persalinan</span><span class="ts">Labor Prep</span></button>
+  <button class="tab" id="tab-postpartum" onclick="showPhase('postpartum')"><span class="ti">🍼</span><span class="tl">Nifas & Menyusui</span><span class="ts">8 Keluhan KIA</span></button>
+  <button class="tab" id="tab-baby" onclick="showPhase('baby')"><span class="ti">👶</span><span class="tl">Perawatan Bayi</span><span class="ts">Baby Care</span></button>
+</div>
+<section class="qpanel" id="panel-pregnancy">
+  <div class="phdr"><div class="phdr-ic">🤰</div><div class="phdr-tx"><h2>Fase Kehamilan</h2><p>Rekomendasi spesifik per trimester sesuai keluhan Anda</p></div></div>
+  <div class="tnav">
+    <button class="tnav-btn" id="tnav-1" onclick="showTri(1)"><span class="tn">I</span><span class="tl2">Minggu 1–12</span></button>
+    <button class="tnav-btn" id="tnav-2" onclick="showTri(2)"><span class="tn">II</span><span class="tl2">Minggu 13–26</span></button>
+    <button class="tnav-btn" id="tnav-3" onclick="showTri(3)"><span class="tn">III</span><span class="tl2">Minggu 27–40</span></button>
+  </div>
+  <div class="tpanel" id="tp1">
+    <div class="fc">
+      <p class="fc-t"><span>🌱</span> Trimester Pertama — Keluhan Anda</p>
+      <p class="fc-h">Pilih keluhan yang paling dominan Anda rasakan saat ini</p>
+      <div class="og" id="t1-og">
+        <button class="ob" onclick="selectO('t1','nausea',this)"><div class="oi">🫧</div><div class="ot"><strong>Mual & Muntah (Morning Sickness)</strong><span>Mual terutama di pagi hari, sulit makan, kadang sampai muntah</span></div><div class="ock">✓</div></button>
+        <button class="ob" onclick="selectO('t1','fatigue',this)"><div class="oi">😴</div><div class="ot"><strong>Kelelahan & Ngantuk Berlebihan</strong><span>Tubuh terasa berat, ingin tidur terus, energi sangat terkuras</span></div><div class="ock">✓</div></button>
+        <button class="ob" onclick="selectO('t1','bloat',this)"><div class="oi">🫙</div><div class="ot"><strong>Kembung & Sembelit Awal</strong><span>Perut terasa penuh, susah BAB, sering bersendawa atau kentut</span></div><div class="ock">✓</div></button>
+        <button class="ob" onclick="selectO('t1','mood',this)"><div class="oi">🌧️</div><div class="ot"><strong>Mood Swing & Mudah Cemas</strong><span>Emosi tidak stabil, mudah sedih atau marah tanpa sebab jelas</span></div><div class="ock">✓</div></button>
+      </div>
+      <div class="vm" id="vm-t1"><span>⚠️</span> Mohon pilih keluhan Anda terlebih dahulu.</div>
+      <button class="sub" onclick="showPR('t1')"><span>✦</span> Lihat Rekomendasi Saya</button>
+    </div>
+    <div class="rs" id="rs-t1"><div id="res-t1-nausea" style="display:none"><div class="tb"><div class="tbl">✦ Tips Klinis Kebidanan — Trimester 1</div><h3>Mengatasi Morning Sickness</h3><p>Mual trimester pertama dipicu lonjakan hormon hCG — tanda kehamilan yang sehat! Strategi terbaik:</p><ul class="tl3"><li>Makan dalam porsi kecil namun sering — perut kosong memperparah mual</li><li>Jahe terbukti secara klinis efektif meredakan mual kehamilan</li><li>Hindari makanan berminyak, berbau tajam, dan terlalu manis</li><li>Minum cairan hangat sebelum beranjak dari tempat tidur di pagi hari</li><li>Probiotik membantu menyeimbangkan flora usus yang berkaitan dengan rasa mual</li><li>Vitamin B6 alami dari buah-buahan membantu mengurangi frekuensi mual</li></ul></div><div class="rl"><div class="rll"></div><div class="rlt">✦ Rekomendasi Produk RSB Wellness</div><div class="rlr"></div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#fff3d0,#fde9a0)">🍯</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Superfood Herbal</div><div class="pc-nm">Madu Akasia + Bawang Dayak</div><div class="pc-tag">"Manis Alami Berpadu Kekuatan Herbal Kalimantan"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🍯 Enzim Aktif</span><span class="bt">🌿 Adaptogen</span><span class="bt">⚡ Energi</span><span class="bt">🛡️ Imun</span></div><p class="pc-ds">Madu akasia murni yang kaya enzim aktif berpadu dengan ekstrak bawang dayak Kalimantan. Madu memberikan energi cepat dan menenangkan lapisan lambung, sementara senyawa aktif bawang dayak membantu menstabilkan kondisi pencernaan. Dikonsumsi hangat di pagi hari — lembut untuk perut mual ibu hamil.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Madu%20Akasia%20%2B%20Bawang%20Dayak%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9)">🍵</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Varian Unggulan</div><div class="pc-nm">Kombucha Original</div><div class="pc-tag">"Classic Fermented Tea: Autentik, Segar, Menyehatkan"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🦠 Probiotik</span><span class="bt">💧 Hidrasi</span><span class="bt">🌱 Fermentasi Alami</span><span class="bt">⚡ Energi</span></div><p class="pc-ds">Kombucha fermentasi alami mengandung probiotik aktif yang membantu menyeimbangkan flora usus — faktor kunci dalam mengurangi intensitas mual kehamilan. Rasa asamnya yang segar juga terbukti secara empiris membantu meredakan mual lebih cepat dari cairan tawar biasa.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Kombucha%20Original%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div></div><div id="res-t1-fatigue" style="display:none"><div class="tb"><div class="tbl">✦ Tips Klinis Kebidanan — Trimester 1</div><h3>Mengatasi Kelelahan Ekstrem Awal Kehamilan</h3><p>Kelelahan di trimester 1 adalah efek nyata dari lonjakan hormon progesteron. Tubuh Anda sedang membangun plasenta — wajar jika sangat lelah!</p><ul class="tl3"><li>Izinkan diri tidur lebih banyak — ini kebutuhan medis, bukan kemalasan</li><li>Konsumsi zat besi alami: bayam, kacang merah, daging tanpa lemak</li><li>Vitamin C membantu penyerapan zat besi hingga 3× lebih efektif</li><li>Cek kadar hemoglobin ke bidan — anemia adalah penyebab umum kelelahan trimester 1</li><li>Kurangi kafein; ganti dengan minuman bergizi alami</li></ul></div><div class="rl"><div class="rll"></div><div class="rlt">✦ Rekomendasi Produk RSB Wellness</div><div class="rlr"></div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#fff0e0,#ffe0c0)">🌅</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Cold Pressed Juice</div><div class="pc-nm">Sunrise Vital</div><div class="pc-tag">"Apple • Carrot • Pineapple — Energi dari Alam"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">⚡ Energi Alami</span><span class="bt">🥕 Beta-Karoten</span><span class="bt">🍎 Antioksidan</span><span class="bt">🌿 Cold Pressed</span></div><p class="pc-ds">Beta-karoten dari wortel, enzim bromelain dari nanas, dan malic acid dari apel bekerja sinergis memberikan energi seluler berkelanjutan. Diperas dingin (cold pressed) tanpa panas sehingga 100% nutrisi alami terjaga utuh — sempurna untuk ibu hamil trimester 1 yang mudah lelah.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Sunrise%20Vital%20Cold%20Pressed%20Juice%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#fce4ec,#f8bbd0)">🌺</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Varian Herbal</div><div class="pc-nm">Kombucha Rosella</div><div class="pc-tag">"Hibiscus sabdariffa: Merah Cantik, Kaya Antioksidan"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🍊 Vitamin C</span><span class="bt">🌸 Antosianin</span><span class="bt">🛡️ Imunitas</span><span class="bt">⚡ Vitalitas</span></div><p class="pc-ds">Rosella merah kaya antioksidan antosianin dan Vitamin C alami yang membantu meningkatkan penyerapan zat besi, mendukung produksi energi seluler, dan memperkuat imunitas ibu hamil di trimester pertama yang kritis.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Kombucha%20Rosella%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div></div><div id="res-t1-bloat" style="display:none"><div class="tb"><div class="tbl">✦ Tips Klinis Kebidanan — Trimester 1</div><h3>Mengatasi Kembung & Sembelit Awal Kehamilan</h3><p>Progesteron yang meningkat memperlambat motilitas usus. Normal, namun bisa sangat tidak nyaman. Berikut solusinya:</p><ul class="tl3"><li>Perbanyak serat dari buah segar — pepaya, kiwi, dan pir sangat membantu</li><li>Minum air hangat di pagi hari, minimal 8–10 gelas per hari</li><li>Hindari makan terlalu cepat — kunyah makanan dengan baik untuk mengurangi gas</li><li>Jalan santai 15–20 menit setelah makan membantu gerakan peristaltik usus</li><li>Probiotik alami membantu memulihkan keseimbangan flora usus yang terganggu hormon</li></ul></div><div class="rl"><div class="rll"></div><div class="rlt">✦ Rekomendasi Produk RSB Wellness</div><div class="rlr"></div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9)">🍋</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Cold Pressed Juice</div><div class="pc-nm">Tropical Cleanse</div><div class="pc-tag">"Pineapple • Lemon • Lemongrass • Ginger"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🌿 Detoks</span><span class="bt">🍍 Bromelain</span><span class="bt">🫙 Anti-Kembung</span><span class="bt">🔥 Jahe</span></div><p class="pc-ds">Bromelain dari nanas melancarkan pencernaan, lemon merangsang enzim lambung, serai bersifat karminatif (membuang gas berlebih), dan jahe membantu meredakan kejang otot usus. Kombinasi sempurna untuk perut kembung ibu hamil trimester pertama.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Tropical%20Cleanse%20Cold%20Pressed%20Juice%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9)">🍵</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Varian Unggulan</div><div class="pc-nm">Kombucha Original</div><div class="pc-tag">"Classic Fermented Tea: Autentik, Segar, Menyehatkan"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🦠 Probiotik</span><span class="bt">💧 Hidrasi</span><span class="bt">🌱 Fermentasi Alami</span><span class="bt">⚡ Energi</span></div><p class="pc-ds">Probiotik dan asam organik dalam kombucha secara langsung membantu memulihkan keseimbangan mikrobioma usus yang terganggu hormon kehamilan, melancarkan gerakan usus, dan mengurangi produksi gas berlebih penyebab kembung.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Kombucha%20Original%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div></div><div id="res-t1-mood" style="display:none"><div class="tb"><div class="tbl">✦ Tips Klinis Kebidanan — Trimester 1</div><h3>Menstabilkan Mood & Mengurangi Kecemasan</h3><p>Perubahan hormon yang drastis di trimester 1 langsung memengaruhi neurotransmiter otak. Mood swing bukan kelemahan — ini respons fisiologis yang nyata.</p><ul class="tl3"><li>Ceritakan perasaan Anda — kepada pasangan, ibu, atau sahabat terpercaya</li><li>Journaling kehamilan: tulis kekhawatiran dan harapan Anda setiap hari</li><li>Yoga prenatal atau stretching ringan melepaskan endorfin alami</li><li>Batasi paparan berita negatif dan media sosial</li><li>Flavonoid alami dari herbal membantu menstabilkan neurotransmiter secara lembut</li></ul></div><div class="rl"><div class="rll"></div><div class="rlt">✦ Rekomendasi Produk RSB Wellness</div><div class="rlr"></div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#ede7f6,#d1c4e9)">💜</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Varian Kalimantan</div><div class="pc-nm">Kombucha Telang</div><div class="pc-tag">"Clitoria ternatea: Ungu Alami dari Bumi Borneo"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🧘 Anxiolitik</span><span class="bt">💜 Flavonoid</span><span class="bt">🧠 Saraf</span><span class="bt">🌙 Menenangkan</span></div><p class="pc-ds">Bunga telang (Clitoria ternatea) mengandung flavonoid yang berinteraksi dengan reseptor GABA di otak untuk efek penenang alami — menstabilkan neurotransmiter tanpa efek sedasi. Pilihan herbal yang aman dan lembut untuk keseimbangan emosional ibu hamil trimester pertama.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Kombucha%20Telang%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#fff3d0,#fde9a0)">🍯</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Superfood Herbal</div><div class="pc-nm">Madu Akasia + Bawang Dayak</div><div class="pc-tag">"Manis Alami Berpadu Kekuatan Herbal Kalimantan"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🍯 Enzim Aktif</span><span class="bt">🌿 Adaptogen</span><span class="bt">⚡ Energi</span><span class="bt">🛡️ Imun</span></div><p class="pc-ds">Tryptophan dalam madu akasia adalah bahan baku serotonin (hormon kebahagiaan). Senyawa adaptogenik bawang dayak membantu tubuh merespons stres hormonal dengan lebih seimbang. Konsumsi pagi hari untuk memulai hari dengan mood yang lebih positif.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Madu%20Akasia%20%2B%20Bawang%20Dayak%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div></div></div>
+  </div>  <div class="tpanel" id="tp2">
+    <div class="fc">
+      <p class="fc-t"><span>🌻</span> Trimester Kedua — Keluhan Anda</p>
+      <p class="fc-h">Pilih keluhan yang paling dominan Anda rasakan saat ini</p>
+      <div class="og" id="t2-og">
+        <button class="ob" onclick="selectO('t2','heartburn',this)"><div class="oi">🔥</div><div class="ot"><strong>Heartburn & Asam Lambung Naik</strong><span>Sensasi panas di dada, mulut pahit/asam, terutama setelah makan</span></div><div class="ock">✓</div></button>
+        <button class="ob" onclick="selectO('t2','stretch',this)"><div class="oi">🌸</div><div class="ot"><strong>Kulit Kering, Gatal & Stretch Mark</strong><span>Kulit perut terasa kencang, gatal, mulai terlihat guratan</span></div><div class="ock">✓</div></button>
+        <button class="ob" onclick="selectO('t2','energy',this)"><div class="oi">⚡</div><div class="ot"><strong>Butuh Tambahan Energi & Stamina</strong><span>Perut membesar, aktivitas lebih berat, ingin menjaga kebugaran</span></div><div class="ock">✓</div></button>
+        <button class="ob" onclick="selectO('t2','imun',this)"><div class="oi">🛡️</div><div class="ot"><strong>Imunitas Turun — Mudah Sakit</strong><span>Sering pilek, batuk, atau infeksi ringan selama kehamilan</span></div><div class="ock">✓</div></button>
+      </div>
+      <div class="vm" id="vm-t2"><span>⚠️</span> Mohon pilih keluhan Anda terlebih dahulu.</div>
+      <button class="sub" onclick="showPR('t2')"><span>✦</span> Lihat Rekomendasi Saya</button>
+    </div>
+    <div class="rs" id="rs-t2"><div id="res-t2-heartburn" style="display:none"><div class="tb"><div class="tbl">✦ Tips Klinis Kebidanan — Trimester 2</div><h3>Mengatasi Heartburn Kehamilan</h3><p>Rahim yang membesar menekan lambung ke atas, sementara progesteron melonggarkan katup lambung-kerongkongan. Hasilnya: asam mudah naik.</p><ul class="tl3"><li>Makan dalam porsi kecil, 5–6× sehari — hindari makan besar sekaligus</li><li>Jangan langsung berbaring setelah makan — tunggu minimal 2 jam</li><li>Tinggikan kepala tempat tidur 15–20 cm dengan bantal tambahan</li><li>Hindari makanan pemicu: tomat, coklat, kopi, jeruk, makanan pedas</li><li>Madu secara tradisional melapisi dinding lambung dan meredakan sensasi terbakar</li></ul></div><div class="rl"><div class="rll"></div><div class="rlt">✦ Rekomendasi Produk RSB Wellness</div><div class="rlr"></div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#fff3d0,#fde9a0)">🍯</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Superfood Herbal</div><div class="pc-nm">Madu Akasia + Bawang Dayak</div><div class="pc-tag">"Manis Alami Berpadu Kekuatan Herbal Kalimantan"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🍯 Enzim Aktif</span><span class="bt">🌿 Adaptogen</span><span class="bt">⚡ Energi</span><span class="bt">🛡️ Imun</span></div><p class="pc-ds">Madu akasia murni memiliki pH netral dan sifat pelapis mukosa yang membantu menetralkan keasaman lambung secara alami. Kandungan antibakteri dari bawang dayak turut menjaga kesehatan dinding lambung. Satu sendok makan madu hangat sebelum makan adalah solusi lembut untuk heartburn kehamilan.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Madu%20Akasia%20%2B%20Bawang%20Dayak%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#fffde7,#fff9c4)">✨</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Cold Pressed Juice</div><div class="pc-nm">Golden Harmony</div><div class="pc-tag">"Pineapple • Pear • Ginger — Harmoni Pencernaan"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🍐 Alkaline</span><span class="bt">🍍 Bromelain</span><span class="bt">🔥 Anti-Inflamasi</span><span class="bt">🌱 Pencernaan</span></div><p class="pc-ds">Pir memiliki sifat basa (alkaline) yang membantu menetralisir keasaman lambung. Bromelain dari nanas membantu pencernaan protein agar lambung tidak bekerja terlalu keras, dan jahe menenangkan peradangan dinding lambung. Minuman penyeimbang pencernaan sempurna untuk trimester kedua.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Golden%20Harmony%20Cold%20Pressed%20Juice%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div></div><div id="res-t2-stretch" style="display:none"><div class="tb"><div class="tbl">✦ Tips Klinis Kebidanan — Trimester 2</div><h3>Merawat Kulit Perut & Mencegah Stretch Mark</h3><p>Kulit yang meregang cepat seiring pertumbuhan bayi dapat menyebabkan gatal dan stretch mark. Perawatan dini lebih efektif!</p><ul class="tl3"><li>Moisturize setiap hari setelah mandi selagi kulit masih sedikit lembap</li><li>Pijat lembut melingkar dari bawah perut ke atas untuk elastisitas kulit</li><li>Minum air minimal 2,5 liter per hari — hidrasi dari dalam sama pentingnya</li><li>Konsumsi makanan kaya kolagen: kaldu tulang, ikan, putih telur, buah beri</li><li>Lemak alami (tallow) yang identik dengan lemak kulit manusia meresap lebih baik dari pelembap sintetis</li></ul></div><div class="rl"><div class="rll"></div><div class="rlt">✦ Rekomendasi Produk RSB Wellness</div><div class="rlr"></div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#f5f5f5,#e8e8e8)">🫙</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Skincare Organik</div><div class="pc-nm">Tallow Balm</div><div class="pc-tag">"Tersertifikasi Organik — Pelembap Terdalam Alami"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">💧 Hidrasi Intensif</span><span class="bt">🌿 Organik</span><span class="bt">🌸 Kulit Sensitif</span><span class="bt">🛡️ Skin Barrier</span></div><p class="pc-ds">Tallow (lemak sapi organik) memiliki profil asam lemak yang sangat mirip dengan sebum alami kulit manusia, sehingga meresap jauh lebih dalam daripada pelembap sintetis. Melembapkan kulit perut secara intensif, menenangkan rasa gatal akibat peregangan, dan membantu menjaga elastisitas untuk mencegah serta meminimalkan stretch mark. Aman 100% untuk ibu hamil tanpa bahan kimia berbahaya.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Tallow%20Balm%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div></div><div id="res-t2-energy" style="display:none"><div class="tb"><div class="tbl">✦ Tips Klinis Kebidanan — Trimester 2</div><h3>Menjaga Energi & Stamina di Trimester Emas</h3><p>Trimester 2 adalah periode terbaik dalam kehamilan — mual mulai reda dan energi mulai pulih. Manfaatkan untuk membangun fondasi nutrisi yang kuat!</p><ul class="tl3"><li>Senam prenatal atau yoga ibu hamil 3× seminggu untuk kebugaran dan persiapan persalinan</li><li>Protein 70–100g per hari penting untuk pertumbuhan otak dan organ bayi</li><li>Omega-3 dari ikan laut (salmon, sarden) mendukung perkembangan otak bayi</li><li>Antioksidan dari buah berwarna-warni melindungi sel ibu dan bayi</li><li>Hindari gula olahan yang menyebabkan energy crash — pilih karbohidrat kompleks</li></ul></div><div class="rl"><div class="rll"></div><div class="rlt">✦ Rekomendasi Produk RSB Wellness</div><div class="rlr"></div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#ffebee,#ffcdd2)">❤️</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Cold Pressed Juice</div><div class="pc-nm">Ruby Boost</div><div class="pc-tag">"Pineapple • Beet • Ginger — Power Merah"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">💪 Stamina</span><span class="bt">❤️ Nitrat Alami</span><span class="bt">🩸 Zat Besi</span><span class="bt">🔥 Sirkulasi</span></div><p class="pc-ds">Bit merah kaya nitrat alami yang dikonversi tubuh menjadi nitric oxide — meningkatkan sirkulasi darah dan oksigen ke sel otot secara dramatis. Kandungan zat besi alaminya mendukung produksi hemoglobin untuk mencegah anemia kehamilan. Kombinas sempurna untuk stamina ibu hamil trimester kedua.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Ruby%20Boost%20Cold%20Pressed%20Juice%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#fce4ec,#f8bbd0)">🌺</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Varian Herbal</div><div class="pc-nm">Kombucha Rosella</div><div class="pc-tag">"Hibiscus sabdariffa: Merah Cantik, Kaya Antioksidan"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🍊 Vitamin C</span><span class="bt">🌸 Antosianin</span><span class="bt">🛡️ Imunitas</span><span class="bt">⚡ Vitalitas</span></div><p class="pc-ds">Rosella kaya Vitamin C alami yang membantu penyerapan zat besi, antioksidan antosianin yang melindungi sel dari stres oksidatif, dan probiotik aktif dari fermentasi yang memaksimalkan penyerapan nutrisi — trifecta nutrisi untuk kebugaran optimal di trimester emas.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Kombucha%20Rosella%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div></div><div id="res-t2-imun" style="display:none"><div class="tb"><div class="tbl">✦ Tips Klinis Kebidanan — Trimester 2</div><h3>Memperkuat Imunitas Selama Kehamilan</h3><p>Sistem imun ibu hamil mengalami modulasi alami agar tidak menyerang janin — efek sampingnya, ibu lebih rentan terhadap infeksi. Perlu perhatian ekstra.</p><ul class="tl3"><li>Cuci tangan sesering mungkin — ini tetap perlindungan terbaik</li><li>Hindari kontak dengan orang yang sedang sakit infeksi</li><li>Konsumsi makanan pelangi (buah dan sayuran berwarna beragam) untuk antioksidan komprehensif</li><li>Tidur cukup — kurang tidur menurunkan produksi antibodi secara signifikan</li><li>Antioksidan dan Vitamin C alami adalah kunci pertahanan imun pertama tubuh</li></ul></div><div class="rl"><div class="rll"></div><div class="rlt">✦ Rekomendasi Produk RSB Wellness</div><div class="rlr"></div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#fff0e0,#ffe0c0)">🌅</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Cold Pressed Juice</div><div class="pc-nm">Sunrise Vital</div><div class="pc-tag">"Apple • Carrot • Pineapple — Energi dari Alam"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">⚡ Energi Alami</span><span class="bt">🥕 Beta-Karoten</span><span class="bt">🍎 Antioksidan</span><span class="bt">🌿 Cold Pressed</span></div><p class="pc-ds">Beta-karoten dari wortel dikonversi menjadi Vitamin A untuk produksi sel imun. Quercetin dari apel adalah antioksidan kuat dengan efek antiviral. Bromelain dari nanas memiliki sifat anti-inflamasi yang mencegah dan memperpendek durasi infeksi. Semua terjaga utuh oleh teknologi cold press tanpa panas.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Sunrise%20Vital%20Cold%20Pressed%20Juice%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#fff3d0,#fde9a0)">🍯</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Superfood Herbal</div><div class="pc-nm">Madu Akasia + Bawang Dayak</div><div class="pc-tag">"Manis Alami Berpadu Kekuatan Herbal Kalimantan"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🍯 Enzim Aktif</span><span class="bt">🌿 Adaptogen</span><span class="bt">⚡ Energi</span><span class="bt">🛡️ Imun</span></div><p class="pc-ds">Madu akasia mengandung hidrogen peroksida alami dan defensin-1 (protein imun lebah) yang bersifat antibakteri dan antiviral kuat. Senyawa aktif bawang dayak memperkuat imunitas seluler. Kombinasi perlindungan imun berlapis yang aman untuk ibu hamil.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Madu%20Akasia%20%2B%20Bawang%20Dayak%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div></div></div>
+  </div>  <div class="tpanel" id="tp3">
+    <div class="fc">
+      <p class="fc-t"><span>🌙</span> Trimester Ketiga — Keluhan Anda</p>
+      <p class="fc-h">Pilih keluhan yang paling dominan Anda rasakan saat ini</p>
+      <div class="og" id="t3-og">
+        <button class="ob" onclick="selectO('t3','insomnia',this)"><div class="oi">🌙</div><div class="ot"><strong>Susah Tidur & Gelisah</strong><span>Posisi tidak nyaman, sering terbangun, pikiran penuh kekhawatiran menjelang persalinan</span></div><div class="ock">✓</div></button>
+        <button class="ob" onclick="selectO('t3','swollen',this)"><div class="oi">🦵</div><div class="ot"><strong>Kaki & Pergelangan Kaki Bengkak</strong><span>Edema pada kaki, tungkai terasa berat dan tidak nyaman</span></div><div class="ock">✓</div></button>
+        <button class="ob" onclick="selectO('t3','back',this)"><div class="oi">🔶</div><div class="ot"><strong>Nyeri Punggung & Panggul</strong><span>Sakit punggung bawah, panggul terasa berat, sulit berdiri lama</span></div><div class="ock">✓</div></button>
+        <button class="ob" onclick="selectO('t3','anxiety',this)"><div class="oi">💭</div><div class="ot"><strong>Cemas & Persiapan Mental Menjelang HPL</strong><span>Takut persalinan, overthinking, ingin relaksasi dan ketenangan</span></div><div class="ock">✓</div></button>
+      </div>
+      <div class="vm" id="vm-t3"><span>⚠️</span> Mohon pilih keluhan Anda terlebih dahulu.</div>
+      <button class="sub" onclick="showPR('t3')"><span>✦</span> Lihat Rekomendasi Saya</button>
+    </div>
+    <div class="rs" id="rs-t3"><div id="res-t3-insomnia" style="display:none"><div class="tb"><div class="tbl">✦ Tips Klinis Kebidanan — Trimester 3</div><h3>Mengatasi Insomnia Trimester Akhir</h3><p>Perut besar, gerakan bayi aktif, sering BAK malam, dan kecemasan menyambut persalinan — semua bertemu dan membuat tidur menjadi tantangan besar.</p><ul class="tl3"><li>Tidur miring kiri (left lateral position) — posisi terbaik untuk sirkulasi ibu dan plasenta</li><li>Gunakan bantal hamil di antara lutut dan di bawah perut</li><li>Batasi minum 2 jam sebelum tidur untuk mengurangi frekuensi BAK malam</li><li>Ritual mandi air hangat 30 menit sebelum tidur memicu kantuk alami</li><li>Flavonoid alami dari herbal membantu menenangkan sistem saraf untuk tidur lebih nyenyak</li></ul></div><div class="rl"><div class="rll"></div><div class="rlt">✦ Rekomendasi Produk RSB Wellness</div><div class="rlr"></div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#ede7f6,#d1c4e9)">💜</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Varian Kalimantan</div><div class="pc-nm">Kombucha Telang</div><div class="pc-tag">"Clitoria ternatea: Ungu Alami dari Bumi Borneo"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🧘 Anxiolitik</span><span class="bt">💜 Flavonoid</span><span class="bt">🧠 Saraf</span><span class="bt">🌙 Menenangkan</span></div><p class="pc-ds">Bunga telang (Clitoria ternatea) mengandung flavonoid yang berinteraksi dengan reseptor GABA di otak untuk efek penenang alami — membantu ibu hamil trimester 3 lebih mudah masuk ke fase tidur dan tidur lebih berkualitas. Nikmati hangat di malam hari sebagai ritual relaksasi sebelum tidur.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Kombucha%20Telang%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#fff3d0,#fde9a0)">🍯</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Superfood Herbal</div><div class="pc-nm">Madu Akasia + Bawang Dayak</div><div class="pc-tag">"Manis Alami Berpadu Kekuatan Herbal Kalimantan"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🍯 Enzim Aktif</span><span class="bt">🌿 Adaptogen</span><span class="bt">⚡ Energi</span><span class="bt">🛡️ Imun</span></div><p class="pc-ds">Madu sebelum tidur mengisi glikogen hati yang mencegah otak 'lapar' di tengah malam. Kandungan tryptophan mendukung produksi serotonin dan melatonin alami. Padukan dengan Kombucha Telang hangat untuk ritual malam yang sempurna.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Madu%20Akasia%20%2B%20Bawang%20Dayak%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div></div><div id="res-t3-swollen" style="display:none"><div class="tb"><div class="tbl">✦ Tips Klinis Kebidanan — Trimester 3</div><h3>Mengatasi Kaki Bengkak (Edema Kehamilan)</h3><p>Edema ringan di kaki trimester 3 adalah normal — akibat peningkatan volume darah dan rahim yang menekan pembuluh darah balik. Namun perlu dipantau!</p><ul class="tl3"><li>Elevasi kaki: angkat 15–20 cm di atas jantung, 2–3× sehari selama 20 menit</li><li>Hindari duduk atau berdiri terlalu lama dalam satu posisi</li><li>Gunakan stocking kompresi ringan untuk membantu sirkulasi vena balik</li><li>Kurangi garam berlebihan yang memperburuk retensi cairan</li><li>Rendam kaki dalam air hangat dengan sedikit garam Epsom sebelum tidur</li></ul><div class="wb"><strong>⚠️ Waspadai Pre-eklampsia:</strong>Segera ke bidan jika bengkak tiba-tiba parah, disertai sakit kepala hebat, pandangan kabur, atau nyeri ulu hati.</div></div><div class="rl"><div class="rll"></div><div class="rlt">✦ Rekomendasi Produk RSB Wellness</div><div class="rlr"></div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#ffebee,#ffcdd2)">❤️</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Cold Pressed Juice</div><div class="pc-nm">Ruby Boost</div><div class="pc-tag">"Pineapple • Beet • Ginger — Power Merah"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">💪 Stamina</span><span class="bt">❤️ Nitrat Alami</span><span class="bt">🩸 Zat Besi</span><span class="bt">🔥 Sirkulasi</span></div><p class="pc-ds">Nitrat alami dalam bit merah mendorong produksi nitric oxide yang melebarkan pembuluh darah dan meningkatkan sirkulasi perifer — membantu mengurangi penumpukan cairan di ekstremitas. Jahe bersifat anti-inflamasi yang membantu mengurangi pembengkakan jaringan secara alami.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Ruby%20Boost%20Cold%20Pressed%20Juice%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#f5f5f5,#e8e8e8)">🫙</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Skincare Organik</div><div class="pc-nm">Tallow Balm</div><div class="pc-tag">"Tersertifikasi Organik — Pelembap Terdalam Alami"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">💧 Hidrasi Intensif</span><span class="bt">🌿 Organik</span><span class="bt">🌸 Kulit Sensitif</span><span class="bt">🛡️ Skin Barrier</span></div><p class="pc-ds">Gunakan Tallow Balm sebagai media pijat kaki dari jari ke betis dengan gerakan melingkar lembut untuk membantu drainase limfatik alami. Asam lemak alaminya meresap jauh ke dalam kulit, mengurangi ketegangan dan sensasi kaki berat, serta menjaga kelembapan kulit yang cenderung kering.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Tallow%20Balm%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div></div><div id="res-t3-back" style="display:none"><div class="tb"><div class="tbl">✦ Tips Klinis Kebidanan — Trimester 3</div><h3>Mengatasi Nyeri Punggung & Panggul</h3><p>Hormon relaxin melonggarkan ligamen panggul sebagai persiapan persalinan, sementara pusat gravitasi tubuh bergeser ke depan. Kombinasi ini menyebabkan nyeri punggung khas.</p><ul class="tl3"><li>Postur tegak saat duduk dan berdiri — bayangkan benang menarik kepala Anda ke atas</li><li>Senam kegel dan cat-cow stretch memperkuat otot dasar panggul</li><li>Kompres hangat di punggung bawah selama 15–20 menit untuk relaksasi otot</li><li>Hindari sepatu hak tinggi — gunakan alas kaki bersupport lengkung yang baik</li><li>Pijat prenatal oleh terapis bersertifikat sangat direkomendasikan di trimester 3</li></ul></div><div class="rl"><div class="rll"></div><div class="rlt">✦ Rekomendasi Produk RSB Wellness</div><div class="rlr"></div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#f5f5f5,#e8e8e8)">🫙</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Skincare Organik</div><div class="pc-nm">Tallow Balm</div><div class="pc-tag">"Tersertifikasi Organik — Pelembap Terdalam Alami"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">💧 Hidrasi Intensif</span><span class="bt">🌿 Organik</span><span class="bt">🌸 Kulit Sensitif</span><span class="bt">🛡️ Skin Barrier</span></div><p class="pc-ds">Tallow Balm bersertifikasi organik adalah media pijat prenatal ideal — bebas bahan kimia sintetis, meresap sempurna ke kulit tanpa bekas berminyak. Asam lemak alaminya membantu merelaksasi otot-otot tegang di area punggung bawah dan panggul. Minta pasangan pijat area punggung bawah dengan gerakan melingkar lembut setiap malam.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Tallow%20Balm%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#fffde7,#fff9c4)">✨</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Cold Pressed Juice</div><div class="pc-nm">Golden Harmony</div><div class="pc-tag">"Pineapple • Pear • Ginger — Harmoni Pencernaan"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🍐 Alkaline</span><span class="bt">🍍 Bromelain</span><span class="bt">🔥 Anti-Inflamasi</span><span class="bt">🌱 Pencernaan</span></div><p class="pc-ds">Gingerol dalam jahe segar memiliki efek anti-inflamasi yang setara dengan ibuprofen namun jauh lebih aman untuk ibu hamil. Membantu mengurangi peradangan pada sendi dan ligamen panggul yang melonggar, serta meredakan nyeri otot punggung secara alami dari dalam.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Golden%20Harmony%20Cold%20Pressed%20Juice%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div></div><div id="res-t3-anxiety" style="display:none"><div class="tb"><div class="tbl">✦ Tips Klinis Kebidanan — Trimester 3</div><h3>Persiapan Mental Menjelang Persalinan</h3><p>Kecemasan menjelang HPL adalah respons perlindungan alami. Yang penting adalah mengkanalnya ke persiapan yang produktif.</p><ul class="tl3"><li>Ikuti kelas persiapan persalinan — pengetahuan adalah antidot terbaik untuk rasa takut</li><li>Teknik Pernapasan 4-7-8: tarik napas 4 hitungan, tahan 7, hembuskan 8 — praktikkan setiap hari</li><li>Diskusikan birth plan dengan bidan — memiliki rencana memberi rasa kontrol</li><li>Visualisasi positif: bayangkan persalinan lancar dan momen pertama bertemu buah hati</li><li>Senyawa alami bunga telang terbukti membantu memodulasi respons stres</li></ul></div><div class="rl"><div class="rll"></div><div class="rlt">✦ Rekomendasi Produk RSB Wellness</div><div class="rlr"></div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#ede7f6,#d1c4e9)">💜</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Varian Kalimantan</div><div class="pc-nm">Kombucha Telang</div><div class="pc-tag">"Clitoria ternatea: Ungu Alami dari Bumi Borneo"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🧘 Anxiolitik</span><span class="bt">💜 Flavonoid</span><span class="bt">🧠 Saraf</span><span class="bt">🌙 Menenangkan</span></div><p class="pc-ds">Di hari-hari mendebarkan menjelang HPL, Kombucha Telang menjadi teman setia untuk menenangkan pikiran yang terus berputar. Flavonoidnya membantu memodulasi respons stres saraf secara lembut, menstabilkan emosi, dan mendukung kualitas istirahat — mempersiapkan tubuh dan jiwa Anda untuk hari yang paling bersejarah.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Kombucha%20Telang%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#fff3d0,#fde9a0)">🍯</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Superfood Herbal</div><div class="pc-nm">Madu Akasia + Bawang Dayak</div><div class="pc-tag">"Manis Alami Berpadu Kekuatan Herbal Kalimantan"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🍯 Enzim Aktif</span><span class="bt">🌿 Adaptogen</span><span class="bt">⚡ Energi</span><span class="bt">🛡️ Imun</span></div><p class="pc-ds">Menjelang persalinan, tubuh membutuhkan cadangan energi dan imunitas prima. Kombinasi madu akasia (sumber energi cepat dan endurance) dengan senyawa adaptogenik bawang dayak membantu tubuh dan mental siap menghadapi persalinan dengan lebih percaya diri dan bertenaga.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Madu%20Akasia%20%2B%20Bawang%20Dayak%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div></div></div>
+  </div>
+</section><section class="qpanel" id="panel-labor">
+  <div class="phdr"><div class="phdr-ic">🌸</div><div class="phdr-tx"><h2>Fase Persalinan</h2><p>Persiapan jiwa & raga menyambut hari kelahiran buah hati</p></div></div>
+  <div class="fc">
+    <p class="fc-t"><span>🎯</span> Apa yang paling Anda butuhkan saat ini?</p>
+    <p class="fc-h">Pilih kondisi yang paling menggambarkan kebutuhan Anda menjelang persalinan</p>
+    <div class="og" id="labor-og">
+      <button class="ob" onclick="selectO('labor','anxiety',this)"><div class="oi">🌬️</div><div class="ot"><strong>Menghindari Cemas Menjelang HPL</strong><span>Sudah >37 minggu, membutuhkan ketenangan & stabilitas emosi</span></div><div class="ock">✓</div></button>
+      <button class="ob" onclick="selectO('labor','energy',this)"><div class="oi">⚡</div><div class="ot"><strong>Membangun Stamina & Energi untuk Persalinan</strong><span>Ingin kondisi fisik optimal saat memasuki proses persalinan</span></div><div class="ock">✓</div></button>
+      <button class="ob" onclick="selectO('labor','ferment',this)"><div class="oi">🧪</div><div class="ot"><strong>Belajar Fermentasi Mandiri di Rumah</strong><span>Mengisi waktu menanti persalinan dengan kegiatan bermakna</span></div><div class="ock">✓</div></button>
+    </div>
+    <div class="vm" id="vm-labor"><span>⚠️</span> Mohon pilih keluhan Anda terlebih dahulu.</div>
+    <button class="sub" onclick="showSR('labor')"><span>✦</span> Lihat Rekomendasi Saya</button>
+  </div>
+  <div class="rs" id="rs-labor"><div id="res-labor-anxiety" style="display:none"><div class="tb"><div class="tbl">✦ Tips Klinis Kebidanan</div><h3>Relaksasi Menjelang Persalinan</h3><p>Deep breathing, hypnobirthing, dan diskusi birth plan adalah tiga strategi terbukti efektif mengurangi kecemasan persalinan.</p><ul class="tl3"><li>Pernapasan 4-4-8: Tarik 4 hitungan, tahan 4, hembuskan 8 — ulang 5× setiap saat</li><li>Visualisasikan persalinan yang lancar dan momen pertama menyentuh bayi Anda</li><li>Siapkan birth plan bersama bidan untuk rasa kontrol yang lebih besar</li><li>Skin-to-skin plan: rencanakan kontak kulit langsung segera setelah bayi lahir</li></ul></div><div class="rl"><div class="rll"></div><div class="rlt">✦ Rekomendasi Produk RSB Wellness</div><div class="rlr"></div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#ede7f6,#d1c4e9)">💜</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Varian Kalimantan</div><div class="pc-nm">Kombucha Telang</div><div class="pc-tag">"Clitoria ternatea: Ungu Alami dari Bumi Borneo"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🧘 Anxiolitik</span><span class="bt">💜 Flavonoid</span><span class="bt">🧠 Saraf</span><span class="bt">🌙 Menenangkan</span></div><p class="pc-ds">Flavonoid bunga telang membantu menstabilkan sistem saraf, meredakan kecemasan berlebihan, dan mempersiapkan kondisi psikologis ibu untuk menghadapi persalinan dengan lebih tenang dan percaya diri.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Kombucha%20Telang%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#fff3d0,#fde9a0)">🍯</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Superfood Herbal</div><div class="pc-nm">Madu Akasia + Bawang Dayak</div><div class="pc-tag">"Manis Alami Berpadu Kekuatan Herbal Kalimantan"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🍯 Enzim Aktif</span><span class="bt">🌿 Adaptogen</span><span class="bt">⚡ Energi</span><span class="bt">🛡️ Imun</span></div><p class="pc-ds">Menjelang persalinan, tubuh membutuhkan cadangan energi prima. Madu akasia memberikan energi cepat dan senyawa adaptogenik bawang dayak membantu merespons stres dengan lebih seimbang.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Madu%20Akasia%20%2B%20Bawang%20Dayak%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div></div><div id="res-labor-energy" style="display:none"><div class="tb"><div class="tbl">✦ Tips Klinis Kebidanan</div><h3>Membangun Stamina Pra-Persalinan</h3><p>Persalinan membutuhkan endurance fisik seperti maraton. Persiapkan tubuh dengan nutrisi dan hidrasi optimal di minggu-minggu terakhir.</p><ul class="tl3"><li>Konsumsi karbohidrat kompleks 48 jam sebelum HPL sebagai 'carbo-loading'</li><li>Jaga hidrasi dengan baik — dehidrasi memperlambat kontraksi dan melemahkan tenaga</li><li>Kurma 6 butir per hari di minggu ke-36 terbukti membantu pematangan serviks</li><li>Antioksidan alami melindungi sel dari stres oksidatif selama persalinan yang intens</li></ul></div><div class="rl"><div class="rll"></div><div class="rlt">✦ Rekomendasi Produk RSB Wellness</div><div class="rlr"></div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#ffebee,#ffcdd2)">❤️</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Cold Pressed Juice</div><div class="pc-nm">Ruby Boost</div><div class="pc-tag">"Pineapple • Beet • Ginger — Power Merah"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">💪 Stamina</span><span class="bt">❤️ Nitrat Alami</span><span class="bt">🩸 Zat Besi</span><span class="bt">🔥 Sirkulasi</span></div><p class="pc-ds">Nitrat alami bit merah meningkatkan efisiensi oksigen otot hingga 16% — sangat bermanfaat untuk stamina fisik selama persalinan yang panjang. Kandungan zat besi membantu menjaga hemoglobin agar tidak drop saat persalinan.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Ruby%20Boost%20Cold%20Pressed%20Juice%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#fff3d0,#fde9a0)">🍯</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Superfood Herbal</div><div class="pc-nm">Madu Akasia + Bawang Dayak</div><div class="pc-tag">"Manis Alami Berpadu Kekuatan Herbal Kalimantan"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🍯 Enzim Aktif</span><span class="bt">🌿 Adaptogen</span><span class="bt">⚡ Energi</span><span class="bt">🛡️ Imun</span></div><p class="pc-ds">Glukosa dan fruktosa madu diserap langsung ke aliran darah tanpa perlu dicerna — ideal dikonsumsi saat kontraksi aktif untuk menjaga stamina. Banyak bidan merekomendasikan madu sebagai 'sport gel alami' selama persalinan.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Madu%20Akasia%20%2B%20Bawang%20Dayak%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div></div><div id="res-labor-ferment" style="display:none"><div class="tb"><div class="tbl">✦ Info Aktivitas Nesting</div><h3>Fermentasi Mandiri: Nesting yang Bermakna</h3><p>Masa nesting adalah waktu sempurna untuk memulai fermentasi kombucha sendiri. Prosesnya 7–14 hari — cocok mengisi masa penantian.</p><ul class="tl3"><li>Fokus pada proses fermentasi membantu mengalihkan pikiran dari kecemasan</li><li>Hasil kombucha buatan sendiri dapat dikonsumsi selama nifas dan menyusui</li><li>Bergabunglah dengan komunitas RSB Wellness untuk berbagi pengalaman</li></ul></div><div class="rl"><div class="rll"></div><div class="rlt">✦ Rekomendasi Produk RSB Wellness</div><div class="rlr"></div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#fff3c4,#fde9a0)">🧫</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — DIY Starter Kit</div><div class="pc-nm">SCOBY Starter Kit</div><div class="pc-tag">"Mulai Perjalanan Fermentasi Mandiri di Rumah"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🧫 SCOBY Aktif</span><span class="bt">🍶 Starter Liquid</span><span class="bt">📖 Panduan</span><span class="bt">🌱 DIY</span></div><p class="pc-ds">Kit lengkap berisi SCOBY mother culture berkualitas dan starter liquid fermentasi aktif. Panduan step-by-step dari RSB Wellness memastikan fermentasi pertama Anda berhasil — menghasilkan kombucha segar buatan sendiri yang siap dikonsumsi selama nifas dan menyusui.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20SCOBY%20Starter%20Kit%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div></div></div>
+</section><section class="qpanel" id="panel-postpartum">
+  <div class="phdr"><div class="phdr-ic">🍼</div><div class="phdr-tx"><h2>Nifas & Menyusui</h2><p>Panduan asuhan nifas berbasis Buku KIA (KF1–KF4)</p></div></div>
+  <div class="kia"><span class="kb">📋 KF1: Hari 1–2</span><span class="kb">📋 KF2: Hari 3–7</span><span class="kb">📋 KF3: Hari 8–28</span><span class="kb">📋 KF4: Hari 29–42</span></div>
+  <div class="fc">
+    <p class="fc-t"><span>💝</span> Keluhan apa yang sedang Anda alami?</p>
+    <p class="fc-h">Pilih satu keluhan paling dominan — kami siapkan panduan klinis dan rekomendasi produk yang tepat</p>
+    <div class="og" id="pp-og">
+      <button class="ob" onclick="selectO('pp','bleeding',this)"><div class="oi">🌹</div><div class="ot"><strong>Perdarahan / Lochia Berlebihan</strong><span>Darah nifas banyak, berbau, atau belum berhenti setelah 40 hari</span></div><div class="ock">✓</div></button>
+      <button class="ob" onclick="selectO('pp','wound',this)"><div class="oi">🩹</div><div class="ot"><strong>Nyeri & Perawatan Luka Perineum / SC</strong><span>Jahitan terasa nyeri, bengkak, atau kekhawatiran terhadap infeksi</span></div><div class="ock">✓</div></button>
+      <button class="ob" onclick="selectO('pp','engorged',this)"><div class="oi">🤱</div><div class="ot"><strong>Payudara Bengkak / ASI Tersumbat</strong><span>Payudara keras, nyeri, puting tersumbat sehingga ASI tidak mengalir lancar</span></div><div class="ock">✓</div></button>
+      <button class="ob" onclick="selectO('pp','milk',this)"><div class="oi">🍼</div><div class="ot"><strong>ASI Sedikit / Produksi Kurang Lancar</strong><span>Merasa ASI tidak cukup, bayi sering rewel setelah menyusu</span></div><div class="ock">✓</div></button>
+      <button class="ob" onclick="selectO('pp','constipation',this)"><div class="oi">🌿</div><div class="ot"><strong>Susah BAB (Konstipasi Pasca-Melahirkan)</strong><span>Belum BAB lebih dari 3 hari, perut kembung, BAB terasa sakit</span></div><div class="ock">✓</div></button>
+      <button class="ob" onclick="selectO('pp','insomnia',this)"><div class="oi">🌙</div><div class="ot"><strong>Susah Tidur & Kelelahan Ekstrem</strong><span>Tidak bisa tidur meski bayi tidur, tubuh sangat lelah</span></div><div class="ock">✓</div></button>
+      <button class="ob" onclick="selectO('pp','mood',this)"><div class="oi">🌧️</div><div class="ot"><strong>Baby Blues / Perubahan Emosi</strong><span>Mudah menangis tanpa sebab, sedih, cemas berlebihan</span></div><div class="ock">✓</div></button>
+      <button class="ob" onclick="selectO('pp','hormone',this)"><div class="oi">🌺</div><div class="ot"><strong>Pemulihan Rahim & Keseimbangan Hormon</strong><span>Ingin mempercepat involusi rahim dan menyeimbangkan hormon pasca-lahir</span></div><div class="ock">✓</div></button>
+    </div>
+    <div class="vm" id="vm-pp"><span>⚠️</span> Mohon pilih keluhan Anda terlebih dahulu.</div>
+    <button class="sub" onclick="showSR('pp')"><span>✦</span> Lihat Panduan & Rekomendasi</button>
+  </div>
+  <div class="rs" id="rs-pp"><div id="res-pp-bleeding" style="display:none"><div class="vb"><div class="vb-ic">📋</div><div class="vb-tx"><strong>KF1 (Hari 1–2) & KF2 (Hari 3–7)</strong>Pemantauan lochia adalah prioritas utama asuhan nifas dini di setiap kunjungan bidan.</div></div><div class="tb"><div class="tbl">✦ Panduan Asuhan Nifas — Lochia</div><h3>Memantau & Merawat Lochia</h3><p>Lochia rubra (merah, hari 1–4) → serosa (merah muda, hari 5–9) → alba (putih, hari 10–42) adalah proses normal.</p><ul class="tl3"><li>Ganti pembalut setiap 4–6 jam dan catat warna, bau, serta jumlahnya</li><li>Hindari aktivitas berat di minggu pertama</li><li>Konsumsi zat besi alami untuk memulihkan darah yang hilang</li><li>Antibakteri herbal membantu mencegah infeksi saluran reproduksi</li></ul><div class="wb"><strong>⚠️ Segera ke bidan:</strong>Lochia >1 pembalut/jam, berbau busuk, disertai demam >38°C, atau lochia merah kembali setelah sudah alba.</div></div><div class="rl"><div class="rll"></div><div class="rlt">✦ Rekomendasi Produk RSB Wellness</div><div class="rlr"></div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#fff8e7,#fde9a0)">🌾</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Heritage Kalimantan</div><div class="pc-nm">Kombucha Bawang Dayak</div><div class="pc-tag">"Eleutherine bulbosa: Warisan Leluhur Dayak"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🌺 Hormonal</span><span class="bt">🛡️ Antibakteri</span><span class="bt">💪 Pemulihan</span><span class="bt">🌿 Herbal</span></div><p class="pc-ds">Bawang Dayak (Eleutherine bulbosa) mengandung senyawa antibakteri dan antijamur yang membantu mencegah infeksi saluran reproduksi pasca-melahirkan. Flavonoid, saponin, dan alkaloidnya mendukung proses involusi rahim dan kondisi lochia yang lebih sehat.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Kombucha%20Bawang%20Dayak%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#fff3d0,#fde9a0)">🍯</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Superfood Herbal</div><div class="pc-nm">Madu Akasia + Bawang Dayak</div><div class="pc-tag">"Manis Alami Berpadu Kekuatan Herbal Kalimantan"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🍯 Enzim Aktif</span><span class="bt">🌿 Adaptogen</span><span class="bt">⚡ Energi</span><span class="bt">🛡️ Imun</span></div><p class="pc-ds">Madu murni membantu memulihkan energi dan gizi yang hilang pasca-persalinan sekaligus memperkuat imunitas. Kombinasi dengan ekstrak bawang dayak memberikan perlindungan antibakteri ganda untuk mendukung pemulihan yang lebih cepat dan aman.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Madu%20Akasia%20%2B%20Bawang%20Dayak%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div></div><div id="res-pp-wound" style="display:none"><div class="vb"><div class="vb-ic">📋</div><div class="vb-tx"><strong>KF1 (Hari 1–2) & KF2 (Hari 3–7)</strong>Pemantauan luka perineum/SC di setiap kunjungan nifas dini untuk deteksi dini infeksi.</div></div><div class="tb"><div class="tbl">✦ Panduan Asuhan Nifas — Perawatan Luka</div><h3>Perawatan Luka Perineum & SC</h3><p>Kebersihan dan perawatan yang benar adalah kunci penyembuhan luka yang cepat dan bebas komplikasi.</p><ul class="tl3"><li>Bersihkan dari depan ke belakang menggunakan air bersih setiap selesai BAK/BAB</li><li>Sitz bath air hangat 15 menit, 2–3×/hari untuk mengurangi nyeri dan bengkak</li><li>Untuk luka SC: jaga tetap kering dan bersih, hindari menggosok jahitan</li><li>Protein dan Vitamin C tinggi mempercepat regenerasi jaringan</li></ul><div class="wb"><strong>⚠️ Segera ke bidan:</strong>Luka semakin nyeri, kemerahan meluas, keluar cairan keruh berbau, atau jahitan terbuka.</div></div><div class="rl"><div class="rll"></div><div class="rlt">✦ Rekomendasi Produk RSB Wellness</div><div class="rlr"></div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#f5f5f5,#e8e8e8)">🫙</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Skincare Organik</div><div class="pc-nm">Tallow Balm</div><div class="pc-tag">"Tersertifikasi Organik — Pelembap Terdalam Alami"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">💧 Hidrasi Intensif</span><span class="bt">🌿 Organik</span><span class="bt">🌸 Kulit Sensitif</span><span class="bt">🛡️ Skin Barrier</span></div><p class="pc-ds">Tallow organik mengandung vitamin A dan D alami yang mempercepat regenerasi sel kulit. Asam lemak konjugasinya bersifat anti-inflamasi untuk mengurangi kemerahan dan bengkak area jahitan. Dapat dioleskan tipis di sekitar jahitan perineum (bukan pada luka terbuka) setelah sitz bath untuk mendukung penyembuhan. Bebas bahan kimia berbahaya — aman untuk area sensitif ibu nifas.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Tallow%20Balm%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#fff8e7,#fde9a0)">🌾</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Heritage Kalimantan</div><div class="pc-nm">Kombucha Bawang Dayak</div><div class="pc-tag">"Eleutherine bulbosa: Warisan Leluhur Dayak"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🌺 Hormonal</span><span class="bt">🛡️ Antibakteri</span><span class="bt">💪 Pemulihan</span><span class="bt">🌿 Herbal</span></div><p class="pc-ds">Konsumsi Kombucha Bawang Dayak secara oral memberikan perlindungan antibakteri dan antijamur dari dalam tubuh, membantu mencegah infeksi sistemik pada luka operasi atau jahitan perineum, serta mendukung proses regenerasi jaringan lebih cepat.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Kombucha%20Bawang%20Dayak%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div></div><div id="res-pp-engorged" style="display:none"><div class="vb"><div class="vb-ic">📋</div><div class="vb-tx"><strong>KF1 (Hari 1–2) & KF2 (Hari 3–7)</strong>Engorgement paling sering terjadi di hari ke-3 hingga ke-5 saat produksi ASI meningkat pesat.</div></div><div class="tb"><div class="tbl">✦ Panduan Asuhan Nifas — Payudara</div><h3>Mengatasi Engorgement & ASI Tersumbat</h3><p>Payudara bengkak adalah tanda ASI sedang produksi — kabar baik! Yang perlu dilakukan adalah memastikan ASI mengalir lancar.</p><ul class="tl3"><li>Susui lebih sering setiap 2–3 jam — ini adalah solusi utama</li><li>Kompres hangat sebelum menyusui 5 menit untuk membuka saluran ASI</li><li>Kompres dingin setelah menyusui untuk mengurangi bengkak dan nyeri</li><li>Breast massage: pijat lembut melingkar dari luar payudara ke arah puting</li><li>Pastikan latch benar — mulut bayi mencakup seluruh areola, bukan hanya puting</li></ul><div class="wb"><strong>⚠️ Waspadai Mastitis:</strong>Demam >38°C + payudara merah berbatas jelas + nyeri seperti terbakar → segera ke bidan.</div></div><div class="rl"><div class="rll"></div><div class="rlt">✦ Rekomendasi Produk RSB Wellness</div><div class="rlr"></div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#e8f0fe,#c7d2fa)">🤱</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Oil Massage Laktasi</div><div class="pc-nm">Asil Oil Massage</div><div class="pc-tag">"VCO • Fennel • Grapeseed • Lavender — For ASI Booster"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🤱 Buka Saluran ASI</span><span class="bt">🌸 Oksitosin</span><span class="bt">😌 Relaksasi</span><span class="bt">🌿 Fennel Oil</span></div><p class="pc-ds">Diformulasikan khusus untuk pijat laktasi! Fennel oil (minyak adas) secara tradisional dikenal sebagai galaktagog alami yang membantu membuka saluran ASI tersumbat. VCO sebagai base bersifat anti-inflamasi untuk meredakan payudara bengkak, lavender membantu relaksasi ibu agar let-down reflex lebih mudah terpicu. Pijat lembut melingkar dari luar payudara ke arah puting 5–10 menit sebelum menyusui.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Asil%20Oil%20Massage%20ASI%20Booster%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9)">🍵</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Varian Unggulan</div><div class="pc-nm">Kombucha Original</div><div class="pc-tag">"Classic Fermented Tea: Autentik, Segar, Menyehatkan"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🦠 Probiotik</span><span class="bt">💧 Hidrasi</span><span class="bt">🌱 Fermentasi Alami</span><span class="bt">⚡ Energi</span></div><p class="pc-ds">Hidrasi optimal dari kombucha mendukung volume produksi ASI, sementara probiotik aktif membantu menjaga kesehatan saluran pencernaan ibu yang berdampak pada kualitas ASI.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Kombucha%20Original%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div></div><div id="res-pp-milk" style="display:none"><div class="vb"><div class="vb-ic">📋</div><div class="vb-tx"><strong>KF2 (Hari 3–7) & KF3 (Hari 8–28)</strong>Produksi ASI kurang adalah keluhan tersering yang menyebabkan ibu berhenti menyusui dini. Dengan dukungan tepat, hampir semua ibu mampu ASI eksklusif.</div></div><div class="tb"><div class="tbl">✦ Panduan Asuhan Nifas — Produksi ASI</div><h3>Melancarkan & Meningkatkan Produksi ASI</h3><p>ASI bekerja berdasarkan prinsip supply and demand. Semakin sering dikosongkan, semakin banyak yang diproduksi.</p><ul class="tl3"><li>Susui atau pompa minimal 8–12× dalam 24 jam termasuk malam (jam 2–5 pagi = puncak prolaktin)</li><li>Minum minimal 2,5–3 liter cairan per hari</li><li>Skin-to-skin 30 menit per hari meningkatkan oksitosin secara signifikan</li><li>Hindari dot/empeng di bulan pertama untuk cegah bingung puting</li><li>Galaktagog alami: daun katuk, kacang-kacangan, oatmeal</li></ul></div><div class="rl"><div class="rll"></div><div class="rlt">✦ Rekomendasi Produk RSB Wellness</div><div class="rlr"></div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#e8f0fe,#c7d2fa)">🤱</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Oil Massage Laktasi</div><div class="pc-nm">Asil Oil Massage</div><div class="pc-tag">"VCO • Fennel • Grapeseed • Lavender — For ASI Booster"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🤱 Buka Saluran ASI</span><span class="bt">🌸 Oksitosin</span><span class="bt">😌 Relaksasi</span><span class="bt">🌿 Fennel Oil</span></div><p class="pc-ds">Pijat payudara rutin dengan Asil Oil mengandung VCO, fennel oil, grapeseed oil, dan lavender — membantu merangsang produksi oksitosin (hormon yang mengalirkan ASI) sekaligus merelaksasi ibu dari stres yang sering menjadi penyebab utama ASI seret. Lakukan pijat 10 menit sebelum menyusui untuk hasil maksimal.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Asil%20Oil%20Massage%20ASI%20Booster%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9)">🍵</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Varian Unggulan</div><div class="pc-nm">Kombucha Original</div><div class="pc-tag">"Classic Fermented Tea: Autentik, Segar, Menyehatkan"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🦠 Probiotik</span><span class="bt">💧 Hidrasi</span><span class="bt">🌱 Fermentasi Alami</span><span class="bt">⚡ Energi</span></div><p class="pc-ds">Probiotik aktif membantu mengoptimalkan penyerapan nutrisi di usus ibu menyusui. Semakin baik penyerapan nutrisi, semakin kaya kandungan gizi ASI — mendukung tumbuh kembang optimal si kecil dari dalam.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Kombucha%20Original%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#fce4ec,#f8bbd0)">🌺</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Varian Herbal</div><div class="pc-nm">Kombucha Rosella</div><div class="pc-tag">"Hibiscus sabdariffa: Merah Cantik, Kaya Antioksidan"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🍊 Vitamin C</span><span class="bt">🌸 Antosianin</span><span class="bt">🛡️ Imunitas</span><span class="bt">⚡ Vitalitas</span></div><p class="pc-ds">Rosella kaya Vitamin C alami dan antosianin membantu ibu menyusui menjaga vitalitas dan imunitas tubuh. Kandungan antioksidan tinggi melindungi sel selama masa menyusui yang intensif, sehingga kualitas ASI tetap terjaga optimal.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Kombucha%20Rosella%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div></div><div id="res-pp-constipation" style="display:none"><div class="vb"><div class="vb-ic">📋</div><div class="vb-tx"><strong>KF1 (Hari 1–2) & KF2 (Hari 3–7)</strong>Konstipasi pasca-melahirkan sangat umum — akibat anestesi, ketakutan mengejan, dehidrasi, atau kurang serat.</div></div><div class="tb"><div class="tbl">✦ Panduan Asuhan Nifas — Konstipasi</div><h3>Mengatasi Susah BAB Pasca-Melahirkan</h3><p>Belum BAB 2–3 hari pasca-melahirkan adalah normal, namun perlu segera diatasi agar tidak berlanjut.</p><ul class="tl3"><li>Minum air hangat segera setelah bangun tidur untuk merangsang gerak usus</li><li>Perbanyak serat: pepaya, pisang, bayam, dan biji-bijian</li><li>Jalan santai 5–10 menit membantu peristaltik usus</li><li>Probiotik alami membantu memulihkan ekosistem flora usus yang terganggu</li><li>Hindari menahan keinginan BAB</li></ul><div class="wb"><strong>⚠️ Segera ke bidan:</strong>Belum BAB lebih dari 5 hari, nyeri perut hebat, atau perdarahan saat BAB.</div></div><div class="rl"><div class="rll"></div><div class="rlt">✦ Rekomendasi Produk RSB Wellness</div><div class="rlr"></div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9)">🍋</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Cold Pressed Juice</div><div class="pc-nm">Tropical Cleanse</div><div class="pc-tag">"Pineapple • Lemon • Lemongrass • Ginger"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🌿 Detoks</span><span class="bt">🍍 Bromelain</span><span class="bt">🫙 Anti-Kembung</span><span class="bt">🔥 Jahe</span></div><p class="pc-ds">Bromelain dari nanas membantu melancarkan pencernaan, lemon merangsang enzim lambung, serai membuang gas berlebih, dan jahe merangsang peristaltik usus. Minuman paling efektif untuk mengatasi konstipasi pasca-melahirkan secara alami — aman untuk ibu menyusui.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Tropical%20Cleanse%20Cold%20Pressed%20Juice%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9)">🍵</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Varian Unggulan</div><div class="pc-nm">Kombucha Original</div><div class="pc-tag">"Classic Fermented Tea: Autentik, Segar, Menyehatkan"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🦠 Probiotik</span><span class="bt">💧 Hidrasi</span><span class="bt">🌱 Fermentasi Alami</span><span class="bt">⚡ Energi</span></div><p class="pc-ds">Probiotik aktif kombucha langsung membantu memulihkan ekosistem mikrobioma usus yang terganggu pasca-melahirkan. Asam organik dari fermentasi membantu melunakkan tinja secara alami dan merangsang peristaltik — tanpa perlu obat pencahar kimia yang mungkin masuk ke ASI.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Kombucha%20Original%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div></div><div id="res-pp-insomnia" style="display:none"><div class="vb"><div class="vb-ic">📋</div><div class="vb-tx"><strong>KF2 (Hari 3–7) & KF3 (Hari 8–28)</strong>Kelelahan dan gangguan tidur langsung memengaruhi produksi ASI dan kesehatan mental ibu nifas.</div></div><div class="tb"><div class="tbl">✦ Panduan Asuhan Nifas — Istirahat</div><h3>Mengatasi Kelelahan & Gangguan Tidur Nifas</h3><p>Tidur saat bayi tidur bukan sekadar saran klise — ini adalah strategi medis yang nyata.</p><ul class="tl3"><li>Tidur saat bayi tidur — pekerjaan rumah bisa menunggu, pemulihan Anda tidak bisa</li><li>Minta bantuan shift malam bergantian dengan pasangan atau keluarga</li><li>Matikan layar HP 30 menit sebelum tidur — cahaya biru mengganggu melatonin</li><li>Ritual minuman hangat menenangkan sebelum tidur membantu relaksasi lebih cepat</li></ul></div><div class="rl"><div class="rll"></div><div class="rlt">✦ Rekomendasi Produk RSB Wellness</div><div class="rlr"></div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#ede7f6,#d1c4e9)">💜</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Varian Kalimantan</div><div class="pc-nm">Kombucha Telang</div><div class="pc-tag">"Clitoria ternatea: Ungu Alami dari Bumi Borneo"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🧘 Anxiolitik</span><span class="bt">💜 Flavonoid</span><span class="bt">🧠 Saraf</span><span class="bt">🌙 Menenangkan</span></div><p class="pc-ds">Flavonoid bunga telang membantu ibu nifas masuk ke fase tidur lebih dalam dan restoratif di sela-sela waktu merawat bayi. Dikonsumsi hangat malam hari — ritual sederhana yang membuat perbedaan besar pada kualitas istirahat Anda.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Kombucha%20Telang%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#fff3d0,#fde9a0)">🍯</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Superfood Herbal</div><div class="pc-nm">Madu Akasia + Bawang Dayak</div><div class="pc-tag">"Manis Alami Berpadu Kekuatan Herbal Kalimantan"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🍯 Enzim Aktif</span><span class="bt">🌿 Adaptogen</span><span class="bt">⚡ Energi</span><span class="bt">🛡️ Imun</span></div><p class="pc-ds">Satu sendok madu sebelum tidur mengisi glikogen hati yang mencegah otak 'lapar' di tengah malam. Tryptophan dalam madu mendukung produksi melatonin alami. Padukan dengan Kombucha Telang hangat untuk ritual malam nifas yang sempurna.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Madu%20Akasia%20%2B%20Bawang%20Dayak%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div></div><div id="res-pp-mood" style="display:none"><div class="vb"><div class="vb-ic">📋</div><div class="vb-tx"><strong>KF1–KF4 (Seluruh Periode Nifas)</strong>Skrining kesehatan mental ibu adalah bagian wajib setiap kunjungan nifas berdasarkan Buku KIA.</div></div><div class="tb"><div class="tbl">✦ Panduan Asuhan Nifas — Kesehatan Mental</div><h3>Baby Blues & Kesehatan Emosional Ibu</h3><p>70–80% ibu mengalami baby blues di 2–3 hari pertama pasca-melahirkan. Ini bukan kelemahan — ini respons hormonal yang sangat nyata.</p><ul class="tl3"><li>Baby Blues (hari 2–14): Normal, biasanya membaik sendiri dengan dukungan yang tepat</li><li>Depresi Pasca-Melahirkan (>2 minggu): Lebih intens, perlu penanganan profesional</li><li>Ceritakan perasaan Anda — jangan memendam sendirian</li><li>Terima bantuan tanpa rasa bersalah — menerima bantuan adalah tanda kebijaksanaan</li></ul><div class="wb"><strong>⚠️ Segera hubungi bidan/psikolog:</strong>Kesedihan mendalam >2 minggu, tidak mau makan, pikiran menyakiti diri sendiri atau bayi.</div></div><div class="rl"><div class="rll"></div><div class="rlt">✦ Rekomendasi Produk RSB Wellness</div><div class="rlr"></div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#ede7f6,#d1c4e9)">💜</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Varian Kalimantan</div><div class="pc-nm">Kombucha Telang</div><div class="pc-tag">"Clitoria ternatea: Ungu Alami dari Bumi Borneo"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🧘 Anxiolitik</span><span class="bt">💜 Flavonoid</span><span class="bt">🧠 Saraf</span><span class="bt">🌙 Menenangkan</span></div><p class="pc-ds">Flavonoid bunga telang memiliki aktivitas ansiolitik dan antidepresan melalui modulasi neurotransmiter GABA. Membantu menstabilkan mood, mengurangi kecemasan berlebihan, dan mendukung kesehatan sistem saraf — pelengkap holistik di samping dukungan emosional dari orang tercinta.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Kombucha%20Telang%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#fff3d0,#fde9a0)">🍯</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Superfood Herbal</div><div class="pc-nm">Madu Akasia + Bawang Dayak</div><div class="pc-tag">"Manis Alami Berpadu Kekuatan Herbal Kalimantan"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🍯 Enzim Aktif</span><span class="bt">🌿 Adaptogen</span><span class="bt">⚡ Energi</span><span class="bt">🛡️ Imun</span></div><p class="pc-ds">Tryptophan dalam madu akasia adalah bahan baku serotonin — neurotransmiter kebahagiaan. Senyawa adaptogenik dari bawang dayak membantu tubuh merespons stres hormonal dengan lebih seimbang. Konsumsi pagi hari untuk memulai hari dengan mood yang lebih positif.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Madu%20Akasia%20%2B%20Bawang%20Dayak%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div></div><div id="res-pp-hormone" style="display:none"><div class="vb"><div class="vb-ic">📋</div><div class="vb-tx"><strong>KF3 (Hari 8–28) & KF4 (Hari 29–42)</strong>Bidan menilai involusi rahim, kondisi hormonal, dan kontrasepsi pasca-lahir di kunjungan KF3 dan KF4.</div></div><div class="tb"><div class="tbl">✦ Panduan Asuhan Nifas — Involusi</div><h3>Pemulihan Rahim & Keseimbangan Hormon</h3><p>Involusi rahim memerlukan waktu sekitar 6 minggu. Dukung proses ini dengan nutrisi dan herbal yang tepat.</p><ul class="tl3"><li>Menyusui langsung mempercepat involusi — oksitosin menyebabkan kontraksi rahim</li><li>Mobilisasi dini (6 jam pasca-lahir normal / 24 jam pasca-SC) mempercepat pemulihan</li><li>Protein, Vitamin C, dan zat besi untuk regenerasi jaringan</li><li>Diskusikan kontrasepsi pasca-lahir dengan bidan di KF4 untuk perencanaan keluarga bijak</li></ul></div><div class="rl"><div class="rll"></div><div class="rlt">✦ Rekomendasi Produk RSB Wellness</div><div class="rlr"></div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#fff8e7,#fde9a0)">🌾</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Heritage Kalimantan</div><div class="pc-nm">Kombucha Bawang Dayak</div><div class="pc-tag">"Eleutherine bulbosa: Warisan Leluhur Dayak"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🌺 Hormonal</span><span class="bt">🛡️ Antibakteri</span><span class="bt">💪 Pemulihan</span><span class="bt">🌿 Herbal</span></div><p class="pc-ds">Bawang Dayak digunakan turun-temurun perempuan Dayak untuk menjaga kesehatan hormonal pasca-melahirkan. Kaya flavonoid, saponin, dan alkaloid — aktif mendukung keseimbangan hormon estrogen dan progesteron, mempercepat involusi rahim, bersifat antibakteri dan antijamur untuk pemulihan nifas yang menyeluruh.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Kombucha%20Bawang%20Dayak%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#fff3d0,#fde9a0)">🍯</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Superfood Herbal</div><div class="pc-nm">Madu Akasia + Bawang Dayak</div><div class="pc-tag">"Manis Alami Berpadu Kekuatan Herbal Kalimantan"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🍯 Enzim Aktif</span><span class="bt">🌿 Adaptogen</span><span class="bt">⚡ Energi</span><span class="bt">🛡️ Imun</span></div><p class="pc-ds">Kombinasi dua kekuatan herbal RSB Wellness: madu akasia sebagai sumber nutrisi komprehensif dan energi pemulihan, dipadukan dengan senyawa aktif bawang dayak sebagai penyeimbang hormonal alami. Duet terbaik untuk mempercepat pemulihan total di akhir masa nifas.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Madu%20Akasia%20%2B%20Bawang%20Dayak%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div></div></div>
+</section><section class="qpanel" id="panel-baby">
+  <div class="phdr" style="background:linear-gradient(135deg,#fde8dc,var(--cream));border-color:#F0C4B0">
+    <div class="phdr-ic">👶</div>
+    <div class="phdr-tx">
+      <h2 style="color:#C05030">Perawatan Bayi</h2>
+      <p>Solusi alami untuk kesehatan dan kenyamanan si kecil</p>
+    </div>
+  </div>
+  <div class="fc">
+    <p class="fc-t"><span>👶</span> Apa yang sedang dialami bayi Anda?</p>
+    <p class="fc-h">Pilih kondisi yang paling sesuai dengan yang dialami si kecil saat ini</p>
+    <div class="og" id="baby-og">
+      <button class="ob" onclick="selectO('baby','colic',this)"><div class="oi">😭</div><div class="ot"><strong>Kolik — Bayi Rewel & Menangis Terus</strong><span>Bayi menangis >3 jam/hari, perut keras, kaki ditarik ke perut, sulit ditenangkan</span></div><div class="ock">✓</div></button>
+      <button class="ob" onclick="selectO('baby','immune',this)"><div class="oi">🛡️</div><div class="ot"><strong>Ingin Meningkatkan Imunitas Bayi</strong><span>Bayi mudah sakit, sering pilek/batuk, atau ingin menjaga daya tahan tubuh si kecil</span></div><div class="ock">✓</div></button>
+      <button class="ob" onclick="selectO('baby','skin',this)"><div class="oi">🌸</div><div class="ot"><strong>Kulit Bayi Kering / Ruam / Sensitif</strong><span>Kulit bayi terasa kering, muncul kemerahan atau ruam, kulit terkelupas</span></div><div class="ock">✓</div></button>
+    </div>
+    <div class="vm" id="vm-baby"><span>⚠️</span> Mohon pilih keluhan Anda terlebih dahulu.</div>
+    <button class="sub baby-btn" onclick="showSR('baby')"><span>✦</span> Lihat Rekomendasi untuk Si Kecil</button>
+  </div>
+  <div class="rs" id="rs-baby"><div id="res-baby-colic" style="display:none"><div class="tb baby-tb"><div class="tbl">✦ Panduan Klinis Bayi — Kolik</div><h3>Mengatasi Kolik pada Bayi</h3><p>Kolik biasanya muncul di usia 2–4 minggu dan memuncak di usia 6 minggu. Hampir selalu membaik sendiri di usia 3–4 bulan.</p><ul class="tl3"><li>Posisi tengkurap di pangkuan ibu (tummy time) sambil mengelus punggung bayi dengan lembut</li><li>Gerakan ritmis: ayunan, perjalanan mobil, atau suara mesin cuci sering ajaib menenangkan kolik</li><li>White noise (suara hujan, kipas angin) meniru suara dalam kandungan yang menenangkan</li><li>Pijat perut bayi searah jarum jam dengan lembut untuk membantu gas keluar</li><li>Minyak pijat herbal dengan bahan karminatif (anti gas) membantu meredakan kram perut bayi</li></ul></div><div class="rl"><div class="rll"></div><div class="rlt">✦ Rekomendasi Produk RSB Wellness</div><div class="rlr"></div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#fff3e0,#ffe0b2)">🍊</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Baby Care</div><div class="pc-nm">Oilic (Oil Massage)</div><div class="pc-tag">"For Kolik — Herbal Hangat untuk Perut Bayi"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">😌 Anti-Kolik</span><span class="bt">🌿 Karminatif</span><span class="bt">🍊 Rempah Hangat</span><span class="bt">💆 Pijat Perut</span></div><p class="pc-ds">Diformulasikan dari rempah-rempah hangat (kayu manis, kembang lawang, jeruk, jahe) yang bersifat karminatif — membantu membuang gas berlebih penyebab kram perut kolik. Minyak kelapa sebagai base memastikan formula lembut dan aman untuk kulit bayi sensitif. Cara pakai: oleskan tipis di perut bayi dan pijat melingkar searah jarum jam selama 5–10 menit, 2–3× sehari terutama setelah mandi pagi.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Oilic%20Oil%20Massage%20For%20Kolik%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div></div><div id="res-baby-immune" style="display:none"><div class="tb baby-tb"><div class="tbl">✦ Panduan Klinis Bayi — Imunitas</div><h3>Memperkuat Imunitas Bayi Secara Alami</h3><p>Sistem imun bayi berkembang bertahap. ASI eksklusif adalah vaksin alami terbaik, namun pijat bayi rutin terbukti klinis meningkatkan aktivitas sel NK dan respons imun.</p><ul class="tl3"><li>ASI eksklusif 6 bulan pertama — sumber antibodi, probiotik, dan prebiotik terlengkap</li><li>Pijat bayi rutin meningkatkan kadar serotonin yang mendukung aktivitas imun seluler</li><li>Paparan sinar matahari pagi 10–15 menit untuk produksi Vitamin D alami</li><li>Jaga kebersihan lingkungan tanpa obsesi steril berlebihan — paparan bakteri baik penting untuk perkembangan imun</li><li>Minyak pijat dengan bahan imunostimulan alami mendukung pertahanan kulit sebagai barrier pertama imun</li></ul></div><div class="rl"><div class="rll"></div><div class="rlt">✦ Rekomendasi Produk RSB Wellness</div><div class="rlr"></div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#ede7f6,#d1c4e9)">🍇</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Baby Care</div><div class="pc-nm">Imunil (Oil Massage)</div><div class="pc-tag">"VCO • Grapeseed • Jahe • Serai — For Imunitas"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">🛡️ Imun Booster</span><span class="bt">🥥 VCO</span><span class="bt">🍇 Grapeseed</span><span class="bt">🌿 Serai & Jahe</span></div><p class="pc-ds">Mengandung VCO (kaya asam laurat dengan efek antiviral dan antibakteri), grapeseed oil (kaya OPC antioksidan kuat), jahe (imunostimulan alami), dan serai (antimikroba). Pijat seluruh tubuh bayi 10–15 menit setiap hari setelah mandi pagi — tidak hanya memberikan sentuhan kasih sayang, tetapi aktif mendukung sistem pertahanan tubuh si kecil dari luar ke dalam.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Imunil%20Oil%20Massage%20For%20Imunitas%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div></div><div id="res-baby-skin" style="display:none"><div class="tb baby-tb"><div class="tbl">✦ Panduan Klinis Bayi — Kulit</div><h3>Merawat Kulit Bayi yang Sensitif</h3><p>Kulit bayi 5× lebih tipis dari kulit dewasa dan jauh lebih rentan kehilangan kelembapan. Rutinitas perawatan kulit yang tepat adalah kunci.</p><ul class="tl3"><li>Mandi dengan air hangat (bukan panas) maksimal 10 menit untuk mencegah kulit kering</li><li>Gunakan sabun bayi pH netral tanpa SLS/SLES dan pewangi sintetis</li><li>Segera moisturize setelah mandi selagi kulit masih sedikit lembap untuk mengunci kelembapan</li><li>Pakaikan bahan 100% katun untuk meminimalkan gesekan dan iritasi kulit</li><li>Bahan alami dengan profil lemak mirip kulit manusia meresap lebih baik dari pelembap sintetis</li></ul></div><div class="rl"><div class="rll"></div><div class="rlt">✦ Rekomendasi Produk RSB Wellness</div><div class="rlr"></div></div><div class="pc">
+<div class="pc-hd"><div class="pc-em" style="background:linear-gradient(135deg,#f5f5f5,#e8e8e8)">🫙</div>
+<div class="pc-tg"><div class="pc-var">RSB Wellness — Skincare Organik</div><div class="pc-nm">Tallow Balm</div><div class="pc-tag">"Tersertifikasi Organik — Pelembap Terdalam Alami"</div></div></div>
+<div class="pc-gb"></div>
+<div class="pc-bd"><div class="bts"><span class="bt">💧 Hidrasi Intensif</span><span class="bt">🌿 Organik</span><span class="bt">🌸 Kulit Sensitif</span><span class="bt">🛡️ Skin Barrier</span></div><p class="pc-ds">Tallow Balm bersertifikasi organik adalah pilihan terbaik untuk kulit bayi sensitif. Profil asam lemaknya (palmitic, stearic, oleic, linoleic) hampir identik dengan lemak kulit manusia — diserap sempurna tanpa menyumbat pori. Kaya vitamin A (retinol alami) dan D untuk regenerasi sel kulit, menenangkan kemerahan dan ruam iritasi, serta membentuk lapisan perlindungan alami tahan lama. Bebas 100% bahan kimia sintetis, pewangi, dan pengawet buatan.</p>
+<a class="wa" href="https://wa.me/6287791299376?text=Halo%20Admin%20RSB%20Wellness%2C%20saya%20tertarik%20memesan%20Tallow%20Balm%20setelah%20mencoba%20Maternal%20Journey%20App." target="_blank" rel="noopener"><span>💬</span> Pesan via WhatsApp</a>
+</div></div></div></div>
+</section></div><div class="cwrap">
+  <div class="cb">
+    <div class="cb-ic">👩‍⚕️</div>
+    <h3>Butuh Pendampingan Lebih Lanjut?</h3>
+    <p>Konsultasikan kondisi kehamilan, persalinan, nifas, atau kesehatan bayi Anda bersama <strong style="color:var(--gold-lt)">Bidan Ahli RSB Wellness</strong>. Kami siap mendampingi dengan sepenuh hati.</p>
+    <a class="cb-btn" href="https://wa.me/6287791299376?text=Halo%20Bidan%20RSB%20Wellness%2C%20saya%20ingin%20berkonsultasi%20mengenai%20kesehatan%20maternal%20saya." target="_blank" rel="noopener"><span>💬</span> Hubungi Bidan RSB Wellness via WhatsApp</a>
+  </div>
+</div>
+<footer class="ft">
+  <div class="ft-logo">RSB Wellness</div>
+  <div class="ft-gold">✦ Kalimantan Herbal · Nature & Wellness ✦</div>
+  <p>Fermentasi Alami · Cold Pressed Juice · Madu Herbal · Oil Massage · Tallow Balm<br/>Sehat dari Dalam, Berdaya dari Komunitas<br/><br/><em>Aplikasi ini bersifat informatif &amp; edukatif berbasis standar asuhan kebidanan Buku KIA.<br/>Selalu konsultasikan kondisi kesehatan Anda dengan tenaga kesehatan profesional.</em></p>
+</footer><script>
+const S={phase:null,tri:null,t1:null,t2:null,t3:null,labor:null,pp:null,baby:null};
+
+function showPhase(p){
+  document.querySelectorAll(".tab").forEach(t=>{t.classList.remove("active");t.setAttribute("aria-selected","false")});
+  const tab=document.getElementById("tab-"+p);
+  if(tab){tab.classList.add("active");tab.setAttribute("aria-selected","true")}
+  document.querySelectorAll(".qpanel").forEach(q=>{
+    q.classList.remove("visible");
+    setTimeout(()=>{if(!q.classList.contains("visible"))q.style.display="none"},350)
+  });
+  const panel=document.getElementById("panel-"+p);
+  if(panel){panel.style.display="block";requestAnimationFrame(()=>requestAnimationFrame(()=>panel.classList.add("visible")))}
+  S.phase=p;
+  if(p==="pregnancy"&&!S.tri)showTri(1);
+  setTimeout(()=>panel&&panel.scrollIntoView({behavior:"smooth",block:"start"}),100)
+}
+
+function showTri(n){
+  [1,2,3].forEach(i=>{
+    const b=document.getElementById("tnav-"+i),p=document.getElementById("tp"+i);
+    if(b)b.classList.remove("act");
+    if(p){p.classList.remove("vis");setTimeout(()=>{if(!p.classList.contains("vis"))p.style.display="none"},300)}
+  });
+  const ab=document.getElementById("tnav-"+n),ap=document.getElementById("tp"+n);
+  if(ab)ab.classList.add("act");
+  if(ap){ap.style.display="block";requestAnimationFrame(()=>requestAnimationFrame(()=>ap.classList.add("vis")))}
+  const rs=document.getElementById("rs-t"+n);
+  if(rs){rs.classList.remove("vis");rs.style.display="none"}
+  S.tri=n
+}
+
+function selectO(grp,val,btn){
+  const og=document.getElementById(grp+"-og");
+  if(og)og.querySelectorAll(".ob").forEach(b=>b.classList.remove("sel"));
+  btn.classList.add("sel");
+  S[grp]=val;
+  const vm=document.getElementById("vm-"+grp);
+  if(vm)vm.classList.remove("show")
+}
+
+function showPR(tk){
+  const val=S[tk],vm=document.getElementById("vm-"+tk);
+  if(!val){if(vm)vm.classList.add("show");return}
+  if(vm)vm.classList.remove("show");
+  const rs=document.getElementById("rs-"+tk);
+  rs.querySelectorAll("[id^=res-]").forEach(e=>e.style.display="none");
+  const t=document.getElementById("res-"+tk+"-"+val);
+  if(t)t.style.display="block";
+  rs.classList.remove("vis");rs.style.display="block";
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    rs.classList.add("vis");
+    setTimeout(()=>rs.scrollIntoView({behavior:"smooth",block:"start"}),80)
+  }))
+}
+
+function showSR(grp){
+  const val=S[grp],vm=document.getElementById("vm-"+grp);
+  if(!val){if(vm)vm.classList.add("show");return}
+  if(vm)vm.classList.remove("show");
+  const rs=document.getElementById("rs-"+grp);
+  rs.querySelectorAll("[id^=res-]").forEach(e=>e.style.display="none");
+  const t=document.getElementById("res-"+grp+"-"+val);
+  if(t)t.style.display="block";
+  rs.classList.remove("vis");rs.style.display="block";
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    rs.classList.add("vis");
+    setTimeout(()=>rs.scrollIntoView({behavior:"smooth",block:"start"}),80)
+  }))
+}
+
+document.addEventListener("DOMContentLoaded",()=>showPhase("pregnancy"));
+</script></body></html>

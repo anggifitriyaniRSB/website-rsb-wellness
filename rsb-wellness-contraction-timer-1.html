@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#4A5D4E">
+<title>RSB Wellness — Contraction Timer & Labor Companion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+  /* ===================== RESET & TOKENS ===================== */
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+
+  :root{
+    --cream:        #FDFBF7;
+    --lavender:      #E8DFF5;
+    --lavender-deep: #D2BFEC;
+    --lavender-line: #E2D5F2;
+    --sage:          #4A5D4E;
+    --sage-light:    #6E8573;
+    --sage-soft:     #DCE6DE;
+    --gold:          #D4AF37;
+    --gold-soft:     #F1E4BC;
+    --ink:           #332E3B;
+    --ink-muted:     #756F80;
+    --white:         #FFFFFF;
+    --danger:        #C23B3B;
+    --danger-soft:   #FBEAEA;
+    --danger-text:   #9C2B2B;
+    --radius:        12px;
+    --radius-sm:     8px;
+    --shadow:        0 4px 18px rgba(74,93,78,0.13);
+    --shadow-soft:   0 2px 10px rgba(74,93,78,0.08);
+    --ff-display:    'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    --ff-body:       'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  body{
+    font-family: var(--ff-body);
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,h2,h3{ font-family: var(--ff-display); margin: 0; color: var(--sage); }
+  button{ font-family: inherit; }
+  a{ color: var(--sage); }
+
+  :focus-visible{
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  /* ===================== LAYOUT SHELL ===================== */
+  .app{
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: var(--cream);
+    position: relative;
+    box-shadow: 0 0 40px rgba(74,93,78,0.06);
+  }
+
+  /* ----- Header ----- */
+  .app-header{
+    background: linear-gradient(160deg, var(--lavender) 0%, #F1E9FA 100%);
+    padding: 22px 20px 16px;
+    border-bottom: 1px solid var(--lavender-line);
+  }
+  .brand{ display:flex; align-items:center; gap:14px; }
+  .brand-mark{
+    flex: 0 0 auto;
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    border: 1.5px solid var(--gold);
+    background: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--ff-display);
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 0.5px;
+    color: var(--sage);
+  }
+  .brand-text h1{ font-size: 1.4rem; font-weight: 600; line-height: 1.1; }
+  .brand-text p{ margin: 3px 0 0; font-size: 0.78rem; color: var(--ink-muted); letter-spacing: 0.3px; }
+  .botanical-divider{ display:block; width: 100%; height: 16px; margin-top: 14px; }
+
+  /* ----- Tabs ----- */
+  .tabs{
+    position: sticky; top: 0; z-index: 30;
+    display: flex;
+    background: var(--white);
+    border-bottom: 1px solid var(--lavender-line);
+    box-shadow: var(--shadow-soft);
+  }
+  .tab-btn{
+    flex: 1 1 0;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    background: none; border: none;
+    padding: 10px 4px 9px;
+    cursor: pointer;
+    color: var(--ink-muted);
+    font-size: 0.7rem; font-weight: 500; letter-spacing: 0.2px;
+    position: relative;
+    transition: color .2s ease;
+  }
+  .tab-btn svg{ width: 21px; height: 21px; stroke: currentColor; transition: stroke .2s ease; }
+  .tab-btn.active{ color: var(--sage); }
+  .tab-btn.active::after{
+    content:""; position:absolute; bottom:0; left: 22%; right: 22%;
+    height: 3px; border-radius: 3px 3px 0 0; background: var(--gold);
+  }
+
+  /* ----- Content ----- */
+  .content{ padding: 18px 16px 96px; }
+  .tab-panel{ display:none; animation: fadeIn .35s ease; }
+  .tab-panel.active{ display:block; }
+  @keyframes fadeIn{ from{ opacity:0; transform: translateY(6px);} to{opacity:1; transform:none;} }
+
+  .section-title{ font-size: 1.05rem; font-weight: 600; margin-bottom: 4px; }
+  .section-lead{ font-size: 0.84rem; color: var(--ink-muted); margin: 0 0 16px; }
+
+  .card{
+    background: var(--white);
+    border: 1px solid var(--lavender-line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+    padding: 18px 16px;
+    margin-bottom: 16px;
+  }
+
+  /* ===================== MODE TENANG (TOGGLE) ===================== */
+  .mode-row{
+    display:flex; align-items:center; justify-content:space-between; gap: 12px;
+    background: var(--white);
+    border: 1px solid var(--lavender-line);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow-soft);
+  }
+  .mode-row .mode-text{ font-size: 0.84rem; font-weight: 600; color: var(--sage); }
+  .mode-row .mode-sub{ font-size: 0.7rem; color: var(--ink-muted); font-weight: 400; margin-top: 2px; }
+  .switch{ position:relative; width:46px; height:26px; flex:0 0 auto; }
+  .switch input{ opacity:0; width:0; height:0; position:absolute; }
+  .switch .slider{
+    position:absolute; inset:0; background: var(--lavender-deep);
+    border-radius:30px; cursor:pointer; transition:background .25s ease;
+  }
+  .switch .slider::before{
+    content:""; position:absolute; width:20px; height:20px; left:3px; top:3px;
+    background: var(--white); border-radius:50%; transition: transform .25s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  }
+  .switch input:checked + .slider{ background: var(--sage); }
+  .switch input:checked + .slider::before{ transform: translateX(20px); }
+
+  /* ===================== CALM OVERLAY (Screen Dimming) ===================== */
+  .calm-overlay{
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 500;
+    opacity: 0;
+    transition: opacity .8s ease;
+    background: radial-gradient(circle at 50% 32%, rgba(20,16,28,0) 0%, rgba(20,16,28,0) 28%, rgba(20,16,28,0.62) 80%);
+  }
+  .calm-overlay.active{ opacity: 1; }
+
+  /* ===================== TAB 1 — TIMER ===================== */
+  .timer-card{
+    background: linear-gradient(165deg, var(--lavender) 0%, var(--white) 120%);
+    text-align: center;
+  }
+
+  .contraction-btn{
+    width: 100%;
+    border: 2px solid var(--gold);
+    background: var(--sage);
+    color: var(--white);
+    font-family: var(--ff-body);
+    font-weight: 700;
+    font-size: 1.12rem;
+    letter-spacing: 0.4px;
+    padding: 22px 14px;
+    border-radius: 60px;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: transform .15s ease, background .25s ease;
+  }
+  .contraction-btn:active{ transform: scale(0.97); }
+  .contraction-btn.recording{
+    background: linear-gradient(135deg, var(--lavender-deep), var(--gold));
+    color: var(--ink);
+    animation: pulseGlow 1.6s ease-in-out infinite;
+  }
+  @keyframes pulseGlow{
+    0%,100%{ box-shadow: 0 0 0 0 rgba(212,175,55,0.45); }
+    50%{ box-shadow: 0 0 0 12px rgba(212,175,55,0); }
+  }
+
+  .live-timer{
+    margin-top: 14px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--sage);
+    min-height: 22px;
+    opacity: 0;
+    transition: opacity .2s ease;
+  }
+  .live-timer.visible{ opacity: 1; }
+
+  .calm-breath{ display:none; flex-direction:column; align-items:center; gap:10px; margin-top:16px; }
+  .timer-card.calm-active .calm-breath{ display:flex; }
+  .timer-card.calm-active .live-timer{ display:none; }
+  .calm-breath-circle{
+    width: 104px; height: 104px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, var(--gold-soft), var(--sage-light));
+    box-shadow: 0 0 0 8px rgba(255,255,255,0.55), var(--shadow);
+    animation: breathe 8s ease-in-out infinite;
+  }
+  @keyframes breathe{
+    0%   { transform: scale(0.82); }
+    50%  { transform: scale(1.18); }
+    100% { transform: scale(0.82); }
+  }
+  .calm-breath-label{ font-size: 0.85rem; font-weight: 600; color: var(--sage); min-height: 20px; }
+  @media (prefers-reduced-motion: reduce){
+    .calm-breath-circle, .breath-circle{ animation: none; }
+  }
+
+  .safety-note{
+    margin-top: 14px;
+    font-size: 0.76rem;
+    color: var(--ink-muted);
+    font-style: italic;
+    line-height: 1.5;
+    border-top: 1px dashed var(--lavender-line);
+    padding-top: 12px;
+    text-align: left;
+  }
+
+  .reset-btn{
+    margin-top: 12px;
+    background: none;
+    border: 1px solid var(--sage-light);
+    color: var(--sage);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 9px 18px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background .2s ease;
+  }
+  .reset-btn:hover{ background: var(--sage-soft); }
+
+  /* ----- Generic expand/collapse info alert system ----- */
+  .info-alert{
+    margin-top: 16px;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height .4s ease, opacity .4s ease;
+    border-radius: var(--radius);
+  }
+  .info-alert.show{ max-height: 600px; opacity: 1; }
+  .info-alert-inner{ border-radius: var(--radius); padding: 16px 14px; text-align: left; }
+  .info-alert-inner p{ margin: 0 0 12px; font-size: 0.86rem; line-height: 1.5; }
+  .info-alert-inner p:last-child{ margin-bottom: 0; }
+  .tone-gold{ background: var(--sage-soft); border-left: 4px solid var(--gold); color: var(--sage); }
+  .tone-lavender{ background: var(--lavender); border-left: 4px solid var(--sage-light); color: var(--sage); }
+  .tone-soft{ background: #FAF7FD; border-left: 4px solid var(--lavender-deep); color: var(--ink-muted); font-style: italic; }
+
+  .alert-cta{
+    display: inline-block;
+    background: var(--sage);
+    color: var(--white);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 30px;
+  }
+
+  .ketuban-warning{
+    margin-top: 16px;
+    background: var(--danger-soft);
+    border: 1.5px solid var(--danger);
+    border-left: 5px solid var(--danger);
+    border-radius: var(--radius);
+    padding: 16px 14px;
+  }
+  .ketuban-warning p{ margin: 0 0 12px; color: var(--danger-text); font-weight: 700; font-size: 0.85rem; line-height: 1.55; }
+  .ketuban-warning .alert-cta{ background: var(--danger); }
+
+  .btn-row{ display:flex; gap:10px; margin-top: 6px; }
+  .btn-choice{
+    flex:1; padding:10px 8px; border-radius:30px;
+    border:1.5px solid var(--sage); background: var(--white); color: var(--sage);
+    font-weight:600; font-size:0.82rem; cursor:pointer;
+  }
+  .btn-choice.primary{ background: var(--sage); color: var(--white); }
+
+  .table-wrap{
+    margin-top: 18px;
+    max-height: 260px;
+    overflow-y: auto;
+    border: 1px solid var(--lavender-line);
+    border-radius: var(--radius-sm);
+  }
+  table.history-table{ width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  .history-table thead th{
+    position: sticky; top: 0;
+    background: var(--lavender); color: var(--sage); font-weight: 600;
+    padding: 9px 6px; text-align: center; border-bottom: 1px solid var(--lavender-line);
+  }
+  .history-table tbody td{ padding: 8px 6px; text-align: center; border-bottom: 1px solid var(--lavender-line); }
+  .history-table tbody tr:nth-child(even){ background: #FBF8FE; }
+
+  .badge{ display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; }
+  .badge.status-good{ background: var(--gold-soft); color: #8A6A14; }
+  .badge.status-neutral{ background: var(--lavender); color: var(--sage-light); }
+  .badge.status-auto{ background: var(--lavender-deep); color: var(--white); }
+
+  .empty-state{ text-align: left; font-size: 0.8rem; color: var(--ink-muted); padding: 14px 4px 2px; }
+
+  /* ===================== ACCORDIONS (Tab 2) ===================== */
+  details.accordion{
+    border: 1px solid var(--lavender-line); border-radius: var(--radius);
+    margin-bottom: 12px; background: var(--white); overflow: hidden;
+  }
+  details.accordion summary{
+    list-style: none; cursor: pointer; padding: 14px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--lavender); font-weight: 600; font-size: 0.92rem; color: var(--sage);
+  }
+  details.accordion summary::-webkit-details-marker{ display:none; }
+  .accordion-sub{ display:block; font-size: 0.7rem; font-weight: 400; color: var(--sage-light); margin-top: 2px; }
+  .chevron{ flex: 0 0 auto; width: 18px; height: 18px; stroke: var(--sage); transition: transform .25s ease; margin-left: 10px; }
+  details.accordion[open] .chevron{ transform: rotate(180deg); }
+  .accordion-body{ padding: 16px; font-size: 0.86rem; }
+
+  .clinical-note{
+    background: var(--sage-soft); border-left: 3px solid var(--sage); border-radius: var(--radius-sm);
+    padding: 10px 12px; font-size: 0.8rem; color: var(--sage); margin: 0 0 14px;
+  }
+  .warning-callout{
+    background: var(--gold-soft); border-left: 3px solid var(--gold); border-radius: var(--radius-sm);
+    padding: 10px 12px; font-size: 0.8rem; color: #8A6A14; margin: 0 0 14px;
+  }
+
+  ul.guide-list{ margin: 0; padding-left: 18px; }
+  ul.guide-list li{ margin-bottom: 12px; }
+  ul.guide-list li::marker{ color: var(--gold); }
+  ul.guide-list li:last-child{ margin-bottom: 0; }
+
+  .breath-widget{ display: flex; flex-direction: column; align-items: center; gap: 10px; margin: 14px 0 16px; padding: 16px 0; }
+  .breath-circle{
+    width: 96px; height: 96px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, var(--lavender-deep), var(--sage-light));
+    box-shadow: 0 0 0 6px var(--lavender), var(--shadow);
+    animation: breathe 8s ease-in-out infinite;
+  }
+  .breath-label{ font-size: 0.8rem; font-weight: 600; color: var(--sage); text-align: center; min-height: 20px; }
+
+  /* ===================== TAB 3 — HUSBAND ===================== */
+  .husband-item{
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px 4px; border-bottom: 1px solid var(--lavender-line); cursor: pointer;
+  }
+  .husband-item:last-child{ border-bottom: none; }
+  .husband-item input[type="checkbox"]{ margin-top: 3px; width: 20px; height: 20px; accent-color: var(--sage); cursor: pointer; flex: 0 0 auto; }
+  .husband-item .item-title{ font-weight: 600; font-size: 0.9rem; color: var(--ink); margin-bottom: 3px; }
+  .husband-item .item-text{ font-size: 0.83rem; color: var(--ink-muted); }
+  .husband-item.checked .item-title, .husband-item.checked .item-text{ text-decoration: line-through; opacity: 0.55; }
+  .quote-bubble{
+    display:block; margin-top: 6px; font-style: italic; font-size: 0.82rem; color: var(--sage);
+    background: var(--lavender); border-radius: var(--radius-sm); padding: 8px 10px;
+  }
+  .section-subtitle{
+    font-size: 0.78rem; color: var(--ink-muted); margin: 0 0 12px; font-weight: 600; letter-spacing: 0.3px;
+  }
+
+  /* ===================== TAB 4 — CHECKLIST ===================== */
+  .progress-wrap{ margin-bottom: 18px; }
+  .progress-bar{ width: 100%; height: 10px; background: var(--lavender); border-radius: 20px; overflow: hidden; }
+  .progress-fill{
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, var(--sage), var(--gold));
+    border-radius: 20px; transition: width .35s ease;
+  }
+  .progress-label{ font-size: 0.78rem; color: var(--ink-muted); margin-top: 6px; text-align: right; }
+
+  .category-note{
+    font-size: 0.78rem; color: var(--ink-muted); font-style: italic;
+    background: #FAF7FD; border-radius: var(--radius-sm); padding: 9px 11px; margin-bottom: 12px;
+  }
+  .subgroup-label{
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
+    color: var(--gold); margin: 14px 0 6px;
+  }
+  .subgroup-label:first-of-type{ margin-top: 2px; }
+
+  label.checklist-item{
+    display: flex; align-items: flex-start; gap: 11px;
+    padding: 9px 4px; border-bottom: 1px solid var(--lavender-line); cursor: pointer;
+  }
+  label.checklist-item:last-child{ border-bottom: none; }
+  label.checklist-item input[type="checkbox"]{ margin-top: 2px; width: 21px; height: 21px; accent-color: var(--sage); cursor: pointer; flex: 0 0 auto; }
+  label.checklist-item .item-text{ font-size: 0.83rem; color: var(--ink); }
+  label.checklist-item.checked .item-text{ text-decoration: line-through; color: var(--ink-muted); opacity: 0.7; }
+
+  .emergency-toggle-btn{
+    width: 100%; padding: 14px; border-radius: 30px;
+    border: 2px solid var(--danger); background: var(--danger-soft); color: var(--danger-text);
+    font-weight: 700; font-size: 0.88rem; cursor: pointer; margin-bottom: 16px;
+    transition: background .2s ease, color .2s ease;
+  }
+  .emergency-toggle-btn.active{ background: var(--danger); color: var(--white); }
+
+  .main-checklist-wrap.hidden{ display:none; }
+  .emergency-wrap{ display:none; }
+  .emergency-wrap.show{ display:block; }
+
+  label.emergency-item{
+    display: flex; align-items: flex-start; gap: 11px;
+    border: 1px solid #F0C9C9; background: #FFFBFB;
+    border-radius: var(--radius-sm); padding: 12px 12px; margin-bottom: 10px; cursor: pointer;
+  }
+  label.emergency-item:last-child{ margin-bottom: 0; }
+  label.emergency-item input[type="checkbox"]{ width: 22px; height: 22px; accent-color: var(--danger); margin-top: 2px; flex: 0 0 auto; }
+  label.emergency-item .item-text{ font-size: 0.85rem; color: var(--ink); font-weight: 500; }
+  label.emergency-item.checked .item-text{ text-decoration: line-through; opacity: 0.6; }
+
+  /* ===================== BLADDER REMINDER MODAL ===================== */
+  .modal-backdrop{
+    position: fixed; inset: 0; background: rgba(51,46,59,0.55);
+    display: none; align-items: center; justify-content: center;
+    z-index: 1000; padding: 24px;
+  }
+  .modal-backdrop.open{ display: flex; }
+  .modal-card{
+    background: var(--white); border-radius: var(--radius); padding: 22px 18px;
+    max-width: 340px; text-align: center; box-shadow: var(--shadow);
+    border-top: 4px solid var(--gold);
+  }
+  .modal-card .modal-icon{ font-size: 1.8rem; margin-bottom: 8px; }
+  .modal-card p{ font-size: 0.88rem; color: var(--ink); line-height: 1.55; margin: 0 0 16px; }
+  .modal-ok-btn{
+    background: var(--sage); color: var(--white); border: none; border-radius: 30px;
+    padding: 10px 22px; font-weight: 600; font-size: 0.84rem; cursor: pointer;
+  }
+
+  /* ===================== BOTTOM EMERGENCY FOOTER ===================== */
+  .emergency-footer{
+    position: fixed; bottom: 0; left: 0; right: 0; margin: 0 auto; max-width: 480px;
+    background: var(--sage); color: var(--white);
+    padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    z-index: 40; box-shadow: 0 -4px 14px rgba(0,0,0,0.12);
+  }
+  .emergency-footer p{ margin: 0; font-size: 0.72rem; line-height: 1.3; opacity: 0.9; }
+  .emergency-footer a{
+    flex: 0 0 auto; background: var(--gold); color: var(--ink); text-decoration: none;
+    font-size: 0.76rem; font-weight: 700; padding: 9px 14px; border-radius: 24px; white-space: nowrap;
+  }
+
+  @media (min-width: 481px){ body{ background: var(--lavender); } }
+</style>
+</head>
+<body>
+
+<!-- ===================== CALM OVERLAY (decorative, click-through) ===================== -->
+<div class="calm-overlay" id="calmOverlay" aria-hidden="true"></div>
+
+<!-- ===================== BLADDER REMINDER MODAL ===================== -->
+<div class="modal-backdrop" id="bladderModal" role="dialog" aria-modal="true" aria-live="polite">
+  <div class="modal-card">
+    <div class="modal-icon">💧</div>
+    <p><strong>Pesan Bidan:</strong> Ibu sayang, yuk coba ke kamar mandi untuk buang air kecil sekarang. Kandung kemih yang kosong akan mengosongkan jalur panggul agar kepala si kecil turun dengan lancar.</p>
+    <button class="modal-ok-btn" id="bladderModalOk" type="button">Baik, Saya Mengerti</button>
+  </div>
+</div>
+
+<div class="app">
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-mark">RSB</div>
+      <div class="brand-text">
+        <h1>RSB Wellness</h1>
+        <p>Contraction Timer &amp; Labor Companion</p>
+      </div>
+    </div>
+    <svg class="botanical-divider" viewBox="0 0 320 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <line x1="0" y1="8" x2="130" y2="8" stroke="#D4AF37" stroke-width="1"/>
+      <path d="M150 8 Q156 1 162 8 Q156 15 150 8 Z" fill="#4A5D4E"/>
+      <path d="M140 8 Q146 2 152 8" stroke="#4A5D4E" stroke-width="1" fill="none"/>
+      <path d="M162 8 Q168 2 174 8" stroke="#4A5D4E" stroke-width="1" fill="none"/>
+      <line x1="190" y1="8" x2="320" y2="8" stroke="#D4AF37" stroke-width="1"/>
+    </svg>
+  </header>
+
+  <!-- ===================== TAB NAV ===================== -->
+  <nav class="tabs" role="tablist" aria-label="Menu utama">
+    <button class="tab-btn active" data-tab="timer" role="tab" aria-selected="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v5l3 2"/></svg>
+      Kontraksi
+    </button>
+    <button class="tab-btn" data-tab="ikhtiar" role="tab" aria-selected="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19c0-7.5 5.2-13.5 15-14.5-1 9.5-7.5 14.5-15 14.5Z"/><path d="M4.5 18.5c2-4.2 5.3-7.4 9.5-9.5"/></svg>
+      Ikhtiar
+    </button>
+    <button class="tab-btn" data-tab="suami" role="tab" aria-selected="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.2s-7.2-4.4-7.2-9.9a4.1 4.1 0 0 1 7.2-2.7 4.1 4.1 0 0 1 7.2 2.7c0 5.5-7.2 9.9-7.2 9.9Z"/></svg>
+      Suami
+    </button>
+    <button class="tab-btn" data-tab="checklist" role="tab" aria-selected="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M9 3.5h6v3H9z"/><path d="M8.5 13l2 2 4.5-4.5"/></svg>
+      Checklist
+    </button>
+  </nav>
+
+  <!-- ===================== CONTENT ===================== -->
+  <main class="content">
+
+    <!-- ============ TAB 1 : PENGHITUNG KONTRAKSI ============ -->
+    <section id="tab-timer" class="tab-panel active">
+      <p class="section-title">Penghitung Gelombang Cinta</p>
+      <p class="section-lead">Tekan tombol setiap kali gelombang cinta (kontraksi) dimulai dan berakhir. Aplikasi akan membantu memantau pola keteraturannya untuk Anda.</p>
+
+      <div class="mode-row">
+        <div>
+          <div class="mode-text">Mode Tenang</div>
+          <div class="mode-sub">Layar meredup &amp; irama suara lembut saat kontraksi</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="calmModeToggle" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="card timer-card" id="timerCard">
+        <button class="contraction-btn" id="contractionBtn" type="button">MULAI KONTRAKSI</button>
+
+        <div class="live-timer" id="liveTimer">Durasi berjalan: 00:00</div>
+
+        <div class="calm-breath">
+          <div class="calm-breath-circle" aria-hidden="true"></div>
+          <div class="calm-breath-label" id="calmBreathLabel">Tarik napas perlahan…</div>
+        </div>
+
+        <div class="info-alert" id="autoCapNote">
+          <div class="info-alert-inner tone-soft">
+            <p>Ibu lupa mematikan tombol? Kontraksi normal jarang melewati 2 menit. Kami merapikan data ini otomatis.</p>
+          </div>
+        </div>
+
+        <button class="reset-btn" id="resetBtn" type="button">Reset Data</button>
+
+        <p class="safety-note">Catatan: Alat ini adalah panduan pendukung untuk membantu memantau pola gelombang cinta, bukan pengganti penilaian klinis langsung. Jika Anda merasa sangat khawatir kapan pun, segera hubungi Bidan tanpa menunggu pola kontraksi menjadi teratur.</p>
+      </div>
+
+      <div class="ketuban-warning">
+        <p>⚠️ PERINGATAN KLINIS: Jika Ketuban Anda sudah pecah (keluar air-air merembes tak tertahankan), JANGAN MENUNGGU hitungan kontraksi di aplikasi ini. Segera pergi ke Klinik Bersalin RSB Wellness sekarang juga!</p>
+        <a class="alert-cta" href="https://wa.me/6287791299376?text=Halo%20Bidan%20RSB%20Wellness%2C%20saya%20sedang%20mengalami%20kontraksi%20dan%20ingin%20berkonsultasi%20mengenai%20kondisi%20saya." target="_blank" rel="noopener">Hubungi Bidan Sekarang</a>
+      </div>
+
+      <div class="info-alert" id="activePhaseAlert">
+        <div class="info-alert-inner tone-gold">
+          <p>⚠️ Gelombang Cinta Sudah Teratur! Kemungkinan besar Anda telah memasuki Kala 1 Fase Aktif. Hubungi Bidan dan Bersiaplah ke Klinik Bersalin RSB Wellness.</p>
+          <a class="alert-cta" href="https://wa.me/6287791299376?text=Halo%20Bidan%20RSB%20Wellness%2C%20saya%20sedang%20mengalami%20kontraksi%20dan%20ingin%20berkonsultasi%20mengenai%20kondisi%20saya." target="_blank" rel="noopener">Hubungi Bidan Sekarang</a>
+        </div>
+      </div>
+
+      <div class="info-alert" id="braxtonPrompt">
+        <div class="info-alert-inner tone-lavender">
+          <p>Apakah kekuatan gelombang ini mereda saat Ibu berpindah posisi atau berjalan?</p>
+          <div class="btn-row">
+            <button class="btn-choice primary" id="braxtonYesBtn" type="button">Ya, mereda</button>
+            <button class="btn-choice" id="braxtonNoBtn" type="button">Tidak, tetap kuat</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-alert" id="braxtonResult">
+        <div class="info-alert-inner tone-lavender">
+          <p>Kemungkinan ini adalah Gelombang Latihan (Braxton Hicks). Ambil posisi nyaman, minum 1–2 teguk RSB Wellness Kombucha Telang untuk relaksasi mendalam, dan tetap istirahat.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="section-title" style="font-size:0.95rem;">Riwayat Kontraksi</p>
+        <div class="table-wrap">
+          <table class="history-table">
+            <thead><tr><th>No</th><th>Durasi</th><th>Jarak</th><th>Status</th></tr></thead>
+            <tbody id="historyBody"></tbody>
+          </table>
+        </div>
+        <p class="empty-state" id="emptyState">Belum ada riwayat kontraksi yang tercatat. Mulai catat gelombang cinta pertama Anda di atas, Bunda.</p>
+      </div>
+    </section>
+
+    <!-- ============ TAB 2 : IKHTIAR FISIK & SPIRITUAL ============ -->
+    <section id="tab-ikhtiar" class="tab-panel">
+      <p class="section-title">Ikhtiar Fisik &amp; Spiritual</p>
+      <p class="section-lead">Panduan kenyamanan persalinan yang memadukan ilmu kebidanan berbasis bukti dengan tuntunan Thibbun Nabawi.</p>
+
+      <details class="accordion" open>
+        <summary>
+          <span>1. Manajemen Nutrisi &amp; Energi<span class="accordion-sub">Asupan Uap Panas-Lembab</span></span>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="accordion-body">
+          <p class="clinical-note"><strong>Catatan Klinis:</strong> Lambung tidak boleh dibebani makanan berat saat kontraksi menguat, namun rahim (Uterus) butuh glukosa cepat serap.</p>
+          <ul class="guide-list">
+            <li><strong>Air Madu Hangat &amp; Kurma (Tamr):</strong> 1–2 sendok makan madu murni dilarutkan air hangat, selingi kurma jumlah ganjil (3/5 butir). Mengandung oksitosin alami &amp; potasium untuk mencegah kelelahan otot rahim (QS. Maryam: 25).</li>
+            <li><strong>Air Nabeez (Rendaman Kurma):</strong> Efektif menjaga hidrasi &amp; keseimbangan elektrolit jika ibu mual terhadap rasa manis madu.</li>
+            <li><strong>Aturan Hidrasi:</strong> Jaga hidrasi harian dengan meminum RSB Wellness Kombucha Original atau Telang sebanyak 1–2 teguk kecil saja secara perlahan di antara jeda kontraksi (bukan saat gelombang berlangsung).</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="accordion">
+        <summary>
+          <span>2. Terapi Fisik &amp; Aromaterapi<span class="accordion-sub">Relaksasi Otot &amp; Ruang Rahim</span></span>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="accordion-body">
+          <ul class="guide-list">
+            <li><strong>Masase Minyak Zaitun &amp; Habbatussauda:</strong> Pijatan lembut area Lumbosakral (punggung bawah) dengan minyak hangat. Memblokir sinyal nyeri (Gate Control Theory) dan melenturkan otot perineum/panggul (Zaitun bersifat Mu'tadil).</li>
+            <li><strong>Inhalasi Wewangian Menenangkan:</strong> Sediaan Duhn (minyak) non-alkohol (mawar/gaharu) di ruang bersalin. Menurunkan kortisol via hipotalamus &amp; memicu pelepasan endorfin alami.</li>
+          </ul>
+
+          <p style="font-weight:600; font-size:0.86rem; color:var(--sage); margin:14px 0 4px;">Latihan Napas (Referensi)</p>
+          <p style="font-size:0.84rem; margin:0 0 4px; color:var(--ink-muted);">Ikuti irama lingkaran berikut kapan pun Anda ingin berlatih — tarik napas lewat hidung saat membesar, hembuskan perlahan lewat mulut saat mengecil.</p>
+          <div class="breath-widget">
+            <div class="breath-circle" aria-hidden="true"></div>
+            <div class="breath-label" id="breathLabel">Tarik napas perlahan lewat hidung…</div>
+          </div>
+
+          <ul class="guide-list">
+            <li><strong>Pelvic Rocking &amp; Gym Ball:</strong> Duduk tegak di atas bola, goyang pinggul memutar searah jarum jam atau membentuk angka 8 untuk membantu kepala janin turun ke panggul.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="accordion">
+        <summary>
+          <span>3. Manajemen Posisi<span class="accordion-sub">Memanfaatkan Gaya Gravitasi</span></span>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="accordion-body">
+          <p class="warning-callout"><strong>Peringatan:</strong> Hindari posisi terlentang (Supine), karena dapat mendinginkan punggung dan menjepit pembuluh darah besar.</p>
+          <ul class="guide-list">
+            <li><strong>Posisi yang Dianjurkan:</strong> Miring Kiri (Janb al-Aysar), Berlutut (Jusyu'), atau Jongkok (Iq'a') dengan sokongan. Posisi ini memaksimalkan diameter panggul, mempercepat penurunan kepala janin, dan selaras dengan prinsip mekanika tubuh alami.</li>
+            <li><strong>Gerakan Pohon Kurma Maryam:</strong> Deep squat rileks sambil berpegangan kokoh pada benda mantap, meniru ikhtiar Ibunda Maryam AS untuk melonggarkan jalan lahir.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="accordion">
+        <summary>
+          <span>4. Ikhtiar Spiritual &amp; Doa</span>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="accordion-body">
+          <ul class="guide-list">
+            <li><strong>Amalan Lisan:</strong> Dzikir Nabi Yunus ("La ilaha illa anta subhanaka inni kuntu minadzolimin") &amp; doa kemudahan persalinan.</li>
+            <li><strong>Lantunan Al-Qur'an:</strong> Menyimak atau membaca Surah Maryam untuk menghadirkan ketenangan jiwa yang mendalam.</li>
+          </ul>
+        </div>
+      </details>
+    </section>
+
+    <!-- ============ TAB 3 : DUKUNGAN SUAMI ============ -->
+    <section id="tab-suami" class="tab-panel">
+      <p class="section-title">Dukungan Suami</p>
+      <p class="section-lead">Panduan praktis Ayah mendampingi persalinan, berlandaskan ilmu kebidanan dan prinsip spiritual Syar'i.</p>
+
+      <div class="card">
+        <p class="section-title" style="font-size:0.92rem;">1. Ikhtiar Spiritual &amp; Mental</p>
+        <p class="section-subtitle">Suami Sebagai Imam</p>
+
+        <label class="husband-item">
+          <input type="checkbox">
+          <div>
+            <div class="item-title">Momen Saling Ridho &amp; Maaf</div>
+            <div class="item-text">Sebelum kontraksi menguat, ajak istri beristighfar bersama, saling memaafkan, dan nyatakan keridhoan Anda sebagai suami untuk melebur ganjalan batin istri.</div>
+          </div>
+        </label>
+        <label class="husband-item">
+          <input type="checkbox">
+          <div>
+            <div class="item-title">Talqin Dzikir Kontinu</div>
+            <div class="item-text">Saat gelombang cinta memuncak, bisikkan dzikir pendek yang menenangkan ("Allah, Allah" atau "La ilaha illallah") di telinga istri untuk menjaga fokus tauhidnya.</div>
+          </div>
+        </label>
+        <label class="husband-item">
+          <input type="checkbox">
+          <div>
+            <div class="item-title">Lantunan Al-Qur'an Langsung</div>
+            <div class="item-text">Alih-alih hanya memutar audio, bacakan langsung Surah Maryam atau Ayat Kursi dengan suara lembut di dekat istri untuk menghadirkan ketenangan Sakinah.</div>
+          </div>
+        </label>
+        <label class="husband-item">
+          <input type="checkbox">
+          <div>
+            <div class="item-title">Menjaga Ghirah &amp; Aurat</div>
+            <div class="item-text">Sigap menjaga dan merapikan kain penutup aurat istri saat bidan melakukan pemeriksaan dalam atau saat berganti posisi bersalin.</div>
+          </div>
+        </label>
+      </div>
+
+      <div class="card">
+        <p class="section-title" style="font-size:0.92rem;">2. Ikhtiar Fisik &amp; Taktis</p>
+        <p class="section-subtitle">Suami Sebagai Pelindung</p>
+
+        <label class="husband-item">
+          <input type="checkbox">
+          <div>
+            <div class="item-title">Pijat Counter-Pressure</div>
+            <div class="item-text">Tekan tulang ekor/punggung bawah istri menggunakan pangkal telapak tangan secara mantap saat kontraksi datang (gunakan campuran minyak zaitun &amp; habbatussauda hangat untuk memblokir sinyal nyeri via Gate Control Theory).</div>
+          </div>
+        </label>
+        <label class="husband-item">
+          <input type="checkbox">
+          <div>
+            <div class="item-title">Afirmasi Positif Syar'i</div>
+            <div class="item-text">Bisikkan kalimat penguat jiwa.
+              <span class="quote-bubble">"Istriku hebat, jihadmu mulia di mata Allah, tubuhmu dirancang untuk melahirkan dengan lancar, kita jemput amanah-Nya bersama."</span>
+            </div>
+          </div>
+        </label>
+        <label class="husband-item">
+          <input type="checkbox">
+          <div>
+            <div class="item-title">Manajemen Hidrasi &amp; Logistik</div>
+            <div class="item-text">Suapi air nabeez/madu hangat, ingatkan dan tuntun istri ke kamar mandi untuk BAK setiap 90 menit (menjaga kelonggaran jalur panggul), serta pastikan kendaraan siap.</div>
+          </div>
+        </label>
+      </div>
+    </section>
+
+    <!-- ============ TAB 4 : CHECKLIST PERSIAPAN ============ -->
+    <section id="tab-checklist" class="tab-panel">
+      <p class="section-title">Checklist Persiapan</p>
+      <p class="section-lead">Pastikan semua sudah siap agar tidak ada barang yang tertinggal.</p>
+
+      <button class="emergency-toggle-btn" id="emergencyToggleBtn" type="button">🚨 EMERGENCY MODE (Berangkat Sekarang!)</button>
+
+      <!-- ===== EMERGENCY MODE — 5 BARANG WAJIB ===== -->
+      <div class="emergency-wrap" id="emergencyWrap">
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="progress-fill" id="emergencyFill"></div></div>
+          <p class="progress-label" id="emergencyLabel">0 dari 5 barang sudah disiapkan (0%)</p>
+        </div>
+        <div class="card">
+          <label class="emergency-item"><input type="checkbox" class="emergency-checkbox" data-key="em-buku-kia"><span class="item-text">1. Buku KIA (Buku Pink)</span></label>
+          <label class="emergency-item"><input type="checkbox" class="emergency-checkbox" data-key="em-ktp-bpjs"><span class="item-text">2. KTP &amp; Kartu BPJS/Asuransi Asli</span></label>
+          <label class="emergency-item"><input type="checkbox" class="emergency-checkbox" data-key="em-jarik"><span class="item-text">3. Kain Jarik / Kain Sarung Ibu (2–3 lembar)</span></label>
+          <label class="emergency-item"><input type="checkbox" class="emergency-checkbox" data-key="em-bayi-set"><span class="item-text">4. Baju &amp; Bedong Kain Bayi Baru Lahir</span></label>
+          <label class="emergency-item"><input type="checkbox" class="emergency-checkbox" data-key="em-dompet-hp"><span class="item-text">5. Dompet, HP, dan Charger</span></label>
+        </div>
+      </div>
+
+      <!-- ===== CHECKLIST LENGKAP ===== -->
+      <div class="main-checklist-wrap" id="mainChecklistWrap">
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="progress-fill" id="checklistFill"></div></div>
+          <p class="progress-label" id="checklistLabel">0 dari 0 barang sudah disiapkan (0%)</p>
+        </div>
+
+        <div class="card">
+          <p class="section-title" style="font-size:0.92rem;">1. Dokumen Penting &amp; Administrasi</p>
+          <p class="category-note">Masukkan semua dokumen ini dalam satu map plastik transparan yang mudah diraih.</p>
+
+          <label class="checklist-item"><input type="checkbox" class="checklist-checkbox" data-key="doc-buku-kia"><span class="item-text"><strong>Buku KIA (Buku Pink):</strong> "Nyawa" rekam medis kehamilan Anda. Wajib dibawa.</span></label>
+          <label class="checklist-item"><input type="checkbox" class="checklist-checkbox" data-key="doc-ktp-kk"><span class="item-text"><strong>KTP &amp; Kartu Keluarga (KK):</strong> Asli dan fotokopi beberapa lembar (diperlukan untuk pelaporan kelahiran dan administrasi).</span></label>
+          <label class="checklist-item"><input type="checkbox" class="checklist-checkbox" data-key="doc-bpjs"><span class="item-text"><strong>Kartu BPJS Kesehatan / Asuransi Lain:</strong> Jika bidan bekerja sama dengan faskes rujukan/jejaringnya.</span></label>
+          <label class="checklist-item"><input type="checkbox" class="checklist-checkbox" data-key="doc-lab"><span class="item-text"><strong>Hasil Pemeriksaan Lab Terakhir:</strong> (HB, Golongan Darah, HIV, Sifilis, Hepatitis B, dan USG terakhir jika ada).</span></label>
+        </div>
+
+        <div class="card">
+          <p class="section-title" style="font-size:0.92rem;">2. Perlengkapan untuk Ibu</p>
+          <p class="category-note">Pilihlah pakaian yang longgar, menyerap keringat, dan praktis untuk menyusui.</p>
+
+          <p class="subgroup-label">Pakaian Utama</p>
+          <label class="checklist-item"><input type="checkbox" class="checklist-checkbox" data-key="ibu-daster"><span class="item-text">3–4 potong daster atau baju dengan kancing/resleting depan (untuk mempermudah IMD dan menyusui).</span></label>
+          <label class="checklist-item"><input type="checkbox" class="checklist-checkbox" data-key="ibu-baju-pulang"><span class="item-text">1 potong baju longgar yang rapi untuk dipakai saat pulang.</span></label>
+
+          <p class="subgroup-label">Pakaian Dalam Khusus</p>
+          <label class="checklist-item"><input type="checkbox" class="checklist-checkbox" data-key="ibu-cd"><span class="item-text">4–5 potong celana dalam katun yang longgar (atau celana dalam sekali pakai/disposable).</span></label>
+          <label class="checklist-item"><input type="checkbox" class="checklist-checkbox" data-key="ibu-bra"><span class="item-text">2–3 buah bra menyusui (tanpa kawat).</span></label>
+
+          <p class="subgroup-label">Kebersihan &amp; Nifas</p>
+          <label class="checklist-item"><input type="checkbox" class="checklist-checkbox" data-key="ibu-pembalut"><span class="item-text">2–3 bungkus pembalut bersalin (pembalut nifas yang ukurannya lebih panjang dan tebal).</span></label>
+          <label class="checklist-item"><input type="checkbox" class="checklist-checkbox" data-key="ibu-jarik"><span class="item-text">Kain jarik/sarung (minimal 2–3 lembar) — sangat berguna saat proses pembukaan awal dan setelah melahirkan.</span></label>
+          <label class="checklist-item"><input type="checkbox" class="checklist-checkbox" data-key="ibu-mandi"><span class="item-text">Alat mandi pribadi (sabun, sikat gigi, pasta gigi, sampo, handuk).</span></label>
+
+          <p class="subgroup-label">Kenyamanan Tambahan</p>
+          <label class="checklist-item"><input type="checkbox" class="checklist-checkbox" data-key="ibu-ikat-rambut"><span class="item-text">Ikat rambut atau jepit (menjaga rambut tetap rapi saat mengejan agar ibu tidak risih).</span></label>
+          <label class="checklist-item"><input type="checkbox" class="checklist-checkbox" data-key="ibu-sandal"><span class="item-text">Sandal jepit yang nyaman untuk berjalan-jalan di sekitar ruang bersalin saat fase laten.</span></label>
+        </div>
+
+        <div class="card">
+          <p class="section-title" style="font-size:0.92rem;">3. Perlengkapan untuk Bayi</p>
+          <p class="category-note">Kulit bayi baru lahir sangat sensitif — pastikan semua pakaian sudah dicuci bersih sebelumnya menggunakan detergen khusus bayi.</p>
+
+          <p class="subgroup-label">Pakaian Bayi</p>
+          <label class="checklist-item"><input type="checkbox" class="checklist-checkbox" data-key="bayi-baju"><span class="item-text">3–4 potong baju bayi (pilih model kutung atau lengan pendek untuk siang hari, dan lengan panjang).</span></label>
+          <label class="checklist-item"><input type="checkbox" class="checklist-checkbox" data-key="bayi-celana"><span class="item-text">3–4 potong celana bayi.</span></label>
+          <label class="checklist-item"><input type="checkbox" class="checklist-checkbox" data-key="bayi-bedong"><span class="item-text">3–4 buah bedong kain (bukan untuk mengikat kaki agar lurus, melainkan untuk menjaga kehangatan tubuhnya).</span></label>
+
+          <p class="subgroup-label">Pelindung &amp; Kehangatan</p>
+          <label class="checklist-item"><input type="checkbox" class="checklist-checkbox" data-key="bayi-sarung-tangan-kaki"><span class="item-text">3 pasang sarung tangan dan sarung kaki bayi (mencegah bayi mencakar wajahnya sendiri).</span></label>
+          <label class="checklist-item"><input type="checkbox" class="checklist-checkbox" data-key="bayi-topi"><span class="item-text">2 buah topi bayi (penting untuk mencegah hipotermia lewat kepala).</span></label>
+
+          <p class="subgroup-label">Sanitasi &amp; Perawatan Kulit</p>
+          <label class="checklist-item"><input type="checkbox" class="checklist-checkbox" data-key="bayi-popok"><span class="item-text">1 lusin popok kain ATAU popok sekali pakai tipe Newborn yang memiliki lekukan di bagian pusar (agar tidak menggesek tali pusat).</span></label>
+          <label class="checklist-item"><input type="checkbox" class="checklist-checkbox" data-key="bayi-waslap-handuk"><span class="item-text">2–3 buah waslap katun lembut dan 1 handuk bayi yang halus.</span></label>
+          <label class="checklist-item"><input type="checkbox" class="checklist-checkbox" data-key="bayi-telon-tisu"><span class="item-text">Minyak telon dan tisu basah ramah bayi (alcohol-free &amp; fragrance-free). Minimalkan produk kimia tambahan.</span></label>
+          <label class="checklist-item"><input type="checkbox" class="checklist-checkbox" data-key="bayi-selimut"><span class="item-text">1 buah selimut bayi tebal untuk dipakai saat pulang.</span></label>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================== PERMANENT EMERGENCY FOOTER ===================== -->
+  <footer class="emergency-footer">
+    <p>Ada pertanyaan atau darurat?<br>Hubungi Klinik Bersalin &amp; Bidan RSB Wellness</p>
+    <a href="https://wa.me/6287791299376?text=Halo%20Bidan%20RSB%20Wellness%2C%20saya%20sedang%20mengalami%20kontraksi%20dan%20ingin%20berkonsultasi%20mengenai%20kondisi%20saya." target="_blank" rel="noopener">WhatsApp</a>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ===================== STORAGE HELPER (with graceful fallback) ===================== */
+  var memoryStore = {};
+  var storageAvailable = (function(){
+    try{
+      var testKey = '__rsb_storage_test__';
+      window.localStorage.setItem(testKey, '1');
+      window.localStorage.removeItem(testKey);
+      return true;
+    }catch(e){
+      return false;
+    }
+  })();
+
+  function saveState(key, value){
+    try{
+      if (storageAvailable){
+        window.localStorage.setItem(key, JSON.stringify(value));
+        return;
+      }
+    }catch(e){ /* fall through to memory */ }
+    memoryStore[key] = value;
+  }
+
+  function loadState(key){
+    try{
+      if (storageAvailable){
+        var raw = window.localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : null;
+      }
+    }catch(e){ /* fall through to memory */ }
+    return memoryStore.hasOwnProperty(key) ? memoryStore[key] : null;
+  }
+
+  /* ===================== TAB NAVIGATION ===================== */
+  var tabButtons = document.querySelectorAll('.tab-btn');
+  var tabPanels  = document.querySelectorAll('.tab-panel');
+
+  tabButtons.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      tabButtons.forEach(function(b){ b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+      tabPanels.forEach(function(p){ p.classList.remove('active'); });
+
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected','true');
+      var target = document.getElementById('tab-' + btn.getAttribute('data-tab'));
+      if (target) target.classList.add('active');
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  /* ===================== MODE TENANG TOGGLE ===================== */
+  var calmModeToggle = document.getElementById('calmModeToggle');
+  var calmOverlay     = document.getElementById('calmOverlay');
+  var timerCard       = document.getElementById('timerCard');
+  var calmModeOn      = true;
+
+  calmModeToggle.addEventListener('change', function(){
+    calmModeOn = calmModeToggle.checked;
+    if (isRecording){
+      if (calmModeOn){ activateCalmVisuals(); startCalmAudio(); }
+      else { deactivateCalmVisuals(); stopCalmAudio(); }
+    }
+  });
+
+  function activateCalmVisuals(){
+    calmOverlay.classList.add('active');
+    timerCard.classList.add('calm-active');
+  }
+  function deactivateCalmVisuals(){
+    calmOverlay.classList.remove('active');
+    timerCard.classList.remove('calm-active');
+  }
+
+  /* ===================== WEB AUDIO — GENTLE PULSE CUE ===================== */
+  var audioCtx = null;
+  var audioPulseInterval = null;
+  var calmBreathLabel = document.getElementById('calmBreathLabel');
+  var calmPhrases = ['Tarik napas perlahan…', 'Hembuskan lembut…'];
+  var calmPhraseIndex = 0;
+
+  function ensureAudioContext(){
+    if (!audioCtx){
+      try{
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }catch(e){ audioCtx = null; }
+    }
+    if (audioCtx && audioCtx.state === 'suspended'){
+      audioCtx.resume();
+    }
+  }
+
+  function playPulseTone(){
+    if (!audioCtx) return;
+    try{
+      var osc = audioCtx.createOscillator();
+      var gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = 196;
+      var now = audioCtx.currentTime;
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.linearRampToValueAtTime(0.05, now + 1.2);
+      gain.gain.linearRampToValueAtTime(0, now + 2.6);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 2.8);
+    }catch(e){ /* ignore audio errors silently */ }
+  }
+
+  function startCalmAudio(){
+    ensureAudioContext();
+    playPulseTone();
+    calmPhraseIndex = 0;
+    calmBreathLabel.textContent = calmPhrases[0];
+    audioPulseInterval = setInterval(function(){
+      playPulseTone();
+      calmPhraseIndex = (calmPhraseIndex + 1) % calmPhrases.length;
+      calmBreathLabel.textContent = calmPhrases[calmPhraseIndex];
+    }, 4000);
+  }
+  function stopCalmAudio(){
+    clearInterval(audioPulseInterval);
+  }
+
+  /* ===================== TAB 1 : CONTRACTION TIMER ===================== */
+  var contractionBtn = document.getElementById('contractionBtn');
+  var liveTimerEl     = document.getElementById('liveTimer');
+  var historyBody     = document.getElementById('historyBody');
+  var emptyState      = document.getElementById('emptyState');
+  var activeAlert      = document.getElementById('activePhaseAlert');
+  var autoCapNote      = document.getElementById('autoCapNote');
+  var braxtonPromptBox  = document.getElementById('braxtonPrompt');
+  var braxtonResultBox  = document.getElementById('braxtonResult');
+  var braxtonYesBtn    = document.getElementById('braxtonYesBtn');
+  var braxtonNoBtn     = document.getElementById('braxtonNoBtn');
+  var resetBtn        = document.getElementById('resetBtn');
+
+  var isRecording   = false;
+  var currentStart  = null;
+  var liveInterval  = null;
+  var autoCapTimeoutId = null;
+  var history       = []; // { start, duration(sec), interval(min|null), autoCapped }
+
+  var braxtonPromptShown = false;
+  var braxtonResetIndex  = null; // history.length at moment Braxton Hicks was suspected
+
+  var INTERVAL_MIN_MINUTES = 4;
+  var INTERVAL_MAX_MINUTES = 5;
+  var DURATION_MIN_SECONDS = 40;
+  var DURATION_MAX_SECONDS = 60;
+  var AUTO_CAP_MS          = 120000; // 2 minutes
+  var STANDARD_AVG_DURATION = 50;    // seconds, used when auto-capped
+  var AUTO_CAP_NOTE_VISIBLE_MS = 8000;
+  var autoCapNoteTimeoutId = null;
+
+  function pad2(n){ return (n < 10 ? '0' : '') + n; }
+
+  function formatDuration(totalSeconds){
+    var m = Math.floor(totalSeconds / 60);
+    var s = totalSeconds % 60;
+    return pad2(m) + ':' + pad2(s);
+  }
+  function formatInterval(minutes){
+    if (minutes === null || minutes === undefined) return '–';
+    return minutes.toFixed(1).replace('.', ',') + ' mnt';
+  }
+
+  function startContraction(){
+    isRecording  = true;
+    currentStart = Date.now();
+
+    contractionBtn.textContent = 'SELESAI KONTRAKSI';
+    contractionBtn.classList.add('recording');
+    liveTimerEl.classList.add('visible');
+    liveTimerEl.textContent = 'Durasi berjalan: 00:00';
+
+    liveInterval = setInterval(function(){
+      var elapsed = Math.floor((Date.now() - currentStart) / 1000);
+      liveTimerEl.textContent = 'Durasi berjalan: ' + formatDuration(elapsed);
+    }, 1000);
+
+    if (calmModeOn){
+      activateCalmVisuals();
+      startCalmAudio();
+    }
+
+    autoCapTimeoutId = setTimeout(handleAutoCap, AUTO_CAP_MS);
+  }
+
+  function finishRecordingUI(){
+    contractionBtn.textContent = 'MULAI KONTRAKSI';
+    contractionBtn.classList.remove('recording');
+    liveTimerEl.classList.remove('visible');
+    deactivateCalmVisuals();
+    stopCalmAudio();
+    clearInterval(liveInterval);
+  }
+
+  function endContraction(){
+    if (autoCapTimeoutId){ clearTimeout(autoCapTimeoutId); autoCapTimeoutId = null; }
+
+    isRecording = false;
+    var endTime     = Date.now();
+    var durationSec = Math.max(1, Math.round((endTime - currentStart) / 1000));
+    var intervalMin = computeIntervalFromPrevious(currentStart);
+
+    history.push({ start: currentStart, duration: durationSec, interval: intervalMin, autoCapped: false });
+
+    finishRecordingUI();
+    currentStart = null;
+
+    renderHistory();
+    runPostEntryChecks();
+  }
+
+  function handleAutoCap(){
+    autoCapTimeoutId = null;
+    if (!isRecording) return; // safety guard
+
+    isRecording = false;
+    var intervalMin = computeIntervalFromPrevious(currentStart);
+
+    history.push({ start: currentStart, duration: STANDARD_AVG_DURATION, interval: intervalMin, autoCapped: true });
+
+    finishRecordingUI();
+    currentStart = null;
+
+    renderHistory();
+    showAutoCapNote();
+    runPostEntryChecks();
+  }
+
+  function computeIntervalFromPrevious(startMs){
+    if (history.length === 0) return null;
+    var prevStart = history[history.length - 1].start;
+    return (startMs - prevStart) / 60000;
+  }
+
+  function showAutoCapNote(){
+    autoCapNote.classList.add('show');
+    if (autoCapNoteTimeoutId) clearTimeout(autoCapNoteTimeoutId);
+    autoCapNoteTimeoutId = setTimeout(function(){
+      autoCapNote.classList.remove('show');
+    }, AUTO_CAP_NOTE_VISIBLE_MS);
+  }
+
+  contractionBtn.addEventListener('click', function(){
+    if (!isRecording) startContraction(); else endContraction();
+  });
+
+  function rowQualifies(entry){
+    return entry.duration >= DURATION_MIN_SECONDS &&
+           entry.duration <= DURATION_MAX_SECONDS &&
+           entry.interval !== null &&
+           entry.interval >= INTERVAL_MIN_MINUTES &&
+           entry.interval <= INTERVAL_MAX_MINUTES;
+  }
+
+  function renderHistory(){
+    historyBody.innerHTML = '';
+    emptyState.style.display = history.length === 0 ? 'block' : 'none';
+
+    history.forEach(function(entry, idx){
+      var qualifies = rowQualifies(entry);
+      var tr = document.createElement('tr');
+
+      var tdNo = document.createElement('td');
+      tdNo.textContent = idx + 1;
+
+      var tdDur = document.createElement('td');
+      tdDur.textContent = formatDuration(entry.duration);
+
+      var tdGap = document.createElement('td');
+      tdGap.textContent = formatInterval(entry.interval);
+
+      var tdStatus = document.createElement('td');
+      var badge = document.createElement('span');
+      if (entry.autoCapped){
+        badge.className = 'badge status-auto';
+        badge.textContent = 'Otomatis';
+      } else {
+        badge.className = 'badge ' + (qualifies ? 'status-good' : 'status-neutral');
+        badge.textContent = qualifies ? 'Teratur' : 'Memantau';
+      }
+      tdStatus.appendChild(badge);
+
+      tr.appendChild(tdNo);
+      tr.appendChild(tdDur);
+      tr.appendChild(tdGap);
+      tr.appendChild(tdStatus);
+      historyBody.appendChild(tr);
+    });
+
+    var wrap = historyBody.closest('.table-wrap');
+    if (wrap) wrap.scrollTop = wrap.scrollHeight;
+  }
+
+  function checkActivePhasePattern(){
+    if (history.length < 3){ activeAlert.classList.remove('show'); return; }
+
+    var lastThree = history.slice(-3);
+    var qualifies = lastThree.every(rowQualifies);
+
+    if (!qualifies){ activeAlert.classList.remove('show'); return; }
+
+    if (braxtonResetIndex !== null && history.length < braxtonResetIndex + 3){
+      // Belum cukup data baru sejak kecurigaan Braxton Hicks dikonfirmasi
+      activeAlert.classList.remove('show');
+      return;
+    }
+
+    activeAlert.classList.add('show');
+  }
+
+  function maybeShowBraxtonPrompt(){
+    if (!braxtonPromptShown && history.length === 3){
+      braxtonPromptShown = true;
+      braxtonPromptBox.classList.add('show');
+    }
+  }
+
+  function runPostEntryChecks(){
+    checkActivePhasePattern();
+    maybeShowBraxtonPrompt();
+  }
+
+  braxtonYesBtn.addEventListener('click', function(){
+    braxtonResetIndex = history.length;
+    braxtonPromptBox.classList.remove('show');
+    braxtonResultBox.classList.add('show');
+    checkActivePhasePattern();
+  });
+
+  braxtonNoBtn.addEventListener('click', function(){
+    braxtonResetIndex = null;
+    braxtonPromptBox.classList.remove('show');
+    braxtonResultBox.classList.remove('show');
+    checkActivePhasePattern();
+  });
+
+  resetBtn.addEventListener('click', function(){
+    var confirmed = window.confirm('Yakin ingin menghapus seluruh riwayat kontraksi dan mulai mencatat dari awal?');
+    if (!confirmed) return;
+
+    if (autoCapTimeoutId){ clearTimeout(autoCapTimeoutId); autoCapTimeoutId = null; }
+    if (autoCapNoteTimeoutId){ clearTimeout(autoCapNoteTimeoutId); autoCapNoteTimeoutId = null; }
+
+    history = [];
+    isRecording = false;
+    currentStart = null;
+    braxtonPromptShown = false;
+    braxtonResetIndex = null;
+
+    finishRecordingUI();
+    activeAlert.classList.remove('show');
+    autoCapNote.classList.remove('show');
+    braxtonPromptBox.classList.remove('show');
+    braxtonResultBox.classList.remove('show');
+
+    renderHistory();
+  });
+
+  renderHistory();
+
+  /* ===================== TAB 2 : BREATHING REFERENCE WIDGET ===================== */
+  var breathLabel   = document.getElementById('breathLabel');
+  var breathPhrases = ['Tarik napas perlahan lewat hidung…', 'Hembuskan lembut lewat mulut…'];
+  var breathIndex = 0;
+
+  if (breathLabel){
+    setInterval(function(){
+      breathIndex = (breathIndex + 1) % breathPhrases.length;
+      breathLabel.textContent = breathPhrases[breathIndex];
+    }, 4000);
+  }
+
+  /* ===================== TAB 3 : HUSBAND TASK TOGGLES ===================== */
+  document.querySelectorAll('.husband-item input[type="checkbox"]').forEach(function(box){
+    box.addEventListener('change', function(){
+      box.closest('.husband-item').classList.toggle('checked', box.checked);
+    });
+  });
+
+  /* ===================== TAB 4 : CHECKLIST (with localStorage persistence) ===================== */
+  var MAIN_STORAGE_KEY = 'rsb_checklist_main_v1';
+  var EMERGENCY_STORAGE_KEY = 'rsb_checklist_emergency_v1';
+
+  function wireChecklist(selector, storageKey, fillEl, labelEl){
+    var boxes = document.querySelectorAll(selector);
+    var saved = loadState(storageKey) || {};
+
+    boxes.forEach(function(box){
+      var key = box.getAttribute('data-key');
+      if (saved[key]){
+        box.checked = true;
+        box.closest('label').classList.add('checked');
+      }
+      box.addEventListener('change', function(){
+        box.closest('label').classList.toggle('checked', box.checked);
+        var current = loadState(storageKey) || {};
+        current[key] = box.checked;
+        saveState(storageKey, current);
+        updateProgress(boxes, fillEl, labelEl);
+      });
+    });
+
+    updateProgress(boxes, fillEl, labelEl);
+  }
+
+  function updateProgress(boxes, fillEl, labelEl){
+    var total = boxes.length;
+    var done = 0;
+    boxes.forEach(function(b){ if (b.checked) done++; });
+    var pct = total ? Math.round((done / total) * 100) : 0;
+    if (fillEl) fillEl.style.width = pct + '%';
+    if (labelEl) labelEl.textContent = done + ' dari ' + total + ' barang sudah disiapkan (' + pct + '%)';
+  }
+
+  wireChecklist('.checklist-checkbox', MAIN_STORAGE_KEY, document.getElementById('checklistFill'), document.getElementById('checklistLabel'));
+  wireChecklist('.emergency-checkbox', EMERGENCY_STORAGE_KEY, document.getElementById('emergencyFill'), document.getElementById('emergencyLabel'));
+
+  /* ===================== TAB 4 : EMERGENCY MODE TOGGLE ===================== */
+  var emergencyToggleBtn = document.getElementById('emergencyToggleBtn');
+  var emergencyWrap       = document.getElementById('emergencyWrap');
+  var mainChecklistWrap   = document.getElementById('mainChecklistWrap');
+  var emergencyModeOn = false;
+
+  emergencyToggleBtn.addEventListener('click', function(){
+    emergencyModeOn = !emergencyModeOn;
+    emergencyToggleBtn.classList.toggle('active', emergencyModeOn);
+    emergencyWrap.classList.toggle('show', emergencyModeOn);
+    mainChecklistWrap.classList.toggle('hidden', emergencyModeOn);
+    emergencyToggleBtn.textContent = emergencyModeOn
+      ? '✅ Kembali ke Checklist Lengkap'
+      : '🚨 EMERGENCY MODE (Berangkat Sekarang!)';
+  });
+
+  /* ===================== BLADDER REMINDER (every 90 minutes) ===================== */
+  var BLADDER_INTERVAL_MS = 90 * 60 * 1000;
+  var bladderModal   = document.getElementById('bladderModal');
+  var bladderModalOk = document.getElementById('bladderModalOk');
+
+  function showBladderModal(){
+    bladderModal.classList.add('open');
+  }
+  bladderModalOk.addEventListener('click', function(){
+    bladderModal.classList.remove('open');
+  });
+
+  setInterval(showBladderModal, BLADDER_INTERVAL_MS);
+
+})();
+</script>
+</body>
+</html>
