@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#37463A">
+<title>RSB Wellness — Comprehensive Smart Inventory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root{
+    --cream:#FDFBF7;
+    --lavender:#E8DFF5;
+    --lavender-soft:#F1EBFA;
+    --sage:#4A5D4E;
+    --sage-dark:#37463A;
+    --gold:#D4AF37;
+    --gold-soft:#F3E8C7;
+    --ink:#332E2C;
+    --ink-soft:#74695F;
+    --white:#FFFFFF;
+    --red:#B3433D;
+    --red-bg:#FBEAE8;
+    --green:#2E7D32;
+    --green-bg:#E8F5E9;
+    --radius:12px;
+    --radius-lg:16px;
+    --shadow:0 4px 14px rgba(74,93,78,0.08);
+    --font-display:'Fraunces', Georgia, serif;
+    --font-body:'Work Sans', -apple-system, sans-serif;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{
+    background:var(--cream);
+    font-family:var(--font-body);
+    color:var(--ink);
+    padding:20px 12px 60px;
+    display:flex;
+    justify-content:center;
+  }
+  .container{ width:100%; max-width:480px; }
+
+  header{ margin-bottom:20px; text-align:center; }
+  header h1{ font-family:var(--font-display); font-size:1.5rem; color:var(--sage-dark); }
+  header p{ font-size:0.8rem; color:var(--ink-soft); margin-top:4px; }
+
+  .stats-grid{ display:flex; gap:10px; margin-bottom:16px; }
+  .stat-card{
+    flex:1; background:var(--white); padding:14px; border-radius:var(--radius);
+    box-shadow:var(--shadow); border:1px solid rgba(74,93,78,0.06); text-align:center;
+  }
+  .stat-card .num{ font-size:1.6rem; font-weight:700; margin-bottom:2px; }
+  .stat-card .label{ font-size:0.72rem; font-weight:600; color:var(--ink-soft); text-transform:uppercase; }
+  .stat-card.critical .num{ color:var(--red); }
+  .stat-card.warning .num{ color:var(--gold); }
+
+  .tabs{ display:flex; gap:6px; margin-bottom:16px; overflow-x:auto; padding-bottom:4px; }
+  .tab-btn{
+    padding:8px 14px; background:var(--white); border-radius:999px; font-size:0.78rem;
+    font-weight:600; color:var(--ink-soft); border:1px solid rgba(74,93,78,0.1); white-space:nowrap;
+    cursor:pointer;
+  }
+  .tab-btn.active{ background:var(--sage); color:var(--white); border-color:var(--sage); }
+
+  .card{
+    background:var(--white); border-radius:var(--radius-lg); padding:16px;
+    box-shadow:var(--shadow); border:1px solid rgba(232,223,245,0.6); margin-bottom:16px;
+  }
+  .card-title{ font-family:var(--font-display); font-size:1.1rem; color:var(--sage-dark); margin-bottom:14px; }
+  
+  .field{ margin-bottom:12px; }
+  .field label{ display:block; font-size:0.78rem; font-weight:600; margin-bottom:4px; }
+  .field input, .field select{
+    width:100%; padding:10px 12px; border:1.5px solid var(--lavender);
+    border-radius:var(--radius); font-size:0.88rem; background:var(--cream);
+    font-family:var(--font-body);
+  }
+  .field input:focus, .field select:focus{ outline:none; border-color:var(--sage); }
+  .row-fields{ display:flex; gap:10px; margin-bottom:12px; }
+  .row-fields .field { flex:1; margin-bottom:0; }
+
+  .checkbox-field { display:flex; align-items:center; gap:8px; margin-top:6px; }
+  .checkbox-field input[type="checkbox"] { width:auto; accent-color:var(--sage); }
+  .checkbox-field label { margin-bottom:0; font-size:0.8rem; font-weight:500; color:var(--ink-soft); cursor:pointer; }
+
+  .btn{
+    width:100%; padding:12px; background:var(--sage); color:var(--white);
+    border-radius:var(--radius); font-weight:700; font-size:0.9rem; margin-top:4px;
+    transition:background 0.2s; cursor:pointer; border:none; font-family:var(--font-body);
+  }
+  .btn-outline{
+    background:transparent; border:1.5px solid var(--sage); color:var(--sage-dark); margin-bottom:16px;
+  }
+  .btn:active{ background:var(--sage-dark); }
+
+  .item-list{ display:flex; flex-direction:column; gap:10px; }
+  .item-row{
+    background:var(--white); border-radius:var(--radius); padding:12px 14px;
+    box-shadow:var(--shadow); display:flex; justify-content:space-between; align-items:center;
+    border-left:5px solid #ccc; transition:opacity 0.2s;
+  }
+  .item-row.status-safe{ border-left-color:var(--green); }
+  .item-row.status-warn{ border-left-color:var(--gold); }
+  .item-row.status-crit{ border-left-color:var(--red); background:linear-gradient(90deg, var(--red-bg) 0%, var(--white) 100%); }
+  
+  .item-info h4{ font-size:0.92rem; font-weight:700; color:var(--ink); margin-bottom:3px; }
+  .item-info p{ font-size:0.72rem; color:var(--ink-soft); }
+  .zone-tag { font-size:0.68rem; font-weight:600; color:var(--sage-dark); background:var(--lavender-soft); padding:1px 5px; border-radius:4px; }
+  
+  .item-status{ text-align:right; display:flex; flex-direction:column; align-items:flex-end; gap:4px; }
+  .stock-badge{ font-size:0.85rem; font-weight:700; color:var(--sage-dark); }
+  .stock-badge.low{ color:var(--red); }
+  .alert-tag{ font-size:0.6rem; font-weight:700; padding:2px 6px; border-radius:4px; text-transform:uppercase; }
+  .alert-tag.crit{ background:var(--red-bg); color:var(--red); }
+  .alert-tag.twobin{ background:var(--gold-soft); color:#8A6B1F; border:1px dashed var(--gold); }
+  
+  .delete-btn{
+    background:none; border:none; color:var(--ink-soft); font-size:1.1rem;
+    margin-left:12px; padding:4px; cursor:pointer; line-height:1;
+  }
+  .delete-btn:hover{ color:var(--red); }
+  .empty-state{ text-align:center; padding:30px; font-size:0.82rem; color:var(--ink-soft); }
+
+  /* Toast notification */
+  .toast{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(80px);
+    background:var(--sage-dark); color:var(--white); padding:12px 20px;
+    border-radius:999px; font-size:0.82rem; font-weight:600;
+    box-shadow:0 8px 24px rgba(55,70,58,0.25);
+    transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s;
+    opacity:0; z-index:1000; white-space:nowrap;
+  }
+  .toast.show{ transform:translateX(-50%) translateY(0); opacity:1; }
+
+  /* Confirm dialog overlay */
+  .overlay{
+    position:fixed; inset:0; background:rgba(55,70,58,0.35); z-index:200;
+    display:flex; align-items:center; justify-content:center; padding:20px;
+    opacity:0; pointer-events:none; transition:opacity 0.2s;
+  }
+  .overlay.visible{ opacity:1; pointer-events:all; }
+  .dialog{
+    background:var(--white); border-radius:var(--radius-lg); padding:24px;
+    max-width:320px; width:100%; box-shadow:0 20px 60px rgba(55,70,58,0.2);
+    transform:scale(0.95); transition:transform 0.2s;
+  }
+  .overlay.visible .dialog{ transform:scale(1); }
+  .dialog h3{ font-family:var(--font-display); font-size:1.1rem; color:var(--sage-dark); margin-bottom:8px; }
+  .dialog p{ font-size:0.84rem; color:var(--ink-soft); margin-bottom:20px; line-height:1.5; }
+  .dialog-btns{ display:flex; gap:10px; }
+  .dialog-btns button{ flex:1; padding:10px; border-radius:var(--radius); font-weight:700; font-size:0.85rem; cursor:pointer; font-family:var(--font-body); }
+  .btn-cancel{ background:var(--cream); border:1.5px solid var(--lavender); color:var(--ink-soft); }
+  .btn-confirm-del{ background:var(--red); border:none; color:var(--white); }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>RSB Wellness — Inventory</h1>
+    <p>Sistem Pemantau FEFO &amp; Alarm Stok Logistik Klinik</p>
+  </header>
+
+  <div class="stats-grid">
+    <div class="stat-card critical">
+      <div class="num" id="stat-expired">0</div>
+      <div class="label">Kritis / Expired</div>
+    </div>
+    <div class="stat-card warning">
+      <div class="num" id="stat-low">0</div>
+      <div class="label">Restock / Menipis</div>
+    </div>
+  </div>
+
+  <div style="display:flex; gap:8px; margin-bottom:16px;">
+    <button class="btn btn-outline" id="btn-share-report" style="margin-bottom:0; flex:1;">
+      📋 Salin ke WhatsApp
+    </button>
+    <button class="btn btn-outline" id="btn-download-xlsx" style="margin-bottom:0; flex:1;">
+      ⬇️ Unduh Excel
+    </button>
+  </div>
+
+  <div class="card">
+    <h3 class="card-title">Tambah Logistik Baru</h3>
+    <div class="field">
+      <label for="item-name">Nama Barang / Sediaan</label>
+      <input type="text" id="item-name" placeholder="Contoh: Oksitosin Ampul / Vaksin BCG">
+    </div>
+    <div class="row-fields">
+      <div class="field">
+        <label for="item-category">Kategori</label>
+        <select id="item-category">
+          <option value="Obat & Vaksin">Vaksin &amp; Obat</option>
+          <option value="BMHP">BMHP (Alkes)</option>
+          <option value="Bahan Pangan">Bahan Pangan</option>
+          <option value="Umum & ATK">Umum &amp; ATK</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="item-zone">Zona Penyimpanan</label>
+        <select id="item-zone">
+          <option value="Rak A (Mata/Dada)">Rak A (Fast-Moving)</option>
+          <option value="Rak B (Bawah)">Rak B (Slow-Moving)</option>
+          <option value="Lemari Es (2-8°C)">Lemari Es Khusus</option>
+          <option value="Wadah Bahan Baku">Wadah Bahan Baku</option>
+        </select>
+      </div>
+    </div>
+    <div class="row-fields">
+      <div class="field">
+        <label for="item-stock">Jumlah Stok</label>
+        <input type="number" id="item-stock" min="0" placeholder="0">
+      </div>
+      <div class="field">
+        <label for="item-min">Batas Min (Restock)</label>
+        <input type="number" id="item-min" min="0" placeholder="5">
+      </div>
+    </div>
+    <div class="field">
+      <label for="item-exp">Tanggal Kedaluwarsa (Expired)</label>
+      <input type="date" id="item-exp">
+      <div class="checkbox-field">
+        <input type="checkbox" id="item-twobin">
+        <label for="item-twobin">Gunakan Pembatas Sistem Dua Wadah (Two-Bin System)</label>
+      </div>
+    </div>
+    <button class="btn" id="btn-save">Simpan ke Inventaris</button>
+  </div>
+
+  <div class="tabs" id="category-tabs">
+    <button class="tab-btn active" data-cat="all">Semua Data</button>
+    <button class="tab-btn" data-cat="Obat & Vaksin">Obat &amp; Vaksin</button>
+    <button class="tab-btn" data-cat="BMHP">BMHP</button>
+    <button class="tab-btn" data-cat="Bahan Pangan">Bahan Pangan</button>
+    <button class="tab-btn" data-cat="Umum & ATK">Umum &amp; ATK</button>
+  </div>
+
+  <div class="item-list" id="inventory-container"></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Delete confirm dialog -->
+<div class="overlay" id="delete-overlay">
+  <div class="dialog">
+    <h3>Hapus Barang?</h3>
+    <p id="dialog-item-name">Yakin ingin menghapus barang ini dari inventaris?</p>
+    <div class="dialog-btns">
+      <button class="btn-cancel" id="btn-cancel-del">Batal</button>
+      <button class="btn-confirm-del" id="btn-confirm-del">Hapus</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const INITIAL_STOK = [
+    { id: 1, name: "Oksitosin 10 IU Injection", category: "Obat & Vaksin", zone: "Lemari Es (2-8°C)", stock: 12, min: 20, exp: "2026-07-10", twobin: false },
+    { id: 2, name: "Spet 3cc Terumo", category: "BMHP", zone: "Rak A (Mata/Dada)", stock: 150, min: 50, exp: "2028-12-01", twobin: true },
+    { id: 3, name: "Simplisia Bawang Dayak Kering", category: "Bahan Pangan", zone: "Wadah Bahan Baku", stock: 3, min: 5, exp: "2026-09-18", twobin: false }
+  ];
+
+  let items = JSON.parse(localStorage.getItem('rsb_inventory_data')) || INITIAL_STOK;
+  let currentFilter = 'all';
+  let pendingDeleteId = null;
+
+  const container = document.getElementById('inventory-container');
+  const statExpired = document.getElementById('stat-expired');
+  const statLow = document.getElementById('stat-low');
+  const toast = document.getElementById('toast');
+  const overlay = document.getElementById('delete-overlay');
+  const dialogName = document.getElementById('dialog-item-name');
+
+  function saveToStorage() {
+    localStorage.setItem('rsb_inventory_data', JSON.stringify(items));
+  }
+
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2800);
+  }
+
+  function getStatus(expStr, stock, min) {
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    const expDate = new Date(expStr);
+    const msDiff = expDate - today;
+    const daysDiff = Math.round(msDiff / (1000 * 60 * 60 * 24));
+
+    let timeStatus = 'safe';
+    let expLabel = '';
+
+    if (daysDiff <= 0) {
+      timeStatus = 'crit';
+      expLabel = 'Sudah Expired!';
+    } else if (daysDiff <= 30) {
+      timeStatus = 'crit';
+      expLabel = 'Kritis (<30 hari)';
+    } else if (daysDiff <= 90) {
+      timeStatus = 'warn';
+      expLabel = 'Peringatan (<3 bulan)';
+    }
+
+    const isLow = stock <= min;
+    return { timeStatus, isLow, expLabel, daysDiff };
+  }
+
+  function renderInventory() {
+    container.innerHTML = '';
+    let countExpired = 0;
+    let countLow = 0;
+
+    const filteredItems = items.filter(item =>
+      currentFilter === 'all' || item.category === currentFilter
+    );
+
+    items.forEach(item => {
+      const stat = getStatus(item.exp, item.stock, item.min);
+      if (stat.timeStatus === 'crit') countExpired++;
+      if (stat.isLow) countLow++;
+    });
+
+    statExpired.textContent = countExpired;
+    statLow.textContent = countLow;
+
+    if (filteredItems.length === 0) {
+      container.innerHTML = '<div class="empty-state">Tidak ada logistik dalam kategori ini.</div>';
+      return;
+    }
+
+    filteredItems.sort((a, b) => new Date(a.exp) - new Date(b.exp));
+
+    filteredItems.forEach(item => {
+      const stat = getStatus(item.exp, item.stock, item.min);
+      const row = document.createElement('div');
+      row.className = `item-row status-${stat.timeStatus}`;
+
+      const d = new Date(item.exp);
+      const formattedDate = `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
+
+      row.innerHTML = `
+        <div class="item-info">
+          <h4>${item.name}</h4>
+          <p style="margin-bottom:2px;">
+            <span class="zone-tag">📍 ${item.zone || 'Belum Diatur'}</span>
+            ${item.twobin ? '<span style="font-size:0.65rem; color:var(--ink-soft); font-weight:600; margin-left:4px;">[Two-Bin]</span>' : ''}
+          </p>
+          <p>ED: ${formattedDate} ${stat.expLabel ? `• <span style="font-weight:700;">${stat.expLabel}</span>` : ''}</p>
+        </div>
+        <div style="display:flex; align-items:center;">
+          <div class="item-status">
+            <span class="stock-badge ${stat.isLow ? 'low' : ''}">Stok: ${item.stock}</span>
+            ${stat.isLow ? '<span class="alert-tag crit">⚠️ Butuh Order</span>' : ''}
+            ${item.twobin && stat.isLow ? '<span class="alert-tag twobin">Buka Wadah B</span>' : ''}
+          </div>
+          <button class="delete-btn" data-id="${item.id}" aria-label="Hapus barang">&times;</button>
+        </div>
+      `;
+
+      row.querySelector('.delete-btn').addEventListener('click', function() {
+        pendingDeleteId = parseInt(this.getAttribute('data-id'), 10);
+        const found = items.find(i => i.id === pendingDeleteId);
+        dialogName.textContent = found
+          ? `Yakin ingin menghapus "${found.name}" dari inventaris? Tindakan ini tidak dapat dibatalkan.`
+          : 'Yakin ingin menghapus barang ini?';
+        overlay.classList.add('visible');
+      });
+
+      container.appendChild(row);
+    });
+  }
+
+  // Delete confirm/cancel
+  document.getElementById('btn-confirm-del').addEventListener('click', () => {
+    if (pendingDeleteId !== null) {
+      items = items.filter(i => i.id !== pendingDeleteId);
+      saveToStorage();
+      renderInventory();
+      showToast('Barang berhasil dihapus dari inventaris.');
+    }
+    overlay.classList.remove('visible');
+    pendingDeleteId = null;
+  });
+
+  document.getElementById('btn-cancel-del').addEventListener('click', () => {
+    overlay.classList.remove('visible');
+    pendingDeleteId = null;
+  });
+
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) {
+      overlay.classList.remove('visible');
+      pendingDeleteId = null;
+    }
+  });
+
+  // Share report
+  document.getElementById('btn-share-report').addEventListener('click', () => {
+    let lowStockItems = items.filter(item => item.stock <= item.min);
+
+    if (lowStockItems.length === 0) {
+      showToast('✅ Semua stok mencukupi. Tidak ada yang perlu direstock.');
+      return;
+    }
+
+    let reportText = "*REKAPITULASI KEBUTUHAN RESTOCK - RSB WELLNESS*\n";
+    reportText += "-----------------------------------------------\n";
+
+    lowStockItems.forEach((item, idx) => {
+      const stat = getStatus(item.exp, item.stock, item.min);
+      reportText += `${idx + 1}. *${item.name}*\n`;
+      reportText += `   - Sisa Stok: ${item.stock} (Batas Min: ${item.min})\n`;
+      reportText += `   - Lokasi Fisik: ${item.zone}\n`;
+      if (stat.timeStatus === 'crit') reportText += `   - STATUS ED: Kritis/Expired (${item.exp})\n`;
+      reportText += `\n`;
+    });
+
+    navigator.clipboard.writeText(reportText).then(() => {
+      showToast('📋 Laporan disalin! Tempel langsung ke WhatsApp pengadaan.');
+    }).catch(() => {
+      showToast('Gagal menyalin. Coba lagi atau gunakan browser lain.');
+    });
+  });
+
+  // Download Excel laporan restock
+  document.getElementById('btn-download-xlsx').addEventListener('click', () => {
+    const today = new Date();
+    const todayStr = `${today.getDate()}/${today.getMonth()+1}/${today.getFullYear()}`;
+
+    // Sheet 1: Semua Inventaris
+    const allRows = items.map(item => {
+      const stat = getStatus(item.exp, item.stock, item.min);
+      const d = new Date(item.exp);
+      return {
+        'Nama Barang': item.name,
+        'Kategori': item.category,
+        'Zona Penyimpanan': item.zone,
+        'Stok Saat Ini': item.stock,
+        'Batas Minimum': item.min,
+        'Tanggal ED': `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`,
+        'Status ED': stat.timeStatus === 'crit' ? '🔴 KRITIS' : stat.timeStatus === 'warn' ? '🟡 PERINGATAN' : '🟢 AMAN',
+        'Status Stok': stat.isLow ? '⚠️ BUTUH ORDER' : '✅ Cukup',
+        'Two-Bin': item.twobin ? 'Ya' : 'Tidak',
+      };
+    });
+
+    // Sheet 2: Hanya barang yang butuh restock
+    const restockRows = items
+      .filter(item => item.stock <= item.min)
+      .map((item, idx) => {
+        const stat = getStatus(item.exp, item.stock, item.min);
+        const d = new Date(item.exp);
+        return {
+          'No': idx + 1,
+          'Nama Barang': item.name,
+          'Kategori': item.category,
+          'Zona Penyimpanan': item.zone,
+          'Sisa Stok': item.stock,
+          'Batas Minimum': item.min,
+          'Kekurangan': item.min - item.stock,
+          'Tanggal ED': `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`,
+          'Status ED': stat.timeStatus === 'crit' ? 'KRITIS/EXPIRED' : 'Aman',
+          'Two-Bin': item.twobin ? 'Ya (Buka Wadah B)' : 'Tidak',
+        };
+      });
+
+    const wb = XLSX.utils.book_new();
+
+    // Sheet 1
+    const ws1 = XLSX.utils.json_to_sheet(allRows);
+    ws1['!cols'] = [
+      {wch:30},{wch:14},{wch:22},{wch:14},{wch:14},{wch:14},{wch:16},{wch:16},{wch:10}
+    ];
+    XLSX.utils.book_append_sheet(wb, ws1, 'Semua Inventaris');
+
+    // Sheet 2
+    if (restockRows.length > 0) {
+      const ws2 = XLSX.utils.json_to_sheet(restockRows);
+      ws2['!cols'] = [
+        {wch:5},{wch:30},{wch:14},{wch:22},{wch:10},{wch:14},{wch:12},{wch:14},{wch:16},{wch:22}
+      ];
+      XLSX.utils.book_append_sheet(wb, ws2, 'Butuh Restock');
+    } else {
+      const ws2 = XLSX.utils.aoa_to_sheet([['Tidak ada barang yang perlu direstock pada ' + todayStr]]);
+      XLSX.utils.book_append_sheet(wb, ws2, 'Butuh Restock');
+    }
+
+    const fileName = `Laporan_Inventaris_RSB_${today.getFullYear()}${String(today.getMonth()+1).padStart(2,'0')}${String(today.getDate()).padStart(2,'0')}.xlsx`;
+    XLSX.writeFile(wb, fileName);
+    showToast('✅ File Excel berhasil diunduh!');
+  });
+  document.getElementById('btn-save').addEventListener('click', () => {
+    const name = document.getElementById('item-name').value.trim();
+    const category = document.getElementById('item-category').value;
+    const zone = document.getElementById('item-zone').value;
+    const stock = parseInt(document.getElementById('item-stock').value, 10);
+    const min = parseInt(document.getElementById('item-min').value, 10);
+    const exp = document.getElementById('item-exp').value;
+    const twobin = document.getElementById('item-twobin').checked;
+
+    if (!name || isNaN(stock) || isNaN(min) || !exp) {
+      showToast('⚠️ Lengkapi semua kolom formulir terlebih dahulu.');
+      return;
+    }
+
+    const newItem = { id: Date.now(), name, category, zone, stock, min, exp, twobin };
+    items.push(newItem);
+    saveToStorage();
+    renderInventory();
+
+    document.getElementById('item-name').value = '';
+    document.getElementById('item-stock').value = '';
+    document.getElementById('item-min').value = '';
+    document.getElementById('item-exp').value = '';
+    document.getElementById('item-twobin').checked = false;
+
+    showToast(`✅ "${name}" berhasil ditambahkan ke inventaris.`);
+  });
+
+  // Category tabs
+  document.getElementById('category-tabs').addEventListener('click', (e) => {
+    if (e.target.classList.contains('tab-btn')) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      e.target.classList.add('active');
+      currentFilter = e.target.getAttribute('data-cat');
+      renderInventory();
+    }
+  });
+
+  renderInventory();
+})();
+</script>
+</body>
+</html>
