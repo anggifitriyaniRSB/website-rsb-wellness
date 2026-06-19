@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Golden Harmony — RSB Wellness</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#080600;--deep:#0c0900;
+  --gold:#d4a010;--amber:#f0b830;--honey:#ffd060;--pear:#c8d820;
+  --warm:#e8901a;--cream:#fffdf0;--muted:rgba(255,253,240,0.5);
+  --glass:rgba(212,160,16,0.08);
+  --glow:rgba(212,160,16,0.35);--glow2:rgba(255,208,96,0.3);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--cream);font-family:"Inter",sans-serif;overflow-x:hidden;cursor:none}
+.cursor{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--honey);pointer-events:none;z-index:9999;mix-blend-mode:screen}
+.cursor-ring{position:fixed;width:36px;height:36px;border-radius:50%;border:1.5px solid rgba(255,208,96,0.45);pointer-events:none;z-index:9998;transition:transform 0.15s,width 0.3s,height 0.3s}
+.cursor-ring.h{width:54px;height:54px;opacity:0.4}
+#gold-canvas{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:0.32}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:1.3rem 4rem;display:flex;align-items:center;justify-content:space-between;transition:background 0.4s}
+nav.scrolled{background:rgba(8,6,0,0.96);backdrop-filter:blur(18px);border-bottom:1px solid rgba(212,160,16,0.15)}
+.logo{font-family:"Playfair Display",serif;font-size:1.1rem;letter-spacing:0.18em;color:var(--honey);text-transform:uppercase;font-weight:600;text-decoration:none}
+.logo span{color:var(--cream)}
+.nav-links{display:flex;gap:2.8rem;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.74rem;letter-spacing:0.13em;text-transform:uppercase;transition:color 0.3s;font-weight:500}
+.nav-links a:hover{color:var(--honey)}
+.nav-cta{padding:0.55rem 1.5rem;border-radius:50px;background:linear-gradient(135deg,var(--gold),var(--amber),var(--honey));color:#1a1000;font-size:0.74rem;font-weight:700;letter-spacing:0.08em;text-decoration:none;box-shadow:0 4px 20px var(--glow);transition:transform 0.2s,box-shadow 0.2s}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 8px 30px var(--glow)}
+
+#hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 75% at 65% 50%,rgba(212,160,16,0.16) 0%,rgba(240,184,48,0.07) 40%,transparent 65%),radial-gradient(ellipse 35% 45% at 20% 70%,rgba(200,216,32,0.08) 0%,transparent 60%);pointer-events:none}
+.hero-left{position:relative;z-index:10;padding:0 4rem;flex:1;max-width:580px}
+.hero-badge{display:inline-flex;align-items:center;gap:0.5rem;padding:0.38rem 1.1rem;border-radius:50px;border:1px solid rgba(212,160,16,0.4);background:rgba(212,160,16,0.08);font-size:0.67rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--amber);margin-bottom:1.6rem;opacity:0;animation:fadeUp 0.7s 0.2s forwards}
+.hero-badge::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--amber);animation:blink 2s infinite}
+.hero-title{font-family:"Playfair Display",serif;font-size:clamp(2.6rem,6vw,5.2rem);font-weight:700;line-height:1.0;opacity:0;animation:fadeUp 0.8s 0.4s forwards}
+.hero-title em{font-style:italic;color:var(--honey);display:block}
+.hero-title .sub{font-size:clamp(0.9rem,1.8vw,1.2rem);font-weight:400;color:var(--muted);display:block;margin-top:0.5rem;font-style:normal;letter-spacing:0.1em;text-transform:uppercase;font-family:"Inter",sans-serif}
+.hero-desc{margin-top:1.4rem;max-width:420px;font-size:0.92rem;color:var(--muted);line-height:1.82;font-weight:300;opacity:0;animation:fadeUp 0.8s 0.65s forwards}
+.hero-pills{display:flex;flex-wrap:wrap;gap:0.6rem;margin-top:1.5rem;opacity:0;animation:fadeUp 0.8s 0.8s forwards}
+.h-pill{padding:0.32rem 0.9rem;border-radius:50px;border:1px solid rgba(212,160,16,0.3);font-size:0.7rem;color:var(--amber);background:rgba(212,160,16,0.07)}
+.hero-actions{margin-top:2rem;display:flex;gap:1rem;align-items:center;opacity:0;animation:fadeUp 0.8s 0.95s forwards}
+.btn-gold{padding:0.85rem 2.2rem;border-radius:50px;background:linear-gradient(135deg,var(--gold),var(--amber),var(--honey));border:none;color:#1a1000;font-size:0.88rem;font-weight:700;letter-spacing:0.04em;cursor:none;box-shadow:0 0 35px var(--glow);transition:transform 0.2s,box-shadow 0.2s;text-decoration:none;display:inline-block}
+.btn-gold:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 0 65px var(--glow)}
+.btn-outline{padding:0.85rem 2.2rem;border-radius:50px;border:1px solid rgba(212,160,16,0.35);color:var(--amber);font-size:0.88rem;font-weight:500;cursor:none;background:transparent;transition:border-color 0.3s,background 0.3s;text-decoration:none;display:inline-block}
+.btn-outline:hover{border-color:var(--honey);background:rgba(212,160,16,0.08)}
+.hero-right{position:relative;z-index:10;flex:1;display:flex;justify-content:center;align-items:center;padding:6rem 4rem 6rem 0}
+.bottle-wrapper{animation:heroFloat 5s ease-in-out infinite;position:relative}
+.bottle-glow{position:absolute;inset:-60px;background:radial-gradient(ellipse at center,rgba(212,160,16,0.3) 0%,rgba(200,216,32,0.1) 45%,transparent 68%);border-radius:50%;animation:pulseGlow 3.5s ease-in-out infinite;pointer-events:none}
+.bottle-img{width:min(255px,33vw);filter:drop-shadow(0 30px 70px rgba(212,160,16,0.55)) drop-shadow(0 0 40px rgba(255,208,96,0.2));border-radius:14px}
+.float-tag{position:absolute;background:rgba(8,6,0,0.92);border:1px solid rgba(212,160,16,0.28);border-radius:14px;padding:0.5rem 1rem;backdrop-filter:blur(12px);font-size:0.73rem;font-weight:500;animation:tagFloat 4s ease-in-out infinite;white-space:nowrap}
+.float-tag .tv{color:var(--honey);font-size:1rem;font-weight:700;font-family:"Playfair Display",serif;display:block}
+.ft-1{top:10%;right:-60%;animation-delay:0s}
+.ft-2{top:48%;left:-68%;animation-delay:1.5s}
+.ft-3{bottom:12%;right:-58%;animation-delay:2.8s}
+
+.ticker{background:linear-gradient(90deg,#2e1c00,#160d00,#2e1c00);padding:0.7rem 0;overflow:hidden;position:relative;z-index:5}
+.ticker-inner{display:flex;gap:3rem;animation:tickerScroll 22s linear infinite;white-space:nowrap}
+.ticker-item{font-size:0.68rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,253,240,0.72);flex-shrink:0}
+.ticker-sep{color:rgba(212,160,16,0.5)}
+
+#stats{padding:4.5rem 4rem;display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid rgba(212,160,16,0.12)}
+.stat-block{padding:2rem;border-right:1px solid rgba(212,160,16,0.1);text-align:center}
+.stat-block:last-child{border-right:none}
+.stat-num{font-family:"Playfair Display",serif;font-size:2.8rem;font-weight:700;color:var(--honey);line-height:1;display:block}
+.stat-unit{font-size:0.88rem;color:var(--amber)}
+.stat-label{font-size:0.7rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-top:0.4rem}
+.section-eyebrow{font-size:0.67rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--amber);margin-bottom:0.8rem}
+.section-heading{font-family:"Playfair Display",serif;font-size:clamp(1.8rem,3.5vw,3rem);font-weight:700;line-height:1.15}
+
+/* HARMONY SCORE — BALANCE INTERAKTIF */
+#harmony{padding:6rem 4rem;background:var(--deep)}
+.harmony-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.balance-visual{padding:2.5rem;border-radius:24px;background:var(--glass);border:1px solid rgba(212,160,16,0.2)}
+.bv-title{font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--amber);margin-bottom:2rem}
+/* Taste radar */
+.radar-wrap{position:relative;width:240px;height:240px;margin:0 auto 1.5rem}
+.radar-wrap svg{width:100%;height:100%}
+.radar-bg{fill:none;stroke:rgba(212,160,16,0.1);stroke-width:1}
+.radar-axis{stroke:rgba(212,160,16,0.15);stroke-width:1}
+.radar-shape{fill:rgba(212,160,16,0.2);stroke:var(--honey);stroke-width:2;transition:all 0.8s cubic-bezier(0.4,0,0.2,1)}
+.radar-dot{fill:var(--honey);transition:all 0.8s}
+.radar-label{fill:rgba(255,253,240,0.6);font-size:9px;font-family:Inter,sans-serif}
+.radar-label.active{fill:var(--honey);font-weight:600}
+.taste-toggle-group{display:flex;gap:0.5rem;flex-wrap:wrap;justify-content:center;margin-top:1.2rem}
+.t-toggle{padding:0.38rem 0.9rem;border-radius:50px;border:1px solid rgba(212,160,16,0.28);background:transparent;color:var(--muted);font-size:0.7rem;cursor:none;transition:all 0.3s;font-family:"Inter",sans-serif}
+.t-toggle.active,.t-toggle:hover{background:rgba(212,160,16,0.15);border-color:var(--amber);color:var(--honey)}
+.harmony-score-big{font-family:"Playfair Display",serif;font-size:4.5rem;color:var(--honey);text-align:center;line-height:1}
+.harmony-score-label{text-align:center;font-size:0.8rem;color:var(--muted);margin-top:0.3rem}
+.taste-bars{margin-top:1.5rem;display:flex;flex-direction:column;gap:0.9rem}
+.taste-bar-item{display:flex;align-items:center;gap:1rem}
+.taste-bar-name{font-size:0.75rem;color:var(--muted);min-width:70px}
+.taste-bar{flex:1;height:6px;border-radius:3px;background:rgba(212,160,16,0.1);overflow:hidden}
+.taste-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold),var(--honey));transition:width 0.8s cubic-bezier(0.4,0,0.2,1)}
+.taste-val{font-size:0.73rem;color:var(--honey);min-width:30px;text-align:right}
+
+/* INGREDIENT EXPLORER */
+#ingredients{padding:6rem 4rem;background:var(--bg)}
+.ingr-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;margin-top:3rem}
+.ingr-tabs{display:flex;flex-direction:column;gap:0.5rem}
+.ingr-tab{padding:1.2rem 1.5rem;border-radius:16px;border:1px solid rgba(212,160,16,0.15);background:transparent;display:flex;align-items:center;gap:1rem;cursor:none;transition:all 0.35s;text-align:left;font-family:"Inter",sans-serif;color:var(--cream)}
+.ingr-tab:hover{border-color:rgba(212,160,16,0.4);background:rgba(212,160,16,0.06)}
+.ingr-tab.active{border-color:var(--amber);background:rgba(212,160,16,0.1);box-shadow:0 0 25px rgba(212,160,16,0.1)}
+.ingr-emoji{font-size:1.8rem;flex-shrink:0;width:48px;text-align:center}
+.ingr-tab-name{font-weight:600;font-size:0.9rem;color:var(--cream)}
+.ingr-tab-sub{font-size:0.72rem;color:var(--muted);margin-top:0.2rem}
+.ingr-detail{position:sticky;top:5rem;padding:2rem;border-radius:22px;background:var(--glass);border:1px solid rgba(212,160,16,0.2);min-height:390px}
+.ingr-detail-emoji{font-size:4rem;margin-bottom:1.2rem}
+.ingr-detail-name{font-family:"Playfair Display",serif;font-size:1.6rem;color:var(--honey);margin-bottom:0.5rem}
+.ingr-detail-origin{font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--amber);margin-bottom:1rem}
+.ingr-detail-desc{font-size:0.88rem;color:var(--muted);line-height:1.78;margin-bottom:1.2rem}
+.ingr-compounds{display:flex;flex-wrap:wrap;gap:0.5rem}
+.cpill{padding:0.28rem 0.85rem;border-radius:50px;border:1px solid rgba(212,160,16,0.3);font-size:0.7rem;color:var(--amber);background:rgba(212,160,16,0.07)}
+.ingr-bar-group{margin-top:1.5rem}
+.ibarlbl{display:flex;justify-content:space-between;font-size:0.72rem;margin-bottom:0.3rem;color:var(--cream)}
+.ibar{height:6px;border-radius:3px;background:rgba(212,160,16,0.1);overflow:hidden;margin-bottom:0.8rem}
+.ifill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold),var(--honey));transition:width 0.9s cubic-bezier(0.4,0,0.2,1)}
+
+/* MOOD PAIRING */
+#mood{padding:6rem 4rem;background:var(--deep)}
+.mood-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-top:3rem}
+.mood-card{padding:2rem;border-radius:22px;border:1px solid rgba(212,160,16,0.15);background:var(--glass);cursor:none;transition:all 0.4s;position:relative;overflow:hidden}
+.mood-card::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(212,160,16,0.12),transparent 65%);opacity:0;transition:opacity 0.4s}
+.mood-card:hover{transform:translateY(-6px);border-color:rgba(255,208,96,0.5);box-shadow:0 20px 50px rgba(212,160,16,0.14)}
+.mood-card:hover::after{opacity:1}
+.mood-icon{font-size:2.5rem;margin-bottom:1.2rem}
+.mood-time{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--amber);margin-bottom:0.5rem}
+.mood-title{font-family:"Playfair Display",serif;font-size:1.1rem;color:var(--honey);margin-bottom:0.6rem}
+.mood-desc{font-size:0.78rem;color:var(--muted);line-height:1.65}
+.mood-tag{display:inline-block;margin-top:1rem;padding:0.25rem 0.75rem;border-radius:50px;border:1px solid rgba(212,160,16,0.3);font-size:0.66rem;color:var(--amber)}
+
+/* QUIZ */
+#quiz{padding:6rem 4rem;background:var(--bg)}
+.quiz-wrap{max-width:680px;margin:3rem auto 0}
+.quiz-q{font-family:"Playfair Display",serif;font-size:1.5rem;margin-bottom:1.8rem;line-height:1.35;min-height:76px}
+.quiz-progress{display:flex;gap:0.4rem;margin-bottom:2rem}
+.quiz-dot{width:8px;height:8px;border-radius:50%;background:rgba(212,160,16,0.2);transition:background 0.3s}
+.quiz-dot.done{background:var(--amber)}
+.quiz-dot.active{background:var(--honey);box-shadow:0 0 10px var(--glow2)}
+.quiz-opts{display:grid;grid-template-columns:1fr 1fr;gap:0.9rem}
+.quiz-opt{padding:1rem 1.3rem;border-radius:16px;border:1px solid rgba(212,160,16,0.22);background:var(--glass);color:var(--cream);font-size:0.86rem;cursor:none;transition:all 0.3s;text-align:left;font-family:"Inter",sans-serif;line-height:1.4}
+.quiz-opt:hover{border-color:var(--amber);background:rgba(212,160,16,0.1);transform:translateY(-2px)}
+.quiz-opt.correct{border-color:#5cb85c;background:rgba(92,184,92,0.12);color:#a8e6ab}
+.quiz-opt.wrong{border-color:#e57373;background:rgba(229,115,115,0.1);color:#ffb3b3}
+.quiz-exp{margin-top:0.9rem;padding:0.85rem 1.2rem;border-radius:12px;background:rgba(212,160,16,0.07);border-left:3px solid var(--gold);font-size:0.78rem;color:var(--muted);line-height:1.65;display:none}
+.quiz-exp.show{display:block}
+.quiz-result{text-align:center;padding:2.5rem;border-radius:24px;background:var(--glass);border:1px solid rgba(212,160,16,0.22);display:none}
+.quiz-result.show{display:block}
+.quiz-score{font-family:"Playfair Display",serif;font-size:4rem;color:var(--honey);margin-bottom:0.5rem}
+.quiz-msg{font-size:0.92rem;color:var(--muted);line-height:1.7}
+.quiz-tip{margin-top:1.5rem;padding:1rem 1.5rem;border-radius:14px;background:rgba(212,160,16,0.07);border:1px solid rgba(212,160,16,0.2);font-size:0.83rem;color:var(--cream);line-height:1.65}
+.btn-restart{margin-top:1.5rem;padding:0.75rem 2rem;border-radius:50px;background:linear-gradient(135deg,var(--gold),var(--amber));border:none;color:#1a1000;font-size:0.83rem;font-weight:700;cursor:none;font-family:"Inter",sans-serif}
+
+/* BENEFITS */
+#benefits{padding:6rem 4rem;background:var(--deep)}
+.ben-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-top:3rem}
+.ben-card{padding:2rem;border-radius:20px;background:rgba(212,160,16,0.05);border:1px solid rgba(212,160,16,0.13);transition:all 0.4s;position:relative;overflow:hidden;cursor:none}
+.ben-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(212,160,16,0.1),transparent 60%);opacity:0;transition:opacity 0.4s}
+.ben-card:hover{transform:translateY(-5px);border-color:rgba(255,208,96,0.5);box-shadow:0 20px 50px rgba(212,160,16,0.12)}
+.ben-card:hover::before{opacity:1}
+.ben-icon{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,var(--gold),var(--honey));display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:1.2rem;box-shadow:0 6px 18px rgba(212,160,16,0.28)}
+.ben-card h3{font-size:0.9rem;font-weight:600;margin-bottom:0.45rem}
+.ben-card p{font-size:0.79rem;color:var(--muted);line-height:1.65}
+
+/* CARA MINUM */
+#howto{padding:6rem 4rem;background:var(--bg)}
+.howto-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-top:3rem}
+.how-card{padding:2rem 1.5rem;border-radius:20px;background:var(--glass);border:1px solid rgba(212,160,16,0.14);text-align:center;transition:all 0.35s;cursor:none}
+.how-card:hover{transform:translateY(-6px);border-color:rgba(255,208,96,0.5);box-shadow:0 20px 50px rgba(212,160,16,0.12)}
+.how-num{font-family:"Playfair Display",serif;font-size:3rem;font-weight:700;color:rgba(212,160,16,0.13);line-height:1;margin-bottom:0.8rem}
+.how-emoji{font-size:2rem;margin-bottom:0.8rem}
+.how-title{font-weight:600;font-size:0.88rem;margin-bottom:0.4rem;color:var(--honey)}
+.how-desc{font-size:0.77rem;color:var(--muted);line-height:1.6}
+
+/* TESTI */
+#testi{padding:6rem 4rem;background:var(--deep)}
+.testi-scroll{display:flex;gap:1.5rem;overflow-x:auto;padding-bottom:1rem;scrollbar-width:thin;scrollbar-color:var(--gold) transparent;margin-top:3rem}
+.testi-scroll::-webkit-scrollbar{height:3px}
+.testi-scroll::-webkit-scrollbar-thumb{background:var(--amber);border-radius:99px}
+.testi-card{min-width:300px;max-width:300px;background:var(--glass);border:1px solid rgba(212,160,16,0.18);border-radius:20px;padding:1.8rem;flex-shrink:0;transition:transform 0.3s,border-color 0.3s;cursor:none}
+.testi-card:hover{transform:translateY(-4px);border-color:rgba(212,160,16,0.45)}
+.stars{color:var(--honey);letter-spacing:0.1em;font-size:0.85rem;margin-bottom:0.9rem}
+.testi-card blockquote{font-size:0.86rem;line-height:1.72;color:rgba(255,253,240,0.65);font-style:italic;margin-bottom:1.4rem}
+.testi-author{font-weight:600;font-size:0.78rem;color:var(--amber)}
+.testi-meta{font-size:0.68rem;color:var(--muted);margin-top:0.2rem}
+
+#cta{padding:8rem 4rem;text-align:center;background:linear-gradient(135deg,#060400,#0c0800,#060400);position:relative;overflow:hidden}
+#cta::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(212,160,16,0.2) 0%,transparent 65%)}
+#cta h2{font-family:"Playfair Display",serif;font-size:clamp(2rem,4.5vw,3.8rem);position:relative;z-index:1;line-height:1.1}
+#cta h2 em{color:var(--honey);font-style:italic}
+#cta p{margin-top:1rem;color:var(--muted);font-size:0.95rem;position:relative;z-index:1}
+.cta-btns{display:flex;gap:1rem;justify-content:center;margin-top:2.5rem;position:relative;z-index:1}
+footer{padding:2.5rem 4rem;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(212,160,16,0.1);color:rgba(255,253,240,0.25);font-size:0.72rem}
+footer span{color:var(--amber)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes heroFloat{0%,100%{transform:translateY(0)}40%{transform:translateY(-13px)}70%{transform:translateY(-6px)}}
+@keyframes pulseGlow{0%,100%{transform:scale(1);opacity:0.5}50%{transform:scale(1.1);opacity:0.9}}
+@keyframes tagFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+@keyframes tickerScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.8s ease,transform 0.8s ease}
+.reveal.visible{opacity:1;transform:none}
+.d1{transition-delay:0.1s}.d2{transition-delay:0.2s}.d3{transition-delay:0.3s}
+@media(max-width:920px){
+  nav{padding:1rem 1.5rem}.nav-links,.nav-cta{display:none}
+  #hero{flex-direction:column;padding-top:5rem}
+  .hero-left{padding:2rem 1.5rem;max-width:none;text-align:center}
+  .hero-pills,.hero-actions{justify-content:center}
+  .hero-desc{margin:1rem auto 0}
+  .hero-right{padding:2rem 1.5rem}
+  #stats{grid-template-columns:1fr 1fr;padding:3rem 1.5rem}
+  .harmony-grid,.ingr-grid{grid-template-columns:1fr}
+  .mood-grid{grid-template-columns:1fr 1fr}
+  #harmony,#ingredients,#mood,#quiz,#benefits,#howto,#testi,#cta{padding:4rem 1.5rem}
+  .ben-grid{grid-template-columns:1fr 1fr}
+  .howto-grid{grid-template-columns:1fr 1fr}
+  .quiz-opts{grid-template-columns:1fr}
+  .ft-1,.ft-2,.ft-3{display:none}
+  footer{flex-direction:column;gap:1rem;text-align:center}
+  .cta-btns{flex-direction:column;align-items:center}
+}
+@media(max-width:560px){.ben-grid,.howto-grid,.mood-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<canvas id="gold-canvas"></canvas>
+
+<nav id="navbar">
+  <a href="#" class="logo">RSB <span>Wellness</span></a>
+  <ul class="nav-links">
+    <li><a href="#harmony">Harmony Score</a></li>
+    <li><a href="#ingredients">Bahan</a></li>
+    <li><a href="#mood">Mood Pairing</a></li>
+    <li><a href="#quiz">Kuis</a></li>
+  </ul>
+  <a href="https://wa.me/6287791299376" class="nav-cta">Pesan Sekarang</a>
+</nav>
+
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-left">
+    <div class="hero-badge">✨ Cold Pressed Juice · Keseimbangan Rasa</div>
+    <h1 class="hero-title">
+      <em>Golden Harmony</em>
+      Cold Pressed Juice
+      <span class="sub">Nanas · Pir · Jahe · Madu</span>
+    </h1>
+    <p class="hero-desc">Empat bahan premium berpadu dalam keseimbangan sempurna — kesegaran nanas, kelembutan pir, kehangatan jahe, dan kemanisan madu. Dipres dingin untuk mempertahankan enzim dan nutrisi yang utuh. Golden dalam nama, golden dalam manfaat.</p>
+    <div class="hero-pills">
+      <span class="h-pill">🍍 Nanas</span>
+      <span class="h-pill">🍐 Pir</span>
+      <span class="h-pill">🫚 Jahe</span>
+      <span class="h-pill">🍯 Madu</span>
+      <span class="h-pill">Zero Sugar Added</span>
+      <span class="h-pill">Zero Pengawet</span>
+    </div>
+    <div class="hero-actions">
+      <a href="https://wa.me/6287791299376" class="btn-gold">Pesan via WhatsApp</a>
+      <a href="#harmony" class="btn-outline">Lihat Harmony Score →</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div style="position:relative">
+      <div class="bottle-wrapper">
+        <div class="bottle-glow"></div>
+        <img src="1001371195.png" alt="Golden Harmony Cold Pressed Juice" class="bottle-img">
+        <div class="float-tag ft-1"><span class="tv">Sorbitol</span>Serat Lembut Pir</div>
+        <div class="float-tag ft-2"><span class="tv">Bromelain</span>Enzim Nanas Aktif</div>
+        <div class="float-tag ft-3"><span class="tv">Harmony</span>4 Rasa Seimbang</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item">Golden Harmony</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Nanas · Pir · Jahe · Madu</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Cold Pressed</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Keseimbangan Rasa</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Enzim Aktif</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">RSB Wellness</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Tanpa Pengawet</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">UMKM Binaan BI</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Golden Harmony</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Nanas · Pir · Jahe · Madu</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Cold Pressed</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Keseimbangan Rasa</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Enzim Aktif</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">RSB Wellness</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Tanpa Pengawet</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">UMKM Binaan BI</span><span class="ticker-sep">✦</span>
+  </div>
+</div>
+
+<section id="stats">
+  <div class="stat-block reveal"><span class="stat-num">4</span><div class="stat-unit">Bahan Premium</div><div class="stat-label">Nanas · Pir · Jahe · Madu</div></div>
+  <div class="stat-block reveal d1"><span class="stat-num">0</span><div class="stat-unit">Tambahan</div><div class="stat-label">No Sugar · No Water · No Preserv.</div></div>
+  <div class="stat-block reveal d2"><span class="stat-num">250</span><div class="stat-unit">ml</div><div class="stat-label">Per Botol</div></div>
+  <div class="stat-block reveal d3"><span class="stat-num">100</span><div class="stat-unit">%</div><div class="stat-label">Harmony Score</div></div>
+</section>
+
+<!-- HARMONY SCORE -->
+<section id="harmony">
+  <div class="harmony-grid">
+    <div class="reveal">
+      <p class="section-eyebrow">Keseimbangan Rasa</p>
+      <h2 class="section-heading">Harmony Score —<br><em style="color:var(--honey);font-style:italic">Profil Rasa Interaktif</em></h2>
+      <p style="color:var(--muted);font-size:0.9rem;line-height:1.82;margin-top:1.2rem">Golden Harmony dirancang untuk mencapai keseimbangan rasa yang sempurna — tidak ada satu bahan pun yang mendominasi. Pir melunakkan ketajaman nanas. Madu menyeimbangkan pedas jahe. Jahe mengangkat kemanisan agar tidak monoton. Hasilnya: harmoni rasa yang bisa dinikmati siapa saja.</p>
+      <p style="color:var(--muted);font-size:0.88rem;line-height:1.75;margin-top:1rem">Klik setiap profil di bawah untuk melihat bagaimana perubahan komposisi memengaruhi keseimbangan rasa Golden Harmony.</p>
+      <div class="taste-bars" style="margin-top:2rem" id="tasteBars">
+        <div class="taste-bar-item"><span class="taste-bar-name">Manis</span><div class="taste-bar"><div class="taste-fill" id="tb-sweet" style="width:0" data-w="75"></div></div><span class="taste-val" id="tv-sweet">75%</span></div>
+        <div class="taste-bar-item"><span class="taste-bar-name">Segar</span><div class="taste-bar"><div class="taste-fill" id="tb-fresh" style="width:0" data-w="85"></div></div><span class="taste-val" id="tv-fresh">85%</span></div>
+        <div class="taste-bar-item"><span class="taste-bar-name">Hangat</span><div class="taste-bar"><div class="taste-fill" id="tb-warm" style="width:0" data-w="55"></div></div><span class="taste-val" id="tv-warm">55%</span></div>
+        <div class="taste-bar-item"><span class="taste-bar-name">Ringan</span><div class="taste-bar"><div class="taste-fill" id="tb-light" style="width:0" data-w="80"></div></div><span class="taste-val" id="tv-light">80%</span></div>
+        <div class="taste-bar-item"><span class="taste-bar-name">Kompleks</span><div class="taste-bar"><div class="taste-fill" id="tb-complex" style="width:0" data-w="72"></div></div><span class="taste-val" id="tv-complex">72%</span></div>
+      </div>
+    </div>
+    <div class="reveal d1">
+      <div class="balance-visual">
+        <div class="bv-title">Profil Rasa per Variasi Konsumsi</div>
+        <div class="radar-wrap">
+          <svg viewBox="0 0 240 240" id="radarSVG">
+            <!-- grid rings -->
+            <polygon points="120,30 196,72 196,168 120,210 44,168 44,72" class="radar-bg"/>
+            <polygon points="120,57 173,86 173,154 120,183 67,154 67,86" class="radar-bg"/>
+            <polygon points="120,84 150,100 150,140 120,156 90,140 90,100" class="radar-bg"/>
+            <!-- axes -->
+            <line x1="120" y1="30" x2="120" y2="210" class="radar-axis"/>
+            <line x1="44" y1="72" x2="196" y2="168" class="radar-axis"/>
+            <line x1="196" y1="72" x2="44" y2="168" class="radar-axis"/>
+            <!-- shape - filled by JS -->
+            <polygon id="radarShape" class="radar-shape" points="120,57 173,86 173,154 120,183 67,154 67,86"/>
+            <!-- dots -->
+            <circle id="rd0" cx="120" cy="57" r="4" class="radar-dot"/>
+            <circle id="rd1" cx="173" cy="86" r="4" class="radar-dot"/>
+            <circle id="rd2" cx="173" cy="154" r="4" class="radar-dot"/>
+            <circle id="rd3" cx="120" cy="183" r="4" class="radar-dot"/>
+            <circle id="rd4" cx="67" cy="154" r="4" class="radar-dot"/>
+            <circle id="rd5" cx="67" cy="86" r="4" class="radar-dot"/>
+            <!-- labels -->
+            <text x="120" y="20" text-anchor="middle" class="radar-label">Manis</text>
+            <text x="206" y="72" text-anchor="start" class="radar-label">Segar</text>
+            <text x="206" y="175" text-anchor="start" class="radar-label">Hangat</text>
+            <text x="120" y="226" text-anchor="middle" class="radar-label">Ringan</text>
+            <text x="34" y="175" text-anchor="end" class="radar-label">Seimbang</text>
+            <text x="34" y="72" text-anchor="end" class="radar-label">Kompleks</text>
+          </svg>
+        </div>
+        <div class="harmony-score-big" id="harmonyNum">96</div>
+        <div class="harmony-score-label" id="harmonyLabel">Golden Harmony Original — Keseimbangan Sempurna</div>
+        <div class="taste-toggle-group">
+          <button class="t-toggle active" onclick="setProfile('original',this)">Original</button>
+          <button class="t-toggle" onclick="setProfile('morePineapple',this)">Lebih Nanas</button>
+          <button class="t-toggle" onclick="setProfile('morePear',this)">Lebih Pir</button>
+          <button class="t-toggle" onclick="setProfile('moreGinger',this)">Lebih Jahe</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INGREDIENT EXPLORER -->
+<section id="ingredients">
+  <p class="section-eyebrow reveal">Komposisi</p>
+  <h2 class="section-heading reveal">4 Bahan Premium,<br><em style="color:var(--honey);font-style:italic">Satu Golden Harmony</em></h2>
+  <div class="ingr-grid">
+    <div class="ingr-tabs reveal">
+      <button class="ingr-tab active" onclick="setIngr(0,this)"><span class="ingr-emoji">🍍</span><div><div class="ingr-tab-name">Nanas Segar</div><div class="ingr-tab-sub">Bromelain & kesegaran tropik</div></div></button>
+      <button class="ingr-tab" onclick="setIngr(1,this)"><span class="ingr-emoji">🍐</span><div><div class="ingr-tab-name">Pir Segar</div><div class="ingr-tab-sub">Serat sorbitol & kelembutan</div></div></button>
+      <button class="ingr-tab" onclick="setIngr(2,this)"><span class="ingr-emoji">🫚</span><div><div class="ingr-tab-name">Jahe Segar</div><div class="ingr-tab-sub">Gingerol & kehangatan</div></div></button>
+      <button class="ingr-tab" onclick="setIngr(3,this)"><span class="ingr-emoji">🍯</span><div><div class="ingr-tab-name">Madu Murni</div><div class="ingr-tab-sub">Prebiotik & keseimbangan rasa</div></div></button>
+    </div>
+    <div class="ingr-detail reveal d1" id="ingrDetail"></div>
+  </div>
+</section>
+
+<!-- MOOD PAIRING -->
+<section id="mood">
+  <div style="text-align:center" class="reveal">
+    <p class="section-eyebrow">Kapan Minum?</p>
+    <h2 class="section-heading" style="max-width:none">Mood Pairing —<br><em style="color:var(--honey);font-style:italic">Golden untuk Setiap Momen</em></h2>
+    <p style="color:var(--muted);font-size:0.87rem;margin-top:0.8rem;max-width:500px;margin-left:auto;margin-right:auto">Golden Harmony adalah minuman paling versatile dari lini RSB — cocok di berbagai momen karena keseimbangannya yang sempurna</p>
+  </div>
+  <div class="mood-grid">
+    <div class="mood-card reveal">
+      <div class="mood-icon">🌅</div>
+      <div class="mood-time">Pagi · 06:00–08:00</div>
+      <div class="mood-title">Morning Ritual</div>
+      <div class="mood-desc">Diminum saat perut kosong sebelum sarapan. Enzim bromelain dan gingerol mengaktifkan metabolisme, Vitamin B madu memberikan energi stabil untuk memulai hari.</div>
+      <span class="mood-tag">Energi Pagi</span>
+    </div>
+    <div class="mood-card reveal d1">
+      <div class="mood-icon">💼</div>
+      <div class="mood-time">Siang · 12:00–14:00</div>
+      <div class="mood-title">Lunch Companion</div>
+      <div class="mood-desc">Diminum bersamaan atau setelah makan siang. Bromelain nanas membantu mencerna protein makanan. Sorbitol pir menjaga pencernaan tetap lancar di tengah hari.</div>
+      <span class="mood-tag">Pencernaan Sehat</span>
+    </div>
+    <div class="mood-card reveal d2">
+      <div class="mood-icon">🏋️</div>
+      <div class="mood-time">Pre-Workout · 30 Menit Sebelum</div>
+      <div class="mood-title">Pre-Workout Fuel</div>
+      <div class="mood-desc">Gula alami nanas + pir memberikan energi cepat. Gingerol meningkatkan sirkulasi darah ke otot. Madu menyediakan karbohidrat mudah diserap untuk performa optimal.</div>
+      <span class="mood-tag">Performa Olahraga</span>
+    </div>
+    <div class="mood-card reveal">
+      <div class="mood-icon">📚</div>
+      <div class="mood-time">Sore · 15:00–17:00</div>
+      <div class="mood-title">Focus Booster</div>
+      <div class="mood-desc">Di saat produktivitas sering menurun, Golden Harmony memberikan natural sugar boost tanpa crash. Antioksidan mendukung aliran darah ke otak untuk fokus lebih tajam.</div>
+      <span class="mood-tag">Fokus & Produktif</span>
+    </div>
+    <div class="mood-card reveal d1">
+      <div class="mood-icon">🌿</div>
+      <div class="mood-time">Recovery · Post-Workout</div>
+      <div class="mood-title">Recovery Drink</div>
+      <div class="mood-desc">Setelah berolahraga, antiinflamasi gingerol membantu pemulihan otot. Kalium dari nanas dan pir menggantikan elektrolit yang hilang. Madu mempercepat replenishment glikogen otot.</div>
+      <span class="mood-tag">Pemulihan Otot</span>
+    </div>
+    <div class="mood-card reveal d2">
+      <div class="mood-icon">🤒</div>
+      <div class="mood-time">Saat Tidak Enak Badan</div>
+      <div class="mood-title">Immune Support</div>
+      <div class="mood-desc">Saat mulai merasa meriang atau tenggorokan tidak nyaman, Golden Harmony menjadi minuman pertama yang dicari. Gingerol + Vitamin C + madu = triple imunitas alami.</div>
+      <span class="mood-tag">Imunitas</span>
+    </div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz">
+  <div style="text-align:center" class="reveal">
+    <p class="section-eyebrow">Interaktif</p>
+    <h2 class="section-heading" style="max-width:none">Seberapa Kenal<br><em style="color:var(--honey);font-style:italic">Kamu dengan Golden Harmony?</em></h2>
+    <p style="color:var(--muted);font-size:0.86rem;margin-top:0.8rem">5 pertanyaan · temukan momen terbaik untuk Golden Harmony-mu</p>
+  </div>
+  <div class="quiz-wrap">
+    <div class="quiz-progress" id="qProg"></div>
+    <div class="quiz-q" id="qText"></div>
+    <div class="quiz-opts" id="qOpts"></div>
+    <div class="quiz-exp" id="qExp"></div>
+    <div class="quiz-result" id="qResult">
+      <div class="quiz-score" id="qScore"></div>
+      <div class="quiz-msg" id="qMsg"></div>
+      <div class="quiz-tip" id="qTip"></div>
+      <button class="btn-restart" onclick="startQuiz()">Ulangi Kuis →</button>
+    </div>
+  </div>
+</section>
+
+<!-- BENEFITS -->
+<section id="benefits">
+  <p class="section-eyebrow reveal">Manfaat</p>
+  <h2 class="section-heading reveal">6 Alasan Golden Harmony<br><em style="color:var(--honey);font-style:italic">Selalu Pas di Setiap Hari</em></h2>
+  <div class="ben-grid">
+    <div class="ben-card reveal"><div class="ben-icon">⚖️</div><h3>Keseimbangan Gula Darah</h3><p>Sorbitol pir diserap lebih lambat dari glukosa biasa. Dikombinasikan dengan madu (GI rendah) dan serat nanas, Golden Harmony memberikan energi yang stabil tanpa spike gula darah.</p></div>
+    <div class="ben-card reveal d1"><div class="ben-icon">🫁</div><h3>Pencernaan Super Lancar</h3><p>Bromelain nanas + sorbitol pir adalah duo terkuat untuk pencernaan. Bromelain memecah protein, sorbitol bersifat osmotik mendukung gerakan usus yang sehat dan teratur.</p></div>
+    <div class="ben-card reveal d2"><div class="ben-icon">⚡</div><h3>Energi Bersih & Stabil</h3><p>Gula alami dari 3 sumber berbeda (nanas, pir, madu) memberikan kurva energi yang lebih panjang dan stabil. Tidak ada spike-crash seperti minuman dengan gula tambahan.</p></div>
+    <div class="ben-card reveal"><div class="ben-icon">🛡️</div><h3>Imunitas Lapis Ganda</h3><p>Vitamin C nanas + gingerol jahe + flavonoid madu menciptakan triple immune protection. Ideal diminum saat cuaca berubah atau ketika tubuh mulai terasa tidak fit.</p></div>
+    <div class="ben-card reveal d1"><div class="ben-icon">😌</div><h3>Paling Mudah Diminum</h3><p>Di antara semua cold press RSB, Golden Harmony memiliki profil rasa paling mild dan accessible. Cocok untuk semua usia, termasuk anak-anak dan lansia yang baru mengenal cold press juice.</p></div>
+    <div class="ben-card reveal d2"><div class="ben-icon">✨</div><h3>Anti-Inflamasi & Anti-Aging</h3><p>Polifenol pir + antioksidan nanas + gingerol jahe bersama menekan peradangan sistemik. Konsumsi rutin mendukung pembaruan sel, kesehatan sendi, dan vitalitas yang terjaga.</p></div>
+  </div>
+</section>
+
+<!-- CARA MINUM -->
+<section id="howto">
+  <div style="text-align:center" class="reveal">
+    <p class="section-eyebrow">Cara Konsumsi</p>
+    <h2 class="section-heading" style="max-width:none">4 Langkah untuk<br><em style="color:var(--honey);font-style:italic">Golden Experience</em></h2>
+  </div>
+  <div class="howto-grid">
+    <div class="how-card reveal"><div class="how-num">01</div><div class="how-emoji">🔄</div><div class="how-title">Kocok Perlahan</div><div class="how-desc">Endapan emas kekuningan di dasar adalah serat pir dan enzim nanas yang murni. Kocok lembut 2–3 kali agar semua lapisan nutrisi tercampur sempurna sebelum diminum.</div></div>
+    <div class="how-card reveal d1"><div class="how-num">02</div><div class="how-emoji">⏰</div><div class="how-title">Sesuai Momen</div><div class="how-desc">Golden Harmony cocok di berbagai waktu — pagi untuk energi, siang untuk pencernaan, sore untuk fokus. Fleksibilitas ini yang membuatnya jadi favorit semua orang.</div></div>
+    <div class="how-card reveal d2"><div class="how-num">03</div><div class="how-emoji">❄️</div><div class="how-title">Simpan Dingin</div><div class="how-desc">Tanpa pengawet, simpan di kulkas dan habiskan 1–2 jam setelah dibuka. Suhu dingin menjaga enzim bromelain dan gingerol tetap aktif dan tidak teroksidasi.</div></div>
+    <div class="how-card reveal d3"><div class="how-num">04</div><div class="how-emoji">📅</div><div class="how-title">Rutin Setiap Hari</div><div class="how-desc">Golden Harmony adalah cold press yang paling mudah dijadikan rutinitas harian karena rasanya yang accessible dan mild. Cocok untuk pemula maupun yang sudah terbiasa cold press.</div></div>
+  </div>
+</section>
+
+<!-- TESTI -->
+<section id="testi">
+  <div style="display:flex;align-items:end;justify-content:space-between;flex-wrap:wrap;gap:1rem" class="reveal">
+    <div>
+      <p class="section-eyebrow">Apa Kata Mereka</p>
+      <h2 class="section-heading" style="max-width:none">Golden Sudah<br>Dibuktikan</h2>
+    </div>
+    <p style="color:var(--muted);font-size:0.78rem">← Geser untuk lihat →</p>
+  </div>
+  <div class="testi-scroll">
+    <div class="testi-card"><div class="stars">★★★★★</div><blockquote>"Golden Harmony ini yang paling cocok di keluarga saya. Anak-anak suka karena manisnya natural, suami suka karena ada jahenya, dan saya suka karena sehatnya. Satu produk untuk semua!"</blockquote><div class="testi-author">Bu Ratna</div><div class="testi-meta">Ibu Rumah Tangga · Palangka Raya</div></div>
+    <div class="testi-card"><div class="stars">★★★★★</div><blockquote>"Ini minuman cold press pertama yang berani saya rekomendasikan ke pasien saya yang baru mau mulai hidup sehat. Rasanya paling 'masuk' untuk pemula — manis alami, segar, tidak ada rasa asing."</blockquote><div class="testi-author">dr. Hani K.</div><div class="testi-meta">Dokter Umum · Banjarmasin</div></div>
+    <div class="testi-card"><div class="stars">★★★★★</div><blockquote>"Saya minum Golden Harmony setiap hari 30 menit sebelum gym. Rasanya ringan di perut tapi energinya nyata. Setelah latihan juga lebih cepat recover — otot tidak terlalu pegal keesokan harinya."</blockquote><div class="testi-author">Kevin A.</div><div class="testi-meta">Personal Trainer · Palangka Raya</div></div>
+    <div class="testi-card"><div class="stars">★★★★★</div><blockquote>"Dari semua varian RSB yang sudah saya coba, Golden Harmony adalah yang paling elegan rasanya. Ada kedalaman dari pir yang jarang ada di cold press juice lain. Ini minuman premium yang sesungguhnya."</blockquote><div class="testi-author">Sela Puspita</div><div class="testi-meta">Food Critic · Jakarta</div></div>
+    <div class="testi-card"><div class="stars">★★★★★</div><blockquote>"Warna golden-nya cantik banget, dan rasanya memang setara namanya — harmonis! Pir memberikan kelembutan yang tidak ada di jus biasa. Sekarang Golden Harmony selalu ada di kulkas saya."</blockquote><div class="testi-card"><div class="testi-author">Yani Pertiwi</div><div class="testi-meta">Lifestyle Blogger · Samarinda</div></div></div>
+  </div>
+</section>
+
+<section id="cta">
+  <h2 class="reveal">Temukan Harmonimu<br>dalam Setiap <em>Golden Sip</em></h2>
+  <p class="reveal">Fresh dibuat setiap hari — stok terbatas per batch harian.</p>
+  <div class="cta-btns reveal">
+    <a href="https://wa.me/6287791299376" class="btn-gold" style="font-size:1rem;padding:1rem 3rem">💬 Pesan via WhatsApp</a>
+    <a href="#harmony" class="btn-outline" style="font-size:1rem;padding:1rem 2.5rem">Lihat Harmony Score</a>
+  </div>
+</section>
+
+<footer>
+  <div>© 2025 <span>Rumah Sehat Bunda</span> · RSB Wellness · Palangka Raya</div>
+  <div>Golden Harmony · Cold Pressed · Nanas·Pir·Jahe·Madu · UMKM Binaan BI</div>
+</footer>
+
+<script>
+// CURSOR
+const cursor=document.getElementById("cursor"),ring=document.getElementById("cursorRing");
+let cx=0,cy=0,rx=0,ry=0;
+document.addEventListener("mousemove",e=>{cx=e.clientX;cy=e.clientY;cursor.style.left=cx-5+"px";cursor.style.top=cy-5+"px";});
+(function a(){rx+=(cx-rx)*0.1;ry+=(cy-ry)*0.1;ring.style.left=rx-18+"px";ring.style.top=ry-18+"px";requestAnimationFrame(a);})();
+document.querySelectorAll("a,button,.ben-card,.testi-card,.how-card,.ingr-tab,.mood-card").forEach(el=>{
+  el.addEventListener("mouseenter",()=>ring.classList.add("h"));
+  el.addEventListener("mouseleave",()=>ring.classList.remove("h"));
+});
+
+// GOLDEN PARTICLES
+(function(){
+  const c=document.getElementById("gold-canvas"),ctx=c.getContext("2d");
+  let W,H,pts=[];
+  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;}
+  resize();window.addEventListener("resize",resize);
+  function pt(){return{x:Math.random()*W,y:H+20,r:1.5+Math.random()*7,vy:-(0.2+Math.random()*0.6),vx:(Math.random()-0.5)*0.25,a:0.06+Math.random()*0.2,hue:38+Math.random()*25};}
+  for(let i=0;i<60;i++){const p=pt();p.y=Math.random()*H;pts.push(p);}
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    pts.forEach((p,i)=>{
+      p.y+=p.vy;p.x+=p.vx;
+      const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r);
+      g.addColorStop(0,`hsla(${p.hue},95%,68%,${p.a})`);
+      g.addColorStop(0.5,`hsla(${p.hue},85%,48%,${p.a*0.5})`);
+      g.addColorStop(1,`hsla(${p.hue},80%,35%,0)`);
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+      if(p.y<-20)pts[i]=pt();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// NAVBAR
+window.addEventListener("scroll",()=>{document.getElementById("navbar").classList.toggle("scrolled",scrollY>60);});
+
+// HARMONY / RADAR
+const profiles={
+  original:{score:96,label:"Golden Harmony Original — Keseimbangan Sempurna",bars:{sweet:75,fresh:85,warm:55,light:80,complex:72},radar:[75,85,55,80,72,78]},
+  morePineapple:{score:82,label:"Dominan Nanas — Lebih Segar & Asam",bars:{sweet:65,fresh:95,warm:45,light:90,complex:60},radar:[65,95,45,90,60,70]},
+  morePear:{score:88,label:"Dominan Pir — Lebih Lembut & Mild",bars:{sweet:88,fresh:70,warm:42,light:92,complex:55},radar:[88,70,42,92,55,65]},
+  moreGinger:{score:78,label:"Dominan Jahe — Lebih Kuat & Hangat",bars:{sweet:60,fresh:80,warm:90,light:55,complex:88},radar:[60,80,90,55,88,85]}
+};
+// Radar math: 6 axes, points at angles 270,330,30,90,150,210 deg (top = sweet)
+function radarPoint(val,axisIdx){
+  const angles=[270,330,30,90,150,210];
+  const a=angles[axisIdx]*(Math.PI/180);
+  const r=val/100*70;
+  return{x:120+r*Math.cos(a),y:120+r*Math.sin(a)};
+}
+function setProfile(key,btn){
+  document.querySelectorAll(".t-toggle").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  const p=profiles[key];
+  document.getElementById("harmonyNum").textContent=p.score;
+  document.getElementById("harmonyLabel").textContent=p.label;
+  // Update bars
+  const keys=["sweet","fresh","warm","light","complex"];
+  keys.forEach(k=>{
+    document.getElementById("tb-"+k).style.width=p.bars[k]+"%";
+    document.getElementById("tv-"+k).textContent=p.bars[k]+"%";
+  });
+  // Update radar
+  const pts=p.radar.map((v,i)=>radarPoint(v,i));
+  const polyStr=pts.map(p=>p.x+","+p.y).join(" ");
+  document.getElementById("radarShape").setAttribute("points",polyStr);
+  pts.forEach((pt,i)=>{
+    const d=document.getElementById("rd"+i);
+    if(d){d.setAttribute("cx",pt.x);d.setAttribute("cy",pt.y);}
+  });
+}
+// Init radar on scroll
+const harmonyObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      setTimeout(()=>{
+        setProfile("original",document.querySelector(".t-toggle.active")||document.querySelector(".t-toggle"));
+        document.querySelectorAll(".taste-fill").forEach(f=>{f.style.width=f.dataset.w+"%";});
+      },300);
+      harmonyObs.unobserve(e.target);
+    }
+  });
+},{threshold:0.2});
+const harmSec=document.getElementById("harmony");
+if(harmSec)harmonyObs.observe(harmSec);
+
+// INGREDIENT DATA
+const ingrData=[
+  {emoji:"🍍",name:"Nanas Segar",origin:"Ananas comosus · Buah Tropik Kalimantan",desc:"Nanas memberikan backbone kesegaran tropis pada Golden Harmony. Bromelain yang berlimpah tidak hanya membantu pencernaan protein tetapi juga memberikan efek antiinflamasi sistemik. Keasaman alami nanas diseimbangkan sempurna oleh kelembutan pir dan kemanisan madu.",compounds:["Bromelain","Vitamin C","Mangan","Serat Larut","Enzim Papain"],bars:[["Bromelain (Enzim)",90],["Vitamin C",80],["Antiinflamasi",78],["Kesegaran Rasa",92]]},
+  {emoji:"🍐",name:"Pir Segar",origin:"Pyrus communis · Buah Bertekstur Lembut",desc:"Pir adalah bahan rahasia Golden Harmony yang membedakannya dari cold press biasa. Sorbitol — gula alkohol alami pir — memberikan rasa manis yang lebih kompleks dan diserap lebih lambat dari glukosa. Tekstur lembut pir dalam bentuk juice menciptakan body yang smooth dan coating yang nyaman di tenggorokan.",compounds:["Sorbitol","Pektin","Quercetin","Vitamin C","Tembaga"],bars:[["Sorbitol (Pencernaan)",85],["Kelembutan Rasa",95],["Serat Pektin",80],["Antioksidan",72]]},
+  {emoji:"🫚",name:"Jahe Segar",origin:"Zingiber officinale · Rimpang Asia Tropis",desc:"Jahe dalam Golden Harmony hadir dengan dosis yang lebih mild dibanding Ruby Boost — berfungsi sebagai enhancer yang mengangkat semua rasa lain tanpa mendominasi. Gingerol meningkatkan sirkulasi, mendukung imunitas, dan memberikan 'finishing warmth' yang membuat setiap tegukan berkesan.",compounds:["Gingerol","Shogaol","Zingerone","Minyak Atsiri","Paradol"],bars:[["Kehangatan",70],["Antiinflamasi",85],["Peningkat Sirkulasi",80],["Imunomodulator",82]]},
+  {emoji:"🍯",name:"Madu Murni",origin:"Apis mellifera · Sari Bunga Alam Kalimantan",desc:"Madu adalah penyatu ajaib Golden Harmony — ia menyeimbangkan nanas yang asam, melunakkan jahe yang pedas, dan mengisi ruang antara rasa pir yang ringan dengan kelembutan golden. Prebiotik madu mendukung usus, sementara flavonoidnya menambah layer antioksidan yang menggenapi harmoni nutrisi.",compounds:["Flavonoid","Prebiotik Inulin","Enzim Diastase","Vitamin B Kompleks","Zinc"],bars:[["Keseimbangan Rasa",98],["Prebiotik Usus",85],["Antioksidan",82],["Indeks GI Rendah",75]]}
+];
+function setIngr(i,btn){
+  document.querySelectorAll(".ingr-tab").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  const d=ingrData[i];
+  document.getElementById("ingrDetail").innerHTML=`
+    <div class="ingr-detail-emoji">${d.emoji}</div>
+    <div class="ingr-detail-name">${d.name}</div>
+    <div class="ingr-detail-origin">${d.origin}</div>
+    <div class="ingr-detail-desc">${d.desc}</div>
+    <div class="ingr-compounds">${d.compounds.map(c=>`<span class="cpill">${c}</span>`).join("")}</div>
+    <div class="ingr-bar-group">${d.bars.map(b=>`<div class="ibarlbl"><span>${b[0]}</span></div><div class="ibar"><div class="ifill" style="width:0" data-w="${b[1]}"></div></div>`).join("")}</div>
+  `;
+  setTimeout(()=>{document.querySelectorAll(".ifill").forEach(f=>{f.style.width=f.dataset.w+"%";});},80);
+}
+setIngr(0,document.querySelector(".ingr-tab"));
+
+// QUIZ
+const qData=[
+  {q:"Bahan apa dalam Golden Harmony yang menjadikannya paling unik dibanding cold press juice lainnya?",opts:["Nanas organik","Pir — buah yang jarang digunakan dalam cold press juice","Jahe tiga kali lipat","Madu khusus lebah madu hutan"],ans:1,exp:"Pir adalah pembeda utama Golden Harmony. Kebanyakan cold press juice menggunakan apel sebagai base buah lunak — pir jarang digunakan. Sorbitol dalam pir memberikan profil rasa yang lebih lembut, body yang smooth, dan manfaat pencernaan yang berbeda dari apel."},
+  {q:"Apa keunggulan sorbitol dalam pir dibanding gula biasa untuk kesehatan?",opts:["Sorbitol lebih manis dari gula","Sorbitol diserap lebih lambat dan memiliki efek osmotik yang mendukung pencernaan","Sorbitol bebas kalori","Sorbitol menghilangkan rasa pahit"],ans:1,exp:"Sorbitol adalah gula alkohol yang diserap lebih lambat dari glukosa — artinya tidak menyebabkan spike gula darah setajam gula biasa. Selain itu, sorbitol memiliki efek osmotik di usus besar yang menarik air dan mendukung gerakan usus yang sehat, menjadikannya alami untuk mencegah konstipasi."},
+  {q:"Mengapa Golden Harmony disebut cold press paling 'accessible' untuk pemula?",opts:["Harganya paling murah","Profil rasanya paling seimbang — tidak ada satu rasa yang terlalu dominan","Ukuran botolnya lebih besar","Warnanya paling menarik"],ans:1,exp:"Golden Harmony dirancang dengan keseimbangan rasa sebagai prioritas utama. Pir melembutkan keasaman nanas. Madu menyeimbangkan pedas jahe. Tidak ada satu rasa yang menyerang — semua harmonis. Ini yang membuatnya mudah dinikmati oleh orang yang belum terbiasa rasa kuat dari cold press seperti bit atau lemon."},
+  {q:"Kapan waktu terbaik minum Golden Harmony jika tujuannya memaksimalkan pencernaan?",opts:["Malam sebelum tidur","30 menit sebelum atau bersamaan dengan makan siang","Saat berolahraga","Setelah bangun tidur langsung"],ans:1,exp:"Bromelain dari nanas bekerja paling efektif saat ada protein untuk dicerna — yaitu bersamaan atau setelah makan. Minum Golden Harmony di waktu makan siang memungkinkan bromelain membantu memecah protein dari makanan, mengurangi kembung, dan mendukung penyerapan nutrisi yang lebih optimal."},
+  {q:"Apa yang dimaksud 'Harmony Score 96' pada Golden Harmony?",opts:["Produk mendapat nilai 96 dari BPOM","Menggambarkan keseimbangan antara manis, segar, hangat, dan ringan yang hampir sempurna","96% kandungan buahnya organik","Harga produk dalam satuan tertentu"],ans:1,exp:"Harmony Score adalah representasi visual dari keseimbangan profil rasa Golden Harmony. Skor 96/100 menunjukkan bahwa keempat dimensi rasa — manis (pir+madu), segar (nanas), hangat (jahe), dan ringan (pir) — berada dalam proporsi yang hampir sempurna satu sama lain, tanpa ada yang berlebihan atau kurang."}
+];
+let qi=0,qs=0,qA=false;
+function startQuiz(){qi=0;qs=0;qA=false;document.getElementById("qResult").classList.remove("show");document.getElementById("qExp").classList.remove("show");renderQ();}
+function renderQ(){
+  const d=qData[qi];
+  document.getElementById("qProg").innerHTML=qData.map((_,i)=>`<div class="quiz-dot ${i<qi?"done":i===qi?"active":""}"></div>`).join("");
+  document.getElementById("qText").textContent=(qi+1)+". "+d.q;
+  document.getElementById("qOpts").innerHTML=d.opts.map((o,i)=>`<button class="quiz-opt" onclick="ansQ(${i})">${o}</button>`).join("");
+  document.getElementById("qExp").classList.remove("show");
+  qA=false;
+}
+function ansQ(i){
+  if(qA)return;qA=true;
+  const d=qData[qi];
+  document.querySelectorAll(".quiz-opt").forEach((b,idx)=>{
+    if(idx===d.ans)b.classList.add("correct");
+    else if(idx===i&&i!==d.ans)b.classList.add("wrong");
+    b.style.pointerEvents="none";
+  });
+  document.getElementById("qExp").textContent=d.exp;
+  document.getElementById("qExp").classList.add("show");
+  if(i===d.ans)qs++;
+  setTimeout(()=>{qi++;qi<qData.length?renderQ():showResult();},2300);
+}
+function showResult(){
+  document.getElementById("qOpts").innerHTML="";document.getElementById("qText").textContent="";
+  document.getElementById("qProg").innerHTML=qData.map(()=>`<div class="quiz-dot done"></div>`).join("");
+  document.getElementById("qExp").classList.remove("show");
+  const tier=qs<=1?0:qs<=3?1:2;
+  const data=[
+    ["Golden Beginner ✨","Mulai perjalananmu! Coba Golden Harmony setiap pagi selama 7 hari. Karena rasanya paling mild, ini adalah cold press terbaik untuk membangun kebiasaan minum jus sehat."],
+    ["Golden Explorer 🌟","Pengetahuanmu sudah solid! Coba variasi waktu minum: pagi untuk energi, siang untuk pencernaan, sore untuk fokus. Lihat mana yang paling kamu rasakan manfaatnya."],
+    ["Golden Master 👑","Luar biasa! Kamu benar-benar paham filosofi Golden Harmony. Coba rekomendasikan ke keluarga — ini adalah cold press yang paling mudah diterima oleh semua kalangan usia!"]
+  ];
+  document.getElementById("qScore").textContent=qs+"/"+qData.length;
+  document.getElementById("qMsg").textContent=data[tier][0]+" — Skor "+qs+" dari "+qData.length;
+  document.getElementById("qTip").textContent="✨ "+data[tier][1];
+  document.getElementById("qResult").classList.add("show");
+}
+startQuiz();
+
+document.querySelectorAll(".ben-card").forEach(card=>{
+  card.addEventListener("mousemove",e=>{
+    const r=card.getBoundingClientRect();
+    card.style.setProperty("--mx",((e.clientX-r.left)/r.width*100)+"%");
+    card.style.setProperty("--my",((e.clientY-r.top)/r.height*100)+"%");
+  });
+});
+
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add("visible");});},{threshold:0.08});
+document.querySelectorAll(".reveal").forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

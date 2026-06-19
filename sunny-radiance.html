@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sunny Radiance — RSB Wellness</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0d0800;--deep:#120a00;
+  --sun:#f5a623;--gold:#ffd166;--orange:#e8703a;--carrot:#e85d04;
+  --peach:#ffb347;--cream:#fffaf0;--muted:rgba(255,250,240,0.5);
+  --glass:rgba(245,166,35,0.08);
+  --glow:rgba(245,166,35,0.32);--glow2:rgba(232,112,58,0.28);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--cream);font-family:"Inter",sans-serif;overflow-x:hidden;cursor:none}
+.cursor{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--gold);pointer-events:none;z-index:9999;mix-blend-mode:screen}
+.cursor-ring{position:fixed;width:36px;height:36px;border-radius:50%;border:1.5px solid rgba(255,209,102,0.45);pointer-events:none;z-index:9998;transition:transform 0.15s,width 0.3s,height 0.3s}
+.cursor-ring.h{width:54px;height:54px;opacity:0.4}
+#ray-canvas{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:0.3}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:1.3rem 4rem;display:flex;align-items:center;justify-content:space-between;transition:background 0.4s}
+nav.scrolled{background:rgba(13,8,0,0.95);backdrop-filter:blur(18px);border-bottom:1px solid rgba(245,166,35,0.15)}
+.logo{font-family:"Playfair Display",serif;font-size:1.1rem;letter-spacing:0.18em;color:var(--gold);text-transform:uppercase;font-weight:600;text-decoration:none}
+.logo span{color:var(--cream)}
+.nav-links{display:flex;gap:2.8rem;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.74rem;letter-spacing:0.13em;text-transform:uppercase;transition:color 0.3s;font-weight:500}
+.nav-links a:hover{color:var(--gold)}
+.nav-cta{padding:0.55rem 1.5rem;border-radius:50px;background:linear-gradient(135deg,var(--carrot),var(--sun),var(--gold));color:#1a0900;font-size:0.74rem;font-weight:700;letter-spacing:0.08em;text-decoration:none;box-shadow:0 4px 20px var(--glow);transition:transform 0.2s,box-shadow 0.2s}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 8px 30px var(--glow)}
+
+/* HERO */
+#hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 75% at 65% 50%,rgba(245,166,35,0.14) 0%,rgba(232,112,58,0.06) 40%,transparent 65%);pointer-events:none}
+.hero-left{position:relative;z-index:10;padding:0 4rem;flex:1;max-width:580px}
+.hero-badge{display:inline-flex;align-items:center;gap:0.5rem;padding:0.38rem 1.1rem;border-radius:50px;border:1px solid rgba(245,166,35,0.4);background:rgba(245,166,35,0.08);font-size:0.67rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:1.6rem;opacity:0;animation:fadeUp 0.7s 0.2s forwards}
+.hero-badge::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--gold);animation:blink 2s infinite}
+.hero-title{font-family:"Playfair Display",serif;font-size:clamp(2.6rem,6vw,5rem);font-weight:700;line-height:1.0;opacity:0;animation:fadeUp 0.8s 0.4s forwards}
+.hero-title em{font-style:italic;color:var(--gold);display:block}
+.hero-title .sub{font-size:clamp(0.9rem,1.8vw,1.2rem);font-weight:400;color:var(--muted);display:block;margin-top:0.5rem;font-style:normal;letter-spacing:0.1em;text-transform:uppercase;font-family:"Inter",sans-serif}
+.hero-desc{margin-top:1.4rem;max-width:420px;font-size:0.92rem;color:var(--muted);line-height:1.82;font-weight:300;opacity:0;animation:fadeUp 0.8s 0.65s forwards}
+.hero-pills{display:flex;flex-wrap:wrap;gap:0.6rem;margin-top:1.5rem;opacity:0;animation:fadeUp 0.8s 0.8s forwards}
+.h-pill{padding:0.32rem 0.9rem;border-radius:50px;border:1px solid rgba(245,166,35,0.3);font-size:0.7rem;color:var(--sun);background:rgba(245,166,35,0.07)}
+.hero-actions{margin-top:2rem;display:flex;gap:1rem;align-items:center;opacity:0;animation:fadeUp 0.8s 0.95s forwards}
+.btn-sunny{padding:0.85rem 2.2rem;border-radius:50px;background:linear-gradient(135deg,var(--carrot),var(--sun),var(--gold));border:none;color:#1a0900;font-size:0.88rem;font-weight:700;letter-spacing:0.04em;cursor:none;box-shadow:0 0 35px var(--glow);transition:transform 0.2s,box-shadow 0.2s;text-decoration:none;display:inline-block}
+.btn-sunny:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 0 65px var(--glow)}
+.btn-outline{padding:0.85rem 2.2rem;border-radius:50px;border:1px solid rgba(245,166,35,0.35);color:var(--gold);font-size:0.88rem;font-weight:500;cursor:none;background:transparent;transition:border-color 0.3s,background 0.3s;text-decoration:none;display:inline-block}
+.btn-outline:hover{border-color:var(--gold);background:rgba(245,166,35,0.08)}
+.hero-right{position:relative;z-index:10;flex:1;display:flex;justify-content:center;align-items:center;padding:6rem 4rem 6rem 0}
+.bottle-wrapper{animation:heroFloat 5s ease-in-out infinite;position:relative}
+.bottle-glow{position:absolute;inset:-60px;background:radial-gradient(ellipse at center,rgba(245,166,35,0.28) 0%,rgba(232,112,58,0.12) 45%,transparent 68%);border-radius:50%;animation:pulseGlow 3.5s ease-in-out infinite;pointer-events:none}
+.bottle-img{width:min(260px,34vw);filter:drop-shadow(0 30px 65px rgba(245,166,35,0.5)) drop-shadow(0 0 40px rgba(232,112,58,0.25));border-radius:14px}
+.float-tag{position:absolute;background:rgba(13,8,0,0.9);border:1px solid rgba(245,166,35,0.28);border-radius:14px;padding:0.5rem 1rem;backdrop-filter:blur(12px);font-size:0.73rem;font-weight:500;animation:tagFloat 4s ease-in-out infinite;white-space:nowrap}
+.float-tag .tv{color:var(--gold);font-size:1rem;font-weight:700;font-family:"Playfair Display",serif;display:block}
+.ft-1{top:10%;right:-62%;animation-delay:0s}
+.ft-2{top:48%;left:-68%;animation-delay:1.5s}
+.ft-3{bottom:12%;right:-58%;animation-delay:2.8s}
+
+/* TICKER */
+.ticker{background:linear-gradient(90deg,#5c2a00,#2d1300,#5c2a00);padding:0.7rem 0;overflow:hidden;position:relative;z-index:5}
+.ticker-inner{display:flex;gap:3rem;animation:tickerScroll 22s linear infinite;white-space:nowrap}
+.ticker-item{font-size:0.68rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,250,240,0.72);flex-shrink:0}
+.ticker-sep{color:rgba(245,166,35,0.5)}
+
+/* STATS */
+#stats{padding:4.5rem 4rem;display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid rgba(245,166,35,0.12)}
+.stat-block{padding:2rem;border-right:1px solid rgba(245,166,35,0.1);text-align:center}
+.stat-block:last-child{border-right:none}
+.stat-num{font-family:"Playfair Display",serif;font-size:2.8rem;font-weight:700;color:var(--gold);line-height:1;display:block}
+.stat-unit{font-size:0.88rem;color:var(--sun)}
+.stat-label{font-size:0.7rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-top:0.4rem}
+
+/* COLD PRESSED EXPLAINER */
+#coldpress{padding:6rem 4rem;background:var(--deep);display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.section-eyebrow{font-size:0.67rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:0.8rem}
+.section-heading{font-family:"Playfair Display",serif;font-size:clamp(1.8rem,3.5vw,3rem);font-weight:700;line-height:1.15}
+.cp-visual{display:flex;flex-direction:column;gap:1.5rem}
+.cp-compare{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.cp-card{padding:1.5rem;border-radius:18px;border:1px solid rgba(245,166,35,0.15);background:var(--glass)}
+.cp-card.winner{border-color:var(--sun);background:rgba(245,166,35,0.1);box-shadow:0 0 30px rgba(245,166,35,0.1)}
+.cp-card-title{font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1rem}
+.cp-card.winner .cp-card-title{color:var(--gold)}
+.cp-card:not(.winner) .cp-card-title{color:var(--muted)}
+.cp-item{display:flex;align-items:center;gap:0.5rem;font-size:0.8rem;margin-bottom:0.6rem}
+.cp-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.cp-dot.yes{background:var(--gold)}
+.cp-dot.no{background:rgba(255,250,240,0.2)}
+.cp-item span{color:var(--muted)}
+.cp-item.good span{color:var(--cream)}
+.vitamin-meter{margin-top:1.5rem;padding:1.5rem;border-radius:18px;background:var(--glass);border:1px solid rgba(245,166,35,0.15)}
+.vm-title{font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem}
+.vm-bar-item{margin-bottom:1rem}
+.vm-bar-label{display:flex;justify-content:space-between;font-size:0.75rem;margin-bottom:0.35rem}
+.vm-bar-label span:last-child{color:var(--gold)}
+.vm-bar{height:7px;border-radius:4px;background:rgba(245,166,35,0.1);overflow:hidden}
+.vm-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--carrot),var(--gold));width:0;transition:width 1.3s cubic-bezier(0.4,0,0.2,1)}
+
+/* INGREDIENT EXPLORER */
+#ingredients{padding:6rem 4rem;background:var(--bg)}
+.ingr-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;margin-top:3rem}
+.ingr-tabs{display:flex;flex-direction:column;gap:0.5rem}
+.ingr-tab{padding:1.2rem 1.5rem;border-radius:16px;border:1px solid rgba(245,166,35,0.15);background:transparent;display:flex;align-items:center;gap:1rem;cursor:none;transition:all 0.35s;text-align:left;font-family:"Inter",sans-serif;color:var(--cream)}
+.ingr-tab:hover{border-color:rgba(245,166,35,0.4);background:rgba(245,166,35,0.06)}
+.ingr-tab.active{border-color:var(--gold);background:rgba(245,166,35,0.1);box-shadow:0 0 25px rgba(245,166,35,0.1)}
+.ingr-emoji{font-size:1.8rem;flex-shrink:0;width:48px;text-align:center}
+.ingr-tab-name{font-weight:600;font-size:0.9rem;color:var(--cream)}
+.ingr-tab-sub{font-size:0.72rem;color:var(--muted);margin-top:0.2rem}
+.ingr-detail{position:sticky;top:5rem;padding:2rem;border-radius:22px;background:var(--glass);border:1px solid rgba(245,166,35,0.2);min-height:380px}
+.ingr-detail-emoji{font-size:4rem;margin-bottom:1.2rem}
+.ingr-detail-name{font-family:"Playfair Display",serif;font-size:1.6rem;color:var(--gold);margin-bottom:0.5rem}
+.ingr-detail-origin{font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--sun);margin-bottom:1rem}
+.ingr-detail-desc{font-size:0.88rem;color:var(--muted);line-height:1.78;margin-bottom:1.2rem}
+.ingr-compounds{display:flex;flex-wrap:wrap;gap:0.5rem}
+.cpill{padding:0.28rem 0.85rem;border-radius:50px;border:1px solid rgba(245,166,35,0.3);font-size:0.7rem;color:var(--sun);background:rgba(245,166,35,0.07)}
+.ingr-bar-group{margin-top:1.5rem}
+.ibarlbl{display:flex;justify-content:space-between;font-size:0.72rem;margin-bottom:0.3rem;color:var(--cream)}
+.ibar{height:6px;border-radius:3px;background:rgba(245,166,35,0.1);overflow:hidden;margin-bottom:0.8rem}
+.ifill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--carrot),var(--gold));transition:width 0.9s cubic-bezier(0.4,0,0.2,1)}
+
+/* GLOW METER / SKIN BENEFITS */
+#glow{padding:6rem 4rem;background:var(--deep)}
+.glow-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-top:3rem}
+.glow-meter-wrap{padding:2.5rem;border-radius:24px;background:var(--glass);border:1px solid rgba(245,166,35,0.2)}
+.glow-meter-title{font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:2rem}
+.radial-meter{position:relative;width:200px;height:200px;margin:0 auto 1.5rem}
+.radial-meter svg{transform:rotate(-90deg)}
+.meter-bg{fill:none;stroke:rgba(245,166,35,0.1);stroke-width:12}
+.meter-fill{fill:none;stroke:url(#sunGrad);stroke-width:12;stroke-linecap:round;stroke-dasharray:565;stroke-dashoffset:565;transition:stroke-dashoffset 1.8s cubic-bezier(0.4,0,0.2,1)}
+.meter-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.meter-num{font-family:"Playfair Display",serif;font-size:2.5rem;color:var(--gold);line-height:1}
+.meter-sub{font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-top:0.3rem}
+.skin-attrs{display:flex;flex-direction:column;gap:0.8rem;margin-top:1rem}
+.skin-attr{display:flex;align-items:center;gap:0.8rem}
+.skin-bar{flex:1;height:5px;border-radius:3px;background:rgba(245,166,35,0.1);overflow:hidden}
+.skin-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--orange),var(--gold));width:0;transition:width 1.4s cubic-bezier(0.4,0,0.2,1)}
+.skin-label{font-size:0.75rem;color:var(--muted);min-width:90px}
+.skin-val{font-size:0.75rem;color:var(--gold);min-width:35px;text-align:right}
+.glow-tips{display:flex;flex-direction:column;gap:1rem}
+.glow-tip-card{padding:1.5rem;border-radius:16px;background:var(--glass);border:1px solid rgba(245,166,35,0.15);display:flex;gap:1rem;align-items:flex-start;transition:all 0.35s;cursor:none}
+.glow-tip-card:hover{border-color:rgba(245,166,35,0.45);transform:translateX(6px);box-shadow:0 8px 30px rgba(245,166,35,0.1)}
+.glow-tip-icon{font-size:1.5rem;flex-shrink:0;margin-top:0.1rem}
+.glow-tip-title{font-weight:600;font-size:0.85rem;margin-bottom:0.3rem;color:var(--gold)}
+.glow-tip-desc{font-size:0.78rem;color:var(--muted);line-height:1.6}
+
+/* QUIZ */
+#quiz{padding:6rem 4rem;background:var(--bg)}
+.quiz-wrap{max-width:680px;margin:3rem auto 0}
+.quiz-q{font-family:"Playfair Display",serif;font-size:1.5rem;margin-bottom:1.8rem;line-height:1.35;min-height:76px}
+.quiz-progress{display:flex;gap:0.4rem;margin-bottom:2rem}
+.quiz-dot{width:8px;height:8px;border-radius:50%;background:rgba(245,166,35,0.2);transition:background 0.3s}
+.quiz-dot.done{background:var(--sun)}
+.quiz-dot.active{background:var(--gold);box-shadow:0 0 10px var(--glow)}
+.quiz-opts{display:grid;grid-template-columns:1fr 1fr;gap:0.9rem}
+.quiz-opt{padding:1rem 1.3rem;border-radius:16px;border:1px solid rgba(245,166,35,0.2);background:var(--glass);color:var(--cream);font-size:0.86rem;cursor:none;transition:all 0.3s;text-align:left;font-family:"Inter",sans-serif;line-height:1.4}
+.quiz-opt:hover{border-color:var(--gold);background:rgba(245,166,35,0.1);transform:translateY(-2px)}
+.quiz-opt.correct{border-color:#5cb85c;background:rgba(92,184,92,0.12);color:#a8e6ab}
+.quiz-opt.wrong{border-color:#e57373;background:rgba(229,115,115,0.1);color:#ffb3b3}
+.quiz-exp{margin-top:0.9rem;padding:0.85rem 1.2rem;border-radius:12px;background:rgba(232,112,58,0.08);border-left:3px solid var(--orange);font-size:0.78rem;color:var(--muted);line-height:1.65;display:none}
+.quiz-exp.show{display:block}
+.quiz-result{text-align:center;padding:2.5rem;border-radius:24px;background:var(--glass);border:1px solid rgba(245,166,35,0.22);display:none}
+.quiz-result.show{display:block}
+.quiz-score{font-family:"Playfair Display",serif;font-size:4rem;color:var(--gold);margin-bottom:0.5rem}
+.quiz-msg{font-size:0.92rem;color:var(--muted);line-height:1.7}
+.quiz-tip{margin-top:1.5rem;padding:1rem 1.5rem;border-radius:14px;background:rgba(245,166,35,0.07);border:1px solid rgba(245,166,35,0.2);font-size:0.83rem;color:var(--cream);line-height:1.65}
+.btn-restart{margin-top:1.5rem;padding:0.75rem 2rem;border-radius:50px;background:linear-gradient(135deg,var(--carrot),var(--sun));border:none;color:#1a0900;font-size:0.83rem;font-weight:700;cursor:none;font-family:"Inter",sans-serif}
+
+/* BENEFITS CARDS */
+#benefits{padding:6rem 4rem;background:var(--deep)}
+.ben-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-top:3rem}
+.ben-card{padding:2rem;border-radius:20px;background:rgba(245,166,35,0.05);border:1px solid rgba(245,166,35,0.13);transition:all 0.4s;position:relative;overflow:hidden;cursor:none}
+.ben-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(245,166,35,0.1),transparent 60%);opacity:0;transition:opacity 0.4s}
+.ben-card:hover{transform:translateY(-5px);border-color:rgba(245,166,35,0.5);box-shadow:0 20px 50px rgba(245,166,35,0.12)}
+.ben-card:hover::before{opacity:1}
+.ben-icon{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,var(--carrot),var(--gold));display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:1.2rem;box-shadow:0 6px 18px rgba(245,166,35,0.25)}
+.ben-card h3{font-size:0.9rem;font-weight:600;margin-bottom:0.45rem}
+.ben-card p{font-size:0.79rem;color:var(--muted);line-height:1.65}
+
+/* CARA MINUM */
+#howto{padding:6rem 4rem;background:var(--bg)}
+.howto-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-top:3rem}
+.how-card{padding:2rem 1.5rem;border-radius:20px;background:var(--glass);border:1px solid rgba(245,166,35,0.14);text-align:center;transition:all 0.35s;cursor:none}
+.how-card:hover{transform:translateY(-6px);border-color:rgba(255,209,102,0.5);box-shadow:0 20px 50px rgba(245,166,35,0.12)}
+.how-num{font-family:"Playfair Display",serif;font-size:3rem;font-weight:700;color:rgba(245,166,35,0.13);line-height:1;margin-bottom:0.8rem}
+.how-emoji{font-size:2rem;margin-bottom:0.8rem}
+.how-title{font-weight:600;font-size:0.88rem;margin-bottom:0.4rem;color:var(--gold)}
+.how-desc{font-size:0.77rem;color:var(--muted);line-height:1.6}
+
+/* TESTIMONIALS */
+#testi{padding:6rem 4rem;background:var(--deep)}
+.testi-scroll{display:flex;gap:1.5rem;overflow-x:auto;padding-bottom:1rem;scrollbar-width:thin;scrollbar-color:var(--carrot) transparent;margin-top:3rem}
+.testi-scroll::-webkit-scrollbar{height:3px}
+.testi-scroll::-webkit-scrollbar-thumb{background:var(--sun);border-radius:99px}
+.testi-card{min-width:300px;max-width:300px;background:var(--glass);border:1px solid rgba(245,166,35,0.18);border-radius:20px;padding:1.8rem;flex-shrink:0;transition:transform 0.3s,border-color 0.3s;cursor:none}
+.testi-card:hover{transform:translateY(-4px);border-color:rgba(245,166,35,0.45)}
+.stars{color:var(--gold);letter-spacing:0.1em;font-size:0.85rem;margin-bottom:0.9rem}
+.testi-card blockquote{font-size:0.86rem;line-height:1.72;color:rgba(255,250,240,0.65);font-style:italic;margin-bottom:1.4rem}
+.testi-author{font-weight:600;font-size:0.78rem;color:var(--sun)}
+.testi-meta{font-size:0.68rem;color:var(--muted);margin-top:0.2rem}
+
+/* CTA */
+#cta{padding:8rem 4rem;text-align:center;background:linear-gradient(135deg,#0a0500,#100800,#080400);position:relative;overflow:hidden}
+#cta::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(245,166,35,0.18) 0%,transparent 65%)}
+#cta h2{font-family:"Playfair Display",serif;font-size:clamp(2rem,4.5vw,3.8rem);position:relative;z-index:1;line-height:1.1}
+#cta h2 em{color:var(--gold);font-style:italic}
+#cta p{margin-top:1rem;color:var(--muted);font-size:0.95rem;position:relative;z-index:1}
+.cta-btns{display:flex;gap:1rem;justify-content:center;margin-top:2.5rem;position:relative;z-index:1}
+footer{padding:2.5rem 4rem;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(245,166,35,0.1);color:rgba(255,250,240,0.25);font-size:0.72rem}
+footer span{color:var(--sun)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes heroFloat{0%,100%{transform:translateY(0)}40%{transform:translateY(-13px)}70%{transform:translateY(-6px)}}
+@keyframes pulseGlow{0%,100%{transform:scale(1);opacity:0.5}50%{transform:scale(1.1);opacity:0.9}}
+@keyframes tagFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+@keyframes tickerScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.8s ease,transform 0.8s ease}
+.reveal.visible{opacity:1;transform:none}
+.d1{transition-delay:0.1s}.d2{transition-delay:0.2s}.d3{transition-delay:0.3s}
+@media(max-width:920px){
+  nav{padding:1rem 1.5rem}.nav-links,.nav-cta{display:none}
+  #hero{flex-direction:column;padding-top:5rem}
+  .hero-left{padding:2rem 1.5rem;max-width:none;text-align:center}
+  .hero-pills,.hero-actions{justify-content:center}
+  .hero-desc{margin:1rem auto 0}
+  .hero-right{padding:2rem 1.5rem}
+  #stats{grid-template-columns:1fr 1fr;padding:3rem 1.5rem}
+  #coldpress,#glow{grid-template-columns:1fr}
+  #ingredients,#coldpress,#quiz,#glow,#benefits,#howto,#testi,#cta{padding:4rem 1.5rem}
+  .ingr-grid{grid-template-columns:1fr}
+  .cp-compare{grid-template-columns:1fr 1fr}
+  .ben-grid{grid-template-columns:1fr 1fr}
+  .howto-grid{grid-template-columns:1fr 1fr}
+  .quiz-opts{grid-template-columns:1fr}
+  .ft-1,.ft-2,.ft-3{display:none}
+  footer{flex-direction:column;gap:1rem;text-align:center}
+  .cta-btns{flex-direction:column;align-items:center}
+}
+@media(max-width:560px){.ben-grid,.howto-grid,.cp-compare{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<canvas id="ray-canvas"></canvas>
+
+<nav id="navbar">
+  <a href="#" class="logo">RSB <span>Wellness</span></a>
+  <ul class="nav-links">
+    <li><a href="#coldpress">Cold Press</a></li>
+    <li><a href="#ingredients">Bahan</a></li>
+    <li><a href="#glow">Glow Meter</a></li>
+    <li><a href="#quiz">Kuis</a></li>
+  </ul>
+  <a href="https://wa.me/6287791299376" class="nav-cta">Pesan Sekarang</a>
+</nav>
+
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-left">
+    <div class="hero-badge">☀️ Cold Pressed Juice · RSB Wellness</div>
+    <h1 class="hero-title">
+      <em>Sunny Radiance</em>
+      Cold Pressed Juice
+      <span class="sub">Apel · Wortel · Nanas · Madu</span>
+    </h1>
+    <p class="hero-desc">100% sari buah segar tanpa tambahan air, gula, atau pengawet. Dipres dingin untuk menjaga vitamin A dan C tetap utuh — efek glow dari dalam kulit, terasa nyata.</p>
+    <div class="hero-pills">
+      <span class="h-pill">🍎 Apel</span>
+      <span class="h-pill">🥕 Wortel</span>
+      <span class="h-pill">🍍 Nanas</span>
+      <span class="h-pill">🍯 Madu</span>
+      <span class="h-pill">Zero Sugar Added</span>
+      <span class="h-pill">Zero Preservatives</span>
+    </div>
+    <div class="hero-actions">
+      <a href="https://wa.me/6287791299376" class="btn-sunny">Pesan via WhatsApp</a>
+      <a href="#glow" class="btn-outline">Cek Glow Meter →</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div style="position:relative">
+      <div class="bottle-wrapper">
+        <div class="bottle-glow"></div>
+        <img src="1001354890_heif.webp" alt="Sunny Radiance Cold Pressed Juice" class="bottle-img">
+        <div class="float-tag ft-1"><span class="tv">Vit A+C</span>Utuh 100%</div>
+        <div class="float-tag ft-2"><span class="tv">Zero</span>No Sugar Added</div>
+        <div class="float-tag ft-3"><span class="tv">Glow</span>dari Dalam Kulit</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item">Sunny Radiance</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Cold Pressed Juice</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">100% Sari Buah</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Tanpa Gula Tambahan</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Tanpa Pengawet</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Vitamin A & C Utuh</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">RSB Wellness</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Glow dari Dalam</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Sunny Radiance</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Cold Pressed Juice</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">100% Sari Buah</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Tanpa Gula Tambahan</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Tanpa Pengawet</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Vitamin A & C Utuh</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">RSB Wellness</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Glow dari Dalam</span><span class="ticker-sep">✦</span>
+  </div>
+</div>
+
+<section id="stats">
+  <div class="stat-block reveal"><span class="stat-num">4</span><div class="stat-unit">Bahan Segar</div><div class="stat-label">100% Buah & Sayur</div></div>
+  <div class="stat-block reveal d1"><span class="stat-num">0</span><div class="stat-unit">Tambahan</div><div class="stat-label">No Sugar · No Water · No Preserv.</div></div>
+  <div class="stat-block reveal d2"><span class="stat-num">250</span><div class="stat-unit">ml</div><div class="stat-label">Per Botol</div></div>
+  <div class="stat-block reveal d3"><span class="stat-num">2x</span><div class="stat-unit">Lebih Utuh</div><div class="stat-label">Vitamin vs Jus Biasa</div></div>
+</section>
+
+<!-- COLD PRESSED EXPLAINER -->
+<section id="coldpress" style="padding:6rem 4rem;background:var(--deep);display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center">
+  <div class="reveal">
+    <p class="section-eyebrow">Teknologi</p>
+    <h2 class="section-heading">Kenapa <em style="color:var(--gold);font-style:italic">Cold Pressed</em><br>Lebih Unggul?</h2>
+    <p style="color:var(--muted);font-size:0.9rem;line-height:1.82;margin-top:1.2rem">Metode cold press menggunakan tekanan hidraulik — bukan panas — untuk mengekstrak sari buah. Hasilnya: nutrisi sensitif panas seperti Vitamin C, enzim, dan antioksidan tetap 100% utuh. Efek glow pun lebih terasa nyata.</p>
+    <div class="cp-compare" style="margin-top:2rem">
+      <div class="cp-card winner">
+        <div class="cp-card-title">✦ Cold Pressed</div>
+        <div class="cp-item good"><div class="cp-dot yes"></div><span>Vitamin C utuh 95%+</span></div>
+        <div class="cp-item good"><div class="cp-dot yes"></div><span>Enzim aktif</span></div>
+        <div class="cp-item good"><div class="cp-dot yes"></div><span>Antioksidan penuh</span></div>
+        <div class="cp-item good"><div class="cp-dot yes"></div><span>Rasa lebih segar</span></div>
+        <div class="cp-item good"><div class="cp-dot yes"></div><span>Warna lebih cerah</span></div>
+      </div>
+      <div class="cp-card">
+        <div class="cp-card-title">Jus Centrifugal</div>
+        <div class="cp-item"><div class="cp-dot no"></div><span>Vitamin C hilang 40%+</span></div>
+        <div class="cp-item"><div class="cp-dot no"></div><span>Enzim rusak oleh panas</span></div>
+        <div class="cp-item"><div class="cp-dot no"></div><span>Antioksidan berkurang</span></div>
+        <div class="cp-item"><div class="cp-dot no"></div><span>Oksidasi cepat</span></div>
+        <div class="cp-item"><div class="cp-dot no"></div><span>Nutrisi tidak stabil</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="reveal d1">
+    <div class="vitamin-meter">
+      <div class="vm-title">Retensi Nutrisi — Cold Press vs Centrifugal</div>
+      <div class="vm-bar-item">
+        <div class="vm-bar-label"><span>Vitamin C</span><span>95% vs 55%</span></div>
+        <div class="vm-bar"><div class="vm-fill" data-w="95"></div></div>
+      </div>
+      <div class="vm-bar-item">
+        <div class="vm-bar-label"><span>Vitamin A (Beta-Karoten)</span><span>92% vs 60%</span></div>
+        <div class="vm-bar"><div class="vm-fill" data-w="92"></div></div>
+      </div>
+      <div class="vm-bar-item">
+        <div class="vm-bar-label"><span>Enzim Aktif</span><span>88% vs 30%</span></div>
+        <div class="vm-bar"><div class="vm-fill" data-w="88"></div></div>
+      </div>
+      <div class="vm-bar-item">
+        <div class="vm-bar-label"><span>Antioksidan Total</span><span>90% vs 52%</span></div>
+        <div class="vm-bar"><div class="vm-fill" data-w="90"></div></div>
+      </div>
+      <div class="vm-bar-item">
+        <div class="vm-bar-label"><span>Mineral (Kalium, Zat Besi)</span><span>96% vs 70%</span></div>
+        <div class="vm-bar"><div class="vm-fill" data-w="96"></div></div>
+      </div>
+    </div>
+    <p style="font-size:0.73rem;color:var(--muted);margin-top:1rem;text-align:center">Bar menunjukkan retensi nutrisi metode Cold Press</p>
+  </div>
+</section>
+
+<!-- INGREDIENT EXPLORER -->
+<section id="ingredients">
+  <p class="section-eyebrow reveal">Komposisi</p>
+  <h2 class="section-heading reveal">4 Bahan, <em style="color:var(--gold);font-style:italic">Satu Glow</em></h2>
+  <div class="ingr-grid">
+    <div class="ingr-tabs reveal" id="ingrTabs">
+      <button class="ingr-tab active" onclick="setIngr(0,this)">
+        <span class="ingr-emoji">🍎</span>
+        <div><div class="ingr-tab-name">Apel Segar</div><div class="ingr-tab-sub">Penstabil gula darah & enzim</div></div>
+      </button>
+      <button class="ingr-tab" onclick="setIngr(1,this)">
+        <span class="ingr-emoji">🥕</span>
+        <div><div class="ingr-tab-name">Wortel</div><div class="ingr-tab-sub">Raja beta-karoten & kulit cerah</div></div>
+      </button>
+      <button class="ingr-tab" onclick="setIngr(2,this)">
+        <span class="ingr-emoji">🍍</span>
+        <div><div class="ingr-tab-name">Nanas</div><div class="ingr-tab-sub">Bromelain & anti-inflamasi</div></div>
+      </button>
+      <button class="ingr-tab" onclick="setIngr(3,this)">
+        <span class="ingr-emoji">🍯</span>
+        <div><div class="ingr-tab-name">Madu Murni</div><div class="ingr-tab-sub">Antioksidan alami & pemanis sehat</div></div>
+      </button>
+    </div>
+    <div class="ingr-detail reveal d1" id="ingrDetail"></div>
+  </div>
+</section>
+
+<!-- GLOW METER -->
+<section id="glow">
+  <p class="section-eyebrow reveal">Skin Benefit</p>
+  <h2 class="section-heading reveal">Glow Meter —<br><em style="color:var(--gold);font-style:italic">Ukur Manfaat Kulitmu</em></h2>
+  <div class="glow-grid">
+    <div class="reveal">
+      <div class="glow-meter-wrap">
+        <div class="glow-meter-title">Overall Skin Glow Score</div>
+        <div class="radial-meter">
+          <svg width="200" height="200" viewBox="0 0 200 200">
+            <defs>
+              <linearGradient id="sunGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#e85d04"/>
+                <stop offset="50%" style="stop-color:#f5a623"/>
+                <stop offset="100%" style="stop-color:#ffd166"/>
+              </linearGradient>
+            </defs>
+            <circle class="meter-bg" cx="100" cy="100" r="90"/>
+            <circle class="meter-fill" id="meterCircle" cx="100" cy="100" r="90"/>
+          </svg>
+          <div class="meter-text">
+            <div class="meter-num" id="meterNum">0</div>
+            <div class="meter-sub">/ 100</div>
+          </div>
+        </div>
+        <div class="skin-attrs">
+          <div class="skin-attr"><span class="skin-label">Kecerahan</span><div class="skin-bar"><div class="skin-fill" data-w="88"></div></div><span class="skin-val">88%</span></div>
+          <div class="skin-attr"><span class="skin-label">Kelembaban</span><div class="skin-bar"><div class="skin-fill" data-w="75"></div></div><span class="skin-val">75%</span></div>
+          <div class="skin-attr"><span class="skin-label">Anti-aging</span><div class="skin-bar"><div class="skin-fill" data-w="82"></div></div><span class="skin-val">82%</span></div>
+          <div class="skin-attr"><span class="skin-label">Proteksi UV</span><div class="skin-bar"><div class="skin-fill" data-w="70"></div></div><span class="skin-val">70%</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="glow-tips reveal d1">
+      <div class="glow-tip-card">
+        <div class="glow-tip-icon">☀️</div>
+        <div><div class="glow-tip-title">Beta-Karoten untuk Kecerahan</div><div class="glow-tip-desc">Wortel kaya beta-karoten yang diubah tubuh menjadi Vitamin A. Vitamin A mempercepat regenerasi sel kulit, mengurangi hiperpigmentasi, dan memberikan semburat kuning keemasan alami pada kulit.</div></div>
+      </div>
+      <div class="glow-tip-card">
+        <div class="glow-tip-icon">💧</div>
+        <div><div class="glow-tip-title">Vitamin C untuk Kolagen</div><div class="glow-tip-desc">Apel dan nanas kaya Vitamin C yang merupakan kofaktor sintesis kolagen. Kolagen menjaga elastisitas kulit, mengurangi kerutan, dan mempertahankan kelembaban alami kulit.</div></div>
+      </div>
+      <div class="glow-tip-card">
+        <div class="glow-tip-icon">🛡️</div>
+        <div><div class="glow-tip-title">Antioksidan Lawan Radikal Bebas</div><div class="glow-tip-desc">Kombinasi madu, apel, dan nanas mengandung flavonoid dan polifenol yang melindungi kulit dari kerusakan akibat paparan UV dan polusi — penyebab utama penuaan dini.</div></div>
+      </div>
+      <div class="glow-tip-card">
+        <div class="glow-tip-icon">✨</div>
+        <div><div class="glow-tip-title">Enzim Bromelain Eksfoliasi Alami</div><div class="glow-tip-desc">Bromelain dari nanas bekerja sebagai eksfoliator alami dari dalam — meluruhkan sel kulit mati dan mendukung penampilan kulit lebih cerah, halus, dan bercahaya dari dalam.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz">
+  <div style="text-align:center" class="reveal">
+    <p class="section-eyebrow">Interaktif</p>
+    <h2 class="section-heading" style="max-width:none">Seberapa Paham<br><em style="color:var(--gold);font-style:italic">Kamu soal Cold Press?</em></h2>
+    <p style="color:var(--muted);font-size:0.86rem;margin-top:0.8rem">5 pertanyaan · temukan glow routine personalmu</p>
+  </div>
+  <div class="quiz-wrap">
+    <div class="quiz-progress" id="qProg"></div>
+    <div class="quiz-q" id="qText"></div>
+    <div class="quiz-opts" id="qOpts"></div>
+    <div class="quiz-exp" id="qExp"></div>
+    <div class="quiz-result" id="qResult">
+      <div class="quiz-score" id="qScore"></div>
+      <div class="quiz-msg" id="qMsg"></div>
+      <div class="quiz-tip" id="qTip"></div>
+      <button class="btn-restart" onclick="startQuiz()">Ulangi Kuis →</button>
+    </div>
+  </div>
+</section>
+
+<!-- BENEFITS -->
+<section id="benefits">
+  <p class="section-eyebrow reveal">Manfaat Lengkap</p>
+  <h2 class="section-heading reveal">6 Alasan Minum<br><em style="color:var(--gold);font-style:italic">Sunny Radiance</em> Setiap Hari</h2>
+  <div class="ben-grid">
+    <div class="ben-card reveal"><div class="ben-icon">✨</div><h3>Kulit Bercahaya</h3><p>Beta-karoten wortel + Vitamin C apel & nanas bekerja sinergis untuk regenerasi sel kulit dan produksi kolagen — efek glow dari dalam yang terasa nyata.</p></div>
+    <div class="ben-card reveal d1"><div class="ben-icon">👁️</div><h3>Kesehatan Mata</h3><p>Wortel adalah sumber beta-karoten terbaik — prekursor Vitamin A yang esensial untuk fungsi penglihatan, terutama dalam kondisi cahaya rendah.</p></div>
+    <div class="ben-card reveal d2"><div class="ben-icon">🩸</div><h3>Stabilkan Gula Darah</h3><p>Pektin dalam apel memperlambat penyerapan gula. Madu memiliki indeks glikemik lebih rendah dari gula putih. Kombinasi keduanya mendukung gula darah yang stabil.</p></div>
+    <div class="ben-card reveal"><div class="ben-icon">🛡️</div><h3>Imunitas & Anti-Inflamasi</h3><p>Bromelain nanas + antioksidan madu + Vitamin C apel menciptakan triple shield perlindungan imun yang komprehensif setiap harinya.</p></div>
+    <div class="ben-card reveal d1"><div class="ben-icon">⚡</div><h3>Energi Alami</h3><p>Gula alami dari buah segar memberikan energi cepat namun stabil. Tanpa crash seperti minuman energi. Ideal diminum pagi hari sebelum beraktivitas.</p></div>
+    <div class="ben-card reveal d2"><div class="ben-icon">🫁</div><h3>Pencernaan Optimal</h3><p>Enzim bromelain dan serat larut dari apel bekerja sama mendukung gerakan peristaltik usus yang sehat dan mencegah sembelit secara alami.</p></div>
+  </div>
+</section>
+
+<!-- CARA MINUM -->
+<section id="howto">
+  <div style="text-align:center" class="reveal">
+    <p class="section-eyebrow">Cara Konsumsi</p>
+    <h2 class="section-heading" style="max-width:none">4 Langkah untuk<br><em style="color:var(--gold);font-style:italic">Hasil Glow Optimal</em></h2>
+  </div>
+  <div class="howto-grid">
+    <div class="how-card reveal"><div class="how-num">01</div><div class="how-emoji">🔄</div><div class="how-title">Kocok Dahulu</div><div class="how-desc">Kocok lembut sebelum minum. Endapan alami serat buah adalah tanda kualitas — bukan kerusakan. Ini mengandung nutrisi terbaik.</div></div>
+    <div class="how-card reveal d1"><div class="how-num">02</div><div class="how-emoji">🌅</div><div class="how-title">Minum Pagi Hari</div><div class="how-desc">Waktu terbaik adalah pagi hari sebelum sarapan. Lambung kosong memaksimalkan penyerapan vitamin dan enzim aktif dari cold press.</div></div>
+    <div class="how-card reveal d2"><div class="how-num">03</div><div class="how-emoji">❄️</div><div class="how-title">Simpan Dingin</div><div class="how-desc">Simpan di kulkas. Habiskan 1–2 jam setelah dibuka. Cold press tanpa pengawet — segarnya hanya bertahan jika tetap dingin.</div></div>
+    <div class="how-card reveal d3"><div class="how-num">04</div><div class="how-emoji">📅</div><div class="how-title">Rutin 30 Hari</div><div class="how-desc">Efek glow terasa signifikan setelah 30 hari konsumsi rutin. Kulit lebih cerah, sehat, dan bercahaya dari dalam secara konsisten.</div></div>
+  </div>
+</section>
+
+<!-- TESTI -->
+<section id="testi">
+  <div style="display:flex;align-items:end;justify-content:space-between;flex-wrap:wrap;gap:1rem" class="reveal">
+    <div>
+      <p class="section-eyebrow">Apa Kata Mereka</p>
+      <h2 class="section-heading" style="max-width:none">Glowing Sudah<br>Terbukti</h2>
+    </div>
+    <p style="color:var(--muted);font-size:0.78rem">← Geser untuk lihat →</p>
+  </div>
+  <div class="testi-scroll">
+    <div class="testi-card"><div class="stars">★★★★★</div><blockquote>"Setelah 3 minggu rutin minum Sunny Radiance tiap pagi, teman-teman mulai nanya skincare apa yang aku pakai. Padahal ini dari dalam! Kulit jauh lebih cerah dan glowing."</blockquote><div class="testi-author">Dewi Rahayu</div><div class="testi-meta">Beauty Enthusiast · Palangka Raya</div></div>
+    <div class="testi-card"><div class="stars">★★★★★</div><blockquote>"Sebagai dokter, aku sangat appreciate produk yang jujur soal kandungannya. Sunny Radiance benar-benar zero tambahan. Vitamin A dan C dari cold press terasa bedanya di kulit."</blockquote><div class="testi-author">dr. Rina M.</div><div class="testi-meta">Dokter Umum · Banjarmasin</div></div>
+    <div class="testi-card"><div class="stars">★★★★★</div><blockquote>"Aku yang awalnya skeptis kini jadi pelanggan setia. Rasanya enak banget — manis alami wortel-nanas, tidak terlalu apel-y. Dan efeknya nyata: perut lebih nyaman, kulit lebih segar."</blockquote><div class="testi-author">Siti Aminah</div><div class="testi-meta">Ibu Rumah Tangga · Sampit</div></div>
+    <div class="testi-card"><div class="stars">★★★★★</div><blockquote>"Cold press pertamaku dan langsung jatuh cinta. Rasa jus-nya pure banget, tidak ada rasa artificial sama sekali. Madu-nya terasa tapi tidak berlebihan. Pesan mingguan sekarang!"</blockquote><div class="testi-author">Rafi A.</div><div class="testi-meta">Content Creator · Jakarta</div></div>
+    <div class="testi-card"><div class="stars">★★★★★</div><blockquote>"Program diet aku makin efektif sejak tambahkan Sunny Radiance. Energi stabil tanpa kalori kosong dari gula tambahan. Kulit jadi bonus yang tidak aku sangka-sangka!"</blockquote><div class="testi-author">Yuni Pratiwi</div><div class="testi-meta">Fitness Coach · Palangka Raya</div></div>
+  </div>
+</section>
+
+<section id="cta">
+  <h2 class="reveal">Mulai Perjalanan<br><em>Glowing</em> dari Dalam</h2>
+  <p class="reveal">Fresh dibuat setiap hari — pesan sebelum jam 12 siang untuk pengiriman hari ini.</p>
+  <div class="cta-btns reveal">
+    <a href="https://wa.me/6287791299376" class="btn-sunny" style="font-size:1rem;padding:1rem 3rem">💬 Pesan via WhatsApp</a>
+    <a href="#glow" class="btn-outline" style="font-size:1rem;padding:1rem 2.5rem">Lihat Glow Meter</a>
+  </div>
+</section>
+
+<footer>
+  <div>© 2025 <span>Rumah Sehat Bunda</span> · RSB Wellness · Palangka Raya</div>
+  <div>Sunny Radiance · Cold Pressed · 100% Sari Buah · UMKM Binaan BI</div>
+</footer>
+
+<script>
+// CURSOR
+const cursor=document.getElementById("cursor"),ring=document.getElementById("cursorRing");
+let cx=0,cy=0,rx=0,ry=0;
+document.addEventListener("mousemove",e=>{cx=e.clientX;cy=e.clientY;cursor.style.left=cx-5+"px";cursor.style.top=cy-5+"px";});
+(function a(){rx+=(cx-rx)*0.1;ry+=(cy-ry)*0.1;ring.style.left=rx-18+"px";ring.style.top=ry-18+"px";requestAnimationFrame(a);})();
+document.querySelectorAll("a,button,.ben-card,.testi-card,.how-card,.ingr-tab,.glow-tip-card").forEach(el=>{
+  el.addEventListener("mouseenter",()=>ring.classList.add("h"));
+  el.addEventListener("mouseleave",()=>ring.classList.remove("h"));
+});
+
+// RAY PARTICLES
+(function(){
+  const c=document.getElementById("ray-canvas"),ctx=c.getContext("2d");
+  let W,H,pts=[];
+  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;}
+  resize();window.addEventListener("resize",resize);
+  function pt(){return{x:Math.random()*W,y:H+20,r:1.5+Math.random()*6,vy:-(0.2+Math.random()*0.7),vx:(Math.random()-0.5)*0.3,a:0.06+Math.random()*0.2};}
+  for(let i=0;i<65;i++){const p=pt();p.y=Math.random()*H;pts.push(p);}
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    pts.forEach((p,i)=>{
+      p.y+=p.vy;p.x+=p.vx;
+      const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r);
+      g.addColorStop(0,`rgba(255,209,102,${p.a})`);
+      g.addColorStop(0.5,`rgba(245,166,35,${p.a*0.5})`);
+      g.addColorStop(1,`rgba(232,112,58,0)`);
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+      if(p.y<-20)pts[i]=pt();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// NAVBAR
+window.addEventListener("scroll",()=>{document.getElementById("navbar").classList.toggle("scrolled",scrollY>60);});
+
+// VITAMIN BARS observer
+const vmObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.querySelectorAll(".vm-fill").forEach(f=>{setTimeout(()=>{f.style.width=f.dataset.w+"%";},200);});vmObs.unobserve(e.target);}
+  });
+},{threshold:0.2});
+document.querySelectorAll(".vitamin-meter").forEach(v=>vmObs.observe(v));
+
+// GLOW METER animation
+const glowObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const score=84;
+      const circumference=2*Math.PI*90;
+      const offset=circumference-(score/100)*circumference;
+      const circle=document.getElementById("meterCircle");
+      const numEl=document.getElementById("meterNum");
+      if(circle){
+        setTimeout(()=>{
+          circle.style.strokeDashoffset=offset;
+          let n=0;const t=setInterval(()=>{n+=2;numEl.textContent=Math.min(n,score);if(n>=score)clearInterval(t);},25);
+        },300);
+      }
+      document.querySelectorAll(".skin-fill").forEach(f=>{setTimeout(()=>{f.style.width=f.dataset.w+"%";},400);});
+      glowObs.unobserve(e.target);
+    }
+  });
+},{threshold:0.2});
+const glowSec=document.getElementById("glow");
+if(glowSec)glowObs.observe(glowSec);
+
+// INGREDIENT DATA
+const ingrData=[
+  {emoji:"🍎",name:"Apel Segar",origin:"Malus domestica · Buah Empat Musim",desc:"Apel adalah fondasi Sunny Radiance. Kaya quercetin dan pektin — serat larut yang memperlambat penyerapan gula dan menjaga kestabilan gula darah. Malic acid dalam apel memberi rasa segar alami sekaligus membantu fungsi liver dan eksfoliasi kulit ringan.",compounds:["Quercetin","Pektin","Malic Acid","Vitamin C","Kalium"],bars:[["Vitamin C",72],["Pektin (Serat)",85],["Quercetin (Antioksidan)",78],["Stabilisasi Gula Darah",82]]},
+  {emoji:"🥕",name:"Wortel",origin:"Daucus carota · Sayuran Akar",desc:"Wortel adalah sumber beta-karoten nomor satu di alam. Beta-karoten adalah prekursor Vitamin A yang diubah tubuh sesuai kebutuhan — tidak berlebihan, tidak toksik. Vitamin A mempercepat regenerasi sel kulit, mengurangi pigmentasi, dan memberikan semburat golden glow alami.",compounds:["Beta-Karoten","Vitamin A","Lutein","Potassium","Vitamin K1"],bars:[["Beta-Karoten",95],["Vitamin A (Retinol Equivalent)",90],["Lutein (Mata)",82],["Antioksidan Total",85]]},
+  {emoji:"🍍",name:"Nanas Segar",origin:"Ananas comosus · Buah Tropik",desc:"Nanas membawa bromelain — enzim proteolitik yang memiliki efek anti-inflamasi kuat, membantu pencernaan protein, dan bertindak sebagai eksfoliator alami dari dalam. Vitamin C nanas mendukung sintesis kolagen untuk kulit yang lebih elastis dan kenyal.",compounds:["Bromelain","Vitamin C","Mangan","Serat","Beta-Karoten"],bars:[["Bromelain (Enzim)",88],["Vitamin C",80],["Anti-Inflamasi",85],["Eksfoliasi Alami",78]]},
+  {emoji:"🍯",name:"Madu Murni",origin:"Apis mellifera · Sari Bunga Alam",desc:"Madu bukan sekadar pemanis — ini adalah gudang antioksidan, flavonoid, dan senyawa antimikroba. Indeks glikemik lebih rendah dari gula pasir. Mengandung hydrogen peroxide alami yang memiliki efek antibakteri. Menyeimbangkan rasa Sunny Radiance menjadi manis alami yang kompleks.",compounds:["Flavonoid","Hydrogen Peroxide","Asam Glukonat","Vitamin B Kompleks","Zinc"],bars:[["Antioksidan (ORAC)",88],["Antimikroba",82],["Indeks GI Rendah",75],["Mineral & Vitamin",70]]}
+];
+function setIngr(i,btn){
+  document.querySelectorAll(".ingr-tab").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  const d=ingrData[i];
+  document.getElementById("ingrDetail").innerHTML=`
+    <div class="ingr-detail-emoji">${d.emoji}</div>
+    <div class="ingr-detail-name">${d.name}</div>
+    <div class="ingr-detail-origin">${d.origin}</div>
+    <div class="ingr-detail-desc">${d.desc}</div>
+    <div class="ingr-compounds">${d.compounds.map(c=>`<span class="cpill">${c}</span>`).join("")}</div>
+    <div class="ingr-bar-group">${d.bars.map(b=>`<div class="ibarlbl"><span>${b[0]}</span></div><div class="ibar"><div class="ifill" style="width:0" data-w="${b[1]}"></div></div>`).join("")}</div>
+  `;
+  setTimeout(()=>{document.querySelectorAll(".ifill").forEach(f=>{f.style.width=f.dataset.w+"%";});},80);
+}
+setIngr(0,document.querySelector(".ingr-tab"));
+
+// QUIZ
+const qData=[
+  {q:"Apa perbedaan utama cold press dari metode juicing biasa (centrifugal)?",opts:["Cold press lebih mahal","Cold press tidak menggunakan panas, nutrisi lebih terjaga","Cold press lebih cepat prosesnya","Cold press menghasilkan lebih banyak ampas"],ans:1,exp:"Cold press menggunakan tekanan hidraulik tanpa panas. Karena vitamin seperti Vitamin C dan enzim sensitif terhadap panas, cold press mampu mempertahankan hingga 95% nutrisi dibanding centrifugal yang hanya 55-60%."},
+  {q:"Nutrisi apa dalam wortel yang memberi efek 'glow' pada kulit?",opts:["Vitamin D","Beta-karoten (provitamin A)","Kalsium","Vitamin B12"],ans:1,exp:"Beta-karoten adalah pigmen oranye dalam wortel yang diubah tubuh menjadi Vitamin A sesuai kebutuhan. Vitamin A mempercepat regenerasi sel kulit, mengurangi hiperpigmentasi, dan memberikan semburat cerah keemasan alami."},
+  {q:"Mengapa Sunny Radiance harus dikonsumsi dalam 1-2 jam setelah dibuka?",opts:["Agar tidak basi di kulkas","Karena tanpa pengawet, oksidasi cepat terjadi setelah terpapar udara","Karena rasanya berubah drastis","Supaya tidak mengandung gula berlebih"],ans:1,exp:"Tanpa pengawet dan pasteurisasi, vitamin C dalam cold press juice sangat rentan teroksidasi ketika terpapar udara. Oksidasi mengurangi kandungan nutrisi secara signifikan dan bisa memengaruhi rasa dan kualitas."},
+  {q:"Kapan waktu terbaik minum Sunny Radiance untuk penyerapan optimal?",opts:["Malam hari sebelum tidur","Pagi hari saat perut masih kosong","Bersamaan dengan makan siang","Setelah olahraga malam"],ans:1,exp:"Pagi hari dengan perut kosong adalah waktu paling ideal. Tanpa kompetisi dari makanan lain, vitamin, enzim, dan antioksidan dapat diserap lebih efisien oleh tubuh. Produksi kolagen juga lebih aktif di pagi hari."},
+  {q:"Berapa lama konsumsi rutin dibutuhkan untuk merasakan efek glow pada kulit?",opts:["3 hari","1 minggu","2-4 minggu","6 bulan"],ans:2,exp:"Regenerasi sel kulit membutuhkan waktu 28-30 hari. Konsumsi rutin 2-4 minggu memberikan cukup waktu bagi beta-karoten dan Vitamin C untuk mendukung pembentukan kolagen baru dan pergantian sel kulit secara menyeluruh."}
+];
+let qi=0,qs=0,qA=false;
+function startQuiz(){qi=0;qs=0;qA=false;document.getElementById("qResult").classList.remove("show");document.getElementById("qExp").classList.remove("show");renderQ();}
+function renderQ(){
+  const d=qData[qi];
+  document.getElementById("qProg").innerHTML=qData.map((_,i)=>`<div class="quiz-dot ${i<qi?"done":i===qi?"active":""}"></div>`).join("");
+  document.getElementById("qText").textContent=(qi+1)+". "+d.q;
+  document.getElementById("qOpts").innerHTML=d.opts.map((o,i)=>`<button class="quiz-opt" onclick="ansQ(${i})">${o}</button>`).join("");
+  document.getElementById("qExp").classList.remove("show");
+  qA=false;
+}
+function ansQ(i){
+  if(qA)return;qA=true;
+  const d=qData[qi];
+  document.querySelectorAll(".quiz-opt").forEach((b,idx)=>{
+    if(idx===d.ans)b.classList.add("correct");
+    else if(idx===i&&i!==d.ans)b.classList.add("wrong");
+    b.style.pointerEvents="none";
+  });
+  const exp=document.getElementById("qExp");exp.textContent=d.exp;exp.classList.add("show");
+  if(i===d.ans)qs++;
+  setTimeout(()=>{qi++;qi<qData.length?renderQ():showResult();},2300);
+}
+function showResult(){
+  document.getElementById("qOpts").innerHTML="";document.getElementById("qText").textContent="";
+  document.getElementById("qProg").innerHTML=qData.map(()=>`<div class="quiz-dot done"></div>`).join("");
+  document.getElementById("qExp").classList.remove("show");
+  const tier=qs<=1?0:qs<=3?1:2;
+  const data=[
+    ["Glow Newbie 🌱","Mulai perjalanan glowing-mu! Konsumsi 250ml Sunny Radiance setiap pagi selama 30 hari. Hasil akan terlihat di minggu ke-3."],
+    ["Glow Explorer 🌿","Pengetahuanmu sudah baik! Kombinasikan Sunny Radiance dengan hidrasi cukup (2L air/hari) untuk hasil glow maksimal."],
+    ["Glow Master ✨","Kamu benar-benar paham ilmu glow dari dalam! Coba routine: Sunny Radiance pagi + kombucha sore untuk duo antioksidan yang powerful."]
+  ];
+  document.getElementById("qScore").textContent=qs+"/"+qData.length;
+  document.getElementById("qMsg").textContent=data[tier][0]+" — Skor "+qs+" dari "+qData.length;
+  document.getElementById("qTip").textContent="☀️ "+data[tier][1];
+  document.getElementById("qResult").classList.add("show");
+}
+startQuiz();
+
+// BEN CARD GLOW
+document.querySelectorAll(".ben-card").forEach(card=>{
+  card.addEventListener("mousemove",e=>{
+    const r=card.getBoundingClientRect();
+    card.style.setProperty("--mx",((e.clientX-r.left)/r.width*100)+"%");
+    card.style.setProperty("--my",((e.clientY-r.top)/r.height*100)+"%");
+  });
+});
+
+// SCROLL REVEAL
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add("visible");});},{threshold:0.08});
+document.querySelectorAll(".reveal").forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

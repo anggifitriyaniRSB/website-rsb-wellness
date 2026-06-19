@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tropical Cleanse — RSB Wellness</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#060a00;--deep:#090e00;
+  --citrus:#d4e010;--lime:#8fc93a;--lemon:#f0e030;--green:#4a8c1c;
+  --sage:#a8c070;--cream:#fafff0;--muted:rgba(250,255,240,0.5);
+  --glass:rgba(143,201,58,0.08);
+  --glow:rgba(143,201,58,0.32);--glow2:rgba(212,224,16,0.28);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--cream);font-family:"Inter",sans-serif;overflow-x:hidden;cursor:none}
+.cursor{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--lemon);pointer-events:none;z-index:9999;mix-blend-mode:screen}
+.cursor-ring{position:fixed;width:36px;height:36px;border-radius:50%;border:1.5px solid rgba(240,224,48,0.45);pointer-events:none;z-index:9998;transition:transform 0.15s,width 0.3s,height 0.3s}
+.cursor-ring.h{width:54px;height:54px;opacity:0.4}
+#cleanse-canvas{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:0.3}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:1.3rem 4rem;display:flex;align-items:center;justify-content:space-between;transition:background 0.4s}
+nav.scrolled{background:rgba(6,10,0,0.96);backdrop-filter:blur(18px);border-bottom:1px solid rgba(143,201,58,0.15)}
+.logo{font-family:"Playfair Display",serif;font-size:1.1rem;letter-spacing:0.18em;color:var(--lemon);text-transform:uppercase;font-weight:600;text-decoration:none}
+.logo span{color:var(--cream)}
+.nav-links{display:flex;gap:2.8rem;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.74rem;letter-spacing:0.13em;text-transform:uppercase;transition:color 0.3s;font-weight:500}
+.nav-links a:hover{color:var(--lemon)}
+.nav-cta{padding:0.55rem 1.5rem;border-radius:50px;background:linear-gradient(135deg,var(--green),var(--lime),var(--lemon));color:#0a1200;font-size:0.74rem;font-weight:700;letter-spacing:0.08em;text-decoration:none;box-shadow:0 4px 20px var(--glow);transition:transform 0.2s,box-shadow 0.2s}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 8px 30px var(--glow)}
+
+#hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 75% at 65% 50%,rgba(143,201,58,0.14) 0%,rgba(212,224,16,0.06) 40%,transparent 65%),radial-gradient(ellipse 35% 45% at 20% 70%,rgba(74,140,28,0.1) 0%,transparent 60%);pointer-events:none}
+.hero-left{position:relative;z-index:10;padding:0 4rem;flex:1;max-width:580px}
+.hero-badge{display:inline-flex;align-items:center;gap:0.5rem;padding:0.38rem 1.1rem;border-radius:50px;border:1px solid rgba(143,201,58,0.4);background:rgba(143,201,58,0.08);font-size:0.67rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--lime);margin-bottom:1.6rem;opacity:0;animation:fadeUp 0.7s 0.2s forwards}
+.hero-badge::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--lime);animation:blink 2s infinite}
+.hero-title{font-family:"Playfair Display",serif;font-size:clamp(2.6rem,6vw,5.2rem);font-weight:700;line-height:1.0;opacity:0;animation:fadeUp 0.8s 0.4s forwards}
+.hero-title em{font-style:italic;color:var(--lemon);display:block}
+.hero-title .sub{font-size:clamp(0.9rem,1.8vw,1.2rem);font-weight:400;color:var(--muted);display:block;margin-top:0.5rem;font-style:normal;letter-spacing:0.1em;text-transform:uppercase;font-family:"Inter",sans-serif}
+.hero-desc{margin-top:1.4rem;max-width:420px;font-size:0.92rem;color:var(--muted);line-height:1.82;font-weight:300;opacity:0;animation:fadeUp 0.8s 0.65s forwards}
+.hero-pills{display:flex;flex-wrap:wrap;gap:0.6rem;margin-top:1.5rem;opacity:0;animation:fadeUp 0.8s 0.8s forwards}
+.h-pill{padding:0.32rem 0.9rem;border-radius:50px;border:1px solid rgba(143,201,58,0.3);font-size:0.7rem;color:var(--lime);background:rgba(143,201,58,0.07)}
+.hero-actions{margin-top:2rem;display:flex;gap:1rem;align-items:center;opacity:0;animation:fadeUp 0.8s 0.95s forwards}
+.btn-cleanse{padding:0.85rem 2.2rem;border-radius:50px;background:linear-gradient(135deg,var(--green),var(--lime),var(--lemon));border:none;color:#0a1200;font-size:0.88rem;font-weight:700;letter-spacing:0.04em;cursor:none;box-shadow:0 0 35px var(--glow);transition:transform 0.2s,box-shadow 0.2s;text-decoration:none;display:inline-block}
+.btn-cleanse:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 0 65px var(--glow)}
+.btn-outline{padding:0.85rem 2.2rem;border-radius:50px;border:1px solid rgba(143,201,58,0.35);color:var(--lime);font-size:0.88rem;font-weight:500;cursor:none;background:transparent;transition:border-color 0.3s,background 0.3s;text-decoration:none;display:inline-block}
+.btn-outline:hover{border-color:var(--lemon);background:rgba(143,201,58,0.08)}
+.hero-right{position:relative;z-index:10;flex:1;display:flex;justify-content:center;align-items:center;padding:6rem 4rem 6rem 0}
+.bottle-wrapper{animation:heroFloat 5s ease-in-out infinite;position:relative}
+.bottle-glow{position:absolute;inset:-60px;background:radial-gradient(ellipse at center,rgba(143,201,58,0.28) 0%,rgba(212,224,16,0.12) 45%,transparent 68%);border-radius:50%;animation:pulseGlow 3.5s ease-in-out infinite;pointer-events:none}
+.bottle-img{width:min(255px,33vw);filter:drop-shadow(0 30px 70px rgba(143,201,58,0.5)) drop-shadow(0 0 40px rgba(240,224,48,0.2));border-radius:14px}
+.float-tag{position:absolute;background:rgba(6,10,0,0.92);border:1px solid rgba(143,201,58,0.28);border-radius:14px;padding:0.5rem 1rem;backdrop-filter:blur(12px);font-size:0.73rem;font-weight:500;animation:tagFloat 4s ease-in-out infinite;white-space:nowrap}
+.float-tag .tv{color:var(--lemon);font-size:1rem;font-weight:700;font-family:"Playfair Display",serif;display:block}
+.ft-1{top:10%;right:-60%;animation-delay:0s}
+.ft-2{top:48%;left:-68%;animation-delay:1.5s}
+.ft-3{bottom:12%;right:-58%;animation-delay:2.8s}
+
+.ticker{background:linear-gradient(90deg,#1a2e00,#0c1800,#1a2e00);padding:0.7rem 0;overflow:hidden;position:relative;z-index:5}
+.ticker-inner{display:flex;gap:3rem;animation:tickerScroll 22s linear infinite;white-space:nowrap}
+.ticker-item{font-size:0.68rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(250,255,240,0.72);flex-shrink:0}
+.ticker-sep{color:rgba(143,201,58,0.5)}
+
+#stats{padding:4.5rem 4rem;display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid rgba(143,201,58,0.12)}
+.stat-block{padding:2rem;border-right:1px solid rgba(143,201,58,0.1);text-align:center}
+.stat-block:last-child{border-right:none}
+.stat-num{font-family:"Playfair Display",serif;font-size:2.8rem;font-weight:700;color:var(--lemon);line-height:1;display:block}
+.stat-unit{font-size:0.88rem;color:var(--lime)}
+.stat-label{font-size:0.7rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-top:0.4rem}
+.section-eyebrow{font-size:0.67rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--lime);margin-bottom:0.8rem}
+.section-heading{font-family:"Playfair Display",serif;font-size:clamp(1.8rem,3.5vw,3rem);font-weight:700;line-height:1.15}
+
+/* CLEANSE CLOCK - DETOX TIMELINE INTERAKTIF */
+#cleanse-clock{padding:6rem 4rem;background:var(--deep)}
+.clock-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
+.clock-visual{padding:2.5rem;border-radius:24px;background:var(--glass);border:1px solid rgba(143,201,58,0.2)}
+.cv-title{font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--lime);margin-bottom:1.8rem}
+.timeline{display:flex;flex-direction:column;gap:0;position:relative}
+.timeline::before{content:"";position:absolute;left:16px;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--green),var(--lemon),transparent)}
+.tl-item{display:flex;gap:1.2rem;padding:1rem 0;cursor:none;transition:all 0.3s;border-radius:12px;padding:0.8rem}
+.tl-item:hover,.tl-item.active{background:rgba(143,201,58,0.07)}
+.tl-dot{width:32px;height:32px;border-radius:50%;border:2px solid rgba(143,201,58,0.3);background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:0.8rem;flex-shrink:0;transition:all 0.3s}
+.tl-item.active .tl-dot,.tl-item:hover .tl-dot{border-color:var(--lemon);background:rgba(212,224,16,0.1);box-shadow:0 0 16px var(--glow2)}
+.tl-content{flex:1}
+.tl-time{font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--lime);margin-bottom:0.2rem}
+.tl-title{font-weight:600;font-size:0.88rem;margin-bottom:0.3rem}
+.tl-desc{font-size:0.76rem;color:var(--muted);line-height:1.6;display:none}
+.tl-item.active .tl-desc,.tl-item:hover .tl-desc{display:block}
+.cleanse-meter{margin-top:1.5rem;padding:1.5rem;border-radius:18px;background:rgba(143,201,58,0.06);border:1px solid rgba(143,201,58,0.15)}
+.cm-title{font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--lime);margin-bottom:1.2rem}
+.cm-bar-item{margin-bottom:1rem}
+.cm-label{display:flex;justify-content:space-between;font-size:0.75rem;margin-bottom:0.35rem}
+.cm-label span:last-child{color:var(--lemon)}
+.cm-bar{height:7px;border-radius:4px;background:rgba(143,201,58,0.1);overflow:hidden}
+.cm-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--green),var(--lemon));width:0;transition:width 1.3s cubic-bezier(0.4,0,0.2,1)}
+
+/* INGREDIENT EXPLORER */
+#ingredients{padding:6rem 4rem;background:var(--bg)}
+.ingr-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;margin-top:3rem}
+.ingr-tabs{display:flex;flex-direction:column;gap:0.5rem}
+.ingr-tab{padding:1.2rem 1.5rem;border-radius:16px;border:1px solid rgba(143,201,58,0.15);background:transparent;display:flex;align-items:center;gap:1rem;cursor:none;transition:all 0.35s;text-align:left;font-family:"Inter",sans-serif;color:var(--cream)}
+.ingr-tab:hover{border-color:rgba(143,201,58,0.4);background:rgba(143,201,58,0.06)}
+.ingr-tab.active{border-color:var(--lime);background:rgba(143,201,58,0.1);box-shadow:0 0 25px rgba(143,201,58,0.1)}
+.ingr-emoji{font-size:1.8rem;flex-shrink:0;width:48px;text-align:center}
+.ingr-tab-name{font-weight:600;font-size:0.9rem;color:var(--cream)}
+.ingr-tab-sub{font-size:0.72rem;color:var(--muted);margin-top:0.2rem}
+.ingr-detail{position:sticky;top:5rem;padding:2rem;border-radius:22px;background:var(--glass);border:1px solid rgba(143,201,58,0.2);min-height:390px}
+.ingr-detail-emoji{font-size:4rem;margin-bottom:1.2rem}
+.ingr-detail-name{font-family:"Playfair Display",serif;font-size:1.6rem;color:var(--lemon);margin-bottom:0.5rem}
+.ingr-detail-origin{font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--lime);margin-bottom:1rem}
+.ingr-detail-desc{font-size:0.88rem;color:var(--muted);line-height:1.78;margin-bottom:1.2rem}
+.ingr-compounds{display:flex;flex-wrap:wrap;gap:0.5rem}
+.cpill{padding:0.28rem 0.85rem;border-radius:50px;border:1px solid rgba(143,201,58,0.3);font-size:0.7rem;color:var(--lime);background:rgba(143,201,58,0.07)}
+.ingr-bar-group{margin-top:1.5rem}
+.ibarlbl{display:flex;justify-content:space-between;font-size:0.72rem;margin-bottom:0.3rem;color:var(--cream)}
+.ibar{height:6px;border-radius:3px;background:rgba(143,201,58,0.1);overflow:hidden;margin-bottom:0.8rem}
+.ifill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--green),var(--lemon));transition:width 0.9s cubic-bezier(0.4,0,0.2,1)}
+
+/* AROMA WHEEL INTERAKTIF */
+#aroma{padding:6rem 4rem;background:var(--deep)}
+.aroma-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.aroma-wheel-wrap{display:flex;flex-direction:column;align-items:center;gap:2rem}
+.aroma-wheel{position:relative;width:280px;height:280px}
+.aroma-wheel svg{width:100%;height:100%}
+.aroma-segment{cursor:none;transition:opacity 0.3s,transform 0.3s;transform-origin:140px 140px}
+.aroma-segment:hover{opacity:0.85;transform:scale(1.05)}
+.aroma-segment.active{filter:drop-shadow(0 0 12px rgba(240,224,48,0.6))}
+.aroma-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+.aroma-center-emoji{font-size:2.2rem;margin-bottom:0.3rem}
+.aroma-center-name{font-size:0.72rem;font-weight:600;color:var(--lemon);text-align:center;letter-spacing:0.05em}
+.aroma-legend{display:flex;flex-wrap:wrap;gap:0.5rem;justify-content:center}
+.aroma-tag{padding:0.3rem 0.85rem;border-radius:50px;font-size:0.7rem;font-weight:500;cursor:none;transition:all 0.3s;border:1px solid transparent}
+.aroma-detail{padding:1.8rem;border-radius:20px;background:var(--glass);border:1px solid rgba(143,201,58,0.2);min-height:280px}
+.ad-emoji{font-size:3rem;margin-bottom:1rem}
+.ad-name{font-family:"Playfair Display",serif;font-size:1.4rem;color:var(--lemon);margin-bottom:0.5rem}
+.ad-category{font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--lime);margin-bottom:1rem}
+.ad-desc{font-size:0.84rem;color:var(--muted);line-height:1.75;margin-bottom:1.2rem}
+.ad-pairs{font-size:0.78rem;color:var(--cream)}
+.ad-pairs span{color:var(--lime)}
+
+/* QUIZ */
+#quiz{padding:6rem 4rem;background:var(--bg)}
+.quiz-wrap{max-width:680px;margin:3rem auto 0}
+.quiz-q{font-family:"Playfair Display",serif;font-size:1.5rem;margin-bottom:1.8rem;line-height:1.35;min-height:76px}
+.quiz-progress{display:flex;gap:0.4rem;margin-bottom:2rem}
+.quiz-dot{width:8px;height:8px;border-radius:50%;background:rgba(143,201,58,0.2);transition:background 0.3s}
+.quiz-dot.done{background:var(--lime)}
+.quiz-dot.active{background:var(--lemon);box-shadow:0 0 10px var(--glow2)}
+.quiz-opts{display:grid;grid-template-columns:1fr 1fr;gap:0.9rem}
+.quiz-opt{padding:1rem 1.3rem;border-radius:16px;border:1px solid rgba(143,201,58,0.22);background:var(--glass);color:var(--cream);font-size:0.86rem;cursor:none;transition:all 0.3s;text-align:left;font-family:"Inter",sans-serif;line-height:1.4}
+.quiz-opt:hover{border-color:var(--lime);background:rgba(143,201,58,0.1);transform:translateY(-2px)}
+.quiz-opt.correct{border-color:#5cb85c;background:rgba(92,184,92,0.12);color:#a8e6ab}
+.quiz-opt.wrong{border-color:#e57373;background:rgba(229,115,115,0.1);color:#ffb3b3}
+.quiz-exp{margin-top:0.9rem;padding:0.85rem 1.2rem;border-radius:12px;background:rgba(74,140,28,0.1);border-left:3px solid var(--green);font-size:0.78rem;color:var(--muted);line-height:1.65;display:none}
+.quiz-exp.show{display:block}
+.quiz-result{text-align:center;padding:2.5rem;border-radius:24px;background:var(--glass);border:1px solid rgba(143,201,58,0.22);display:none}
+.quiz-result.show{display:block}
+.quiz-score{font-family:"Playfair Display",serif;font-size:4rem;color:var(--lemon);margin-bottom:0.5rem}
+.quiz-msg{font-size:0.92rem;color:var(--muted);line-height:1.7}
+.quiz-tip{margin-top:1.5rem;padding:1rem 1.5rem;border-radius:14px;background:rgba(143,201,58,0.07);border:1px solid rgba(143,201,58,0.2);font-size:0.83rem;color:var(--cream);line-height:1.65}
+.btn-restart{margin-top:1.5rem;padding:0.75rem 2rem;border-radius:50px;background:linear-gradient(135deg,var(--green),var(--lime));border:none;color:#0a1200;font-size:0.83rem;font-weight:700;cursor:none;font-family:"Inter",sans-serif}
+
+/* BENEFITS */
+#benefits{padding:6rem 4rem;background:var(--deep)}
+.ben-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-top:3rem}
+.ben-card{padding:2rem;border-radius:20px;background:rgba(143,201,58,0.05);border:1px solid rgba(143,201,58,0.13);transition:all 0.4s;position:relative;overflow:hidden;cursor:none}
+.ben-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(143,201,58,0.1),transparent 60%);opacity:0;transition:opacity 0.4s}
+.ben-card:hover{transform:translateY(-5px);border-color:rgba(143,201,58,0.5);box-shadow:0 20px 50px rgba(143,201,58,0.12)}
+.ben-card:hover::before{opacity:1}
+.ben-icon{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,var(--green),var(--lemon));display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:1.2rem;box-shadow:0 6px 18px rgba(143,201,58,0.25)}
+.ben-card h3{font-size:0.9rem;font-weight:600;margin-bottom:0.45rem}
+.ben-card p{font-size:0.79rem;color:var(--muted);line-height:1.65}
+
+/* CARA MINUM */
+#howto{padding:6rem 4rem;background:var(--bg)}
+.howto-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-top:3rem}
+.how-card{padding:2rem 1.5rem;border-radius:20px;background:var(--glass);border:1px solid rgba(143,201,58,0.14);text-align:center;transition:all 0.35s;cursor:none}
+.how-card:hover{transform:translateY(-6px);border-color:rgba(240,224,48,0.5);box-shadow:0 20px 50px rgba(143,201,58,0.12)}
+.how-num{font-family:"Playfair Display",serif;font-size:3rem;font-weight:700;color:rgba(143,201,58,0.13);line-height:1;margin-bottom:0.8rem}
+.how-emoji{font-size:2rem;margin-bottom:0.8rem}
+.how-title{font-weight:600;font-size:0.88rem;margin-bottom:0.4rem;color:var(--lemon)}
+.how-desc{font-size:0.77rem;color:var(--muted);line-height:1.6}
+
+/* TESTI */
+#testi{padding:6rem 4rem;background:var(--deep)}
+.testi-scroll{display:flex;gap:1.5rem;overflow-x:auto;padding-bottom:1rem;scrollbar-width:thin;scrollbar-color:var(--green) transparent;margin-top:3rem}
+.testi-scroll::-webkit-scrollbar{height:3px}
+.testi-scroll::-webkit-scrollbar-thumb{background:var(--lime);border-radius:99px}
+.testi-card{min-width:300px;max-width:300px;background:var(--glass);border:1px solid rgba(143,201,58,0.18);border-radius:20px;padding:1.8rem;flex-shrink:0;transition:transform 0.3s,border-color 0.3s;cursor:none}
+.testi-card:hover{transform:translateY(-4px);border-color:rgba(143,201,58,0.45)}
+.stars{color:var(--lemon);letter-spacing:0.1em;font-size:0.85rem;margin-bottom:0.9rem}
+.testi-card blockquote{font-size:0.86rem;line-height:1.72;color:rgba(250,255,240,0.65);font-style:italic;margin-bottom:1.4rem}
+.testi-author{font-weight:600;font-size:0.78rem;color:var(--lime)}
+.testi-meta{font-size:0.68rem;color:var(--muted);margin-top:0.2rem}
+
+#cta{padding:8rem 4rem;text-align:center;background:linear-gradient(135deg,#040700,#080d00,#040600);position:relative;overflow:hidden}
+#cta::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(143,201,58,0.18) 0%,transparent 65%)}
+#cta h2{font-family:"Playfair Display",serif;font-size:clamp(2rem,4.5vw,3.8rem);position:relative;z-index:1;line-height:1.1}
+#cta h2 em{color:var(--lemon);font-style:italic}
+#cta p{margin-top:1rem;color:var(--muted);font-size:0.95rem;position:relative;z-index:1}
+.cta-btns{display:flex;gap:1rem;justify-content:center;margin-top:2.5rem;position:relative;z-index:1}
+footer{padding:2.5rem 4rem;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(143,201,58,0.1);color:rgba(250,255,240,0.25);font-size:0.72rem}
+footer span{color:var(--lime)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes heroFloat{0%,100%{transform:translateY(0)}40%{transform:translateY(-13px)}70%{transform:translateY(-6px)}}
+@keyframes pulseGlow{0%,100%{transform:scale(1);opacity:0.5}50%{transform:scale(1.1);opacity:0.9}}
+@keyframes tagFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+@keyframes tickerScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.8s ease,transform 0.8s ease}
+.reveal.visible{opacity:1;transform:none}
+.d1{transition-delay:0.1s}.d2{transition-delay:0.2s}.d3{transition-delay:0.3s}
+@media(max-width:920px){
+  nav{padding:1rem 1.5rem}.nav-links,.nav-cta{display:none}
+  #hero{flex-direction:column;padding-top:5rem}
+  .hero-left{padding:2rem 1.5rem;max-width:none;text-align:center}
+  .hero-pills,.hero-actions{justify-content:center}
+  .hero-desc{margin:1rem auto 0}
+  .hero-right{padding:2rem 1.5rem}
+  #stats{grid-template-columns:1fr 1fr;padding:3rem 1.5rem}
+  .clock-grid,.aroma-grid,.ingr-grid{grid-template-columns:1fr}
+  #cleanse-clock,#aroma,#ingredients,#quiz,#benefits,#howto,#testi,#cta{padding:4rem 1.5rem}
+  .ben-grid{grid-template-columns:1fr 1fr}
+  .howto-grid{grid-template-columns:1fr 1fr}
+  .quiz-opts{grid-template-columns:1fr}
+  .ft-1,.ft-2,.ft-3{display:none}
+  footer{flex-direction:column;gap:1rem;text-align:center}
+  .cta-btns{flex-direction:column;align-items:center}
+}
+@media(max-width:560px){.ben-grid,.howto-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<canvas id="cleanse-canvas"></canvas>
+
+<nav id="navbar">
+  <a href="#" class="logo">RSB <span>Wellness</span></a>
+  <ul class="nav-links">
+    <li><a href="#cleanse-clock">Cleanse Timeline</a></li>
+    <li><a href="#ingredients">Bahan</a></li>
+    <li><a href="#aroma">Aroma Wheel</a></li>
+    <li><a href="#quiz">Kuis</a></li>
+  </ul>
+  <a href="https://wa.me/6287791299376" class="nav-cta">Pesan Sekarang</a>
+</nav>
+
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-left">
+    <div class="hero-badge">🌿 Cold Pressed Juice · Detoks Tropis</div>
+    <h1 class="hero-title">
+      <em>Tropical Cleanse</em>
+      Cold Pressed Juice
+      <span class="sub">Nanas · Lemon · Jahe · Sereh · Madu</span>
+    </h1>
+    <p class="hero-desc">Lima bahan tropis terbaik dipres dingin menjadi satu cairan pembersih tubuh yang menyegarkan. Citarasa segar lemon, kehangatan jahe, aroma sereh yang menenangkan — detoks tidak pernah sepezat ini.</p>
+    <div class="hero-pills">
+      <span class="h-pill">🍍 Nanas</span>
+      <span class="h-pill">🍋 Lemon</span>
+      <span class="h-pill">🫚 Jahe</span>
+      <span class="h-pill">🌿 Sereh</span>
+      <span class="h-pill">🍯 Madu</span>
+      <span class="h-pill">Zero Pengawet</span>
+    </div>
+    <div class="hero-actions">
+      <a href="https://wa.me/6287791299376" class="btn-cleanse">Pesan via WhatsApp</a>
+      <a href="#aroma" class="btn-outline">Lihat Aroma Wheel →</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div style="position:relative">
+      <div class="bottle-wrapper">
+        <div class="bottle-glow"></div>
+        <img src="1001371931.png" alt="Tropical Cleanse Cold Pressed Juice" class="bottle-img">
+        <div class="float-tag ft-1"><span class="tv">Detoks</span>5 Bahan Tropis</div>
+        <div class="float-tag ft-2"><span class="tv">Sereh</span>Aroma Terapeutik</div>
+        <div class="float-tag ft-3"><span class="tv">Lemon</span>Alkalizing Effect</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item">Tropical Cleanse</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Nanas · Lemon · Jahe</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Sereh · Madu</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Cold Pressed</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Detoks Alami</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">RSB Wellness</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Tanpa Pengawet</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Alkalizing Juice</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Tropical Cleanse</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Nanas · Lemon · Jahe</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Sereh · Madu</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Cold Pressed</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Detoks Alami</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">RSB Wellness</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Tanpa Pengawet</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Alkalizing Juice</span><span class="ticker-sep">✦</span>
+  </div>
+</div>
+
+<section id="stats">
+  <div class="stat-block reveal"><span class="stat-num">5</span><div class="stat-unit">Bahan Tropis</div><div class="stat-label">Nanas·Lemon·Jahe·Sereh·Madu</div></div>
+  <div class="stat-block reveal d1"><span class="stat-num">0</span><div class="stat-unit">Tambahan</div><div class="stat-label">No Sugar · No Water · No Preserv.</div></div>
+  <div class="stat-block reveal d2"><span class="stat-num">250</span><div class="stat-unit">ml</div><div class="stat-label">Per Botol</div></div>
+  <div class="stat-block reveal d3"><span class="stat-num">24h</span><div class="stat-unit">Detoks</div><div class="stat-label">Efek Pembersihan Aktif</div></div>
+</section>
+
+<!-- CLEANSE CLOCK -->
+<section id="cleanse-clock">
+  <div class="clock-grid">
+    <div class="reveal">
+      <p class="section-eyebrow">Proses Detoks</p>
+      <h2 class="section-heading">Apa yang Terjadi<br><em style="color:var(--lemon);font-style:italic">Setelah Diminum?</em></h2>
+      <p style="color:var(--muted);font-size:0.9rem;line-height:1.82;margin-top:1.2rem">Tropical Cleanse bekerja bertahap dari dalam. Setiap bahan aktif pada waktu yang berbeda — bersama-sama menciptakan efek detoksifikasi holistik 24 jam. Hover setiap tahap untuk lihat detail prosesnya.</p>
+      <div class="cleanse-meter" style="margin-top:2rem">
+        <div class="cm-title">Efisiensi Penyerapan Nutrisi per Sesi</div>
+        <div class="cm-bar-item"><div class="cm-label"><span>Vitamin C (Lemon + Nanas)</span><span>Diserap 95%</span></div><div class="cm-bar"><div class="cm-fill" data-w="95"></div></div></div>
+        <div class="cm-bar-item"><div class="cm-label"><span>Gingerol (Jahe)</span><span>Aktif 88%</span></div><div class="cm-bar"><div class="cm-fill" data-w="88"></div></div></div>
+        <div class="cm-bar-item"><div class="cm-label"><span>Citral (Sereh)</span><span>Terserap 82%</span></div><div class="cm-bar"><div class="cm-fill" data-w="82"></div></div></div>
+        <div class="cm-bar-item"><div class="cm-label"><span>Bromelain (Nanas)</span><span>Aktif 90%</span></div><div class="cm-bar"><div class="cm-fill" data-w="90"></div></div></div>
+      </div>
+    </div>
+    <div class="reveal d1">
+      <div class="clock-visual">
+        <div class="cv-title">Timeline Detoks 24 Jam</div>
+        <div class="timeline">
+          <div class="tl-item active" onclick="tlClick(this)">
+            <div class="tl-dot">⚡</div>
+            <div class="tl-content">
+              <div class="tl-time">0–30 Menit</div>
+              <div class="tl-title">Penyerapan Cepat</div>
+              <div class="tl-desc">Vitamin C dan enzim bromelain langsung diserap usus halus. Gingerol masuk ke aliran darah dan mulai meningkatkan sirkulasi. Rasa hangat di tenggorokan = tanda gingerol bekerja.</div>
+            </div>
+          </div>
+          <div class="tl-item" onclick="tlClick(this)">
+            <div class="tl-dot">🫁</div>
+            <div class="tl-content">
+              <div class="tl-time">30–60 Menit</div>
+              <div class="tl-title">Aktivasi Liver</div>
+              <div class="tl-desc">Asam sitrat lemon mencapai hati dan memicu produksi enzim detoksifikasi. Citral dari sereh mendukung fungsi empedu. Tubuh mulai memproses toksin lebih aktif.</div>
+            </div>
+          </div>
+          <div class="tl-item" onclick="tlClick(this)">
+            <div class="tl-dot">🛡️</div>
+            <div class="tl-content">
+              <div class="tl-time">1–3 Jam</div>
+              <div class="tl-title">Puncak Antioksidan</div>
+              <div class="tl-desc">Vitamin C dan flavonoid mencapai kadar puncak dalam darah. Radikal bebas mulai dinetralisir. Antiinflamasi dari jahe bekerja maksimal. Ini puncak efek Tropical Cleanse.</div>
+            </div>
+          </div>
+          <div class="tl-item" onclick="tlClick(this)">
+            <div class="tl-dot">🌿</div>
+            <div class="tl-content">
+              <div class="tl-time">3–8 Jam</div>
+              <div class="tl-title">Detoks Berkelanjutan</div>
+              <div class="tl-desc">Citral sereh terus mendukung sistem saraf parasimpatik — efek tenang dan rileks. Bromelain bekerja membantu pencernaan protein. Ginjal memproses toksin yang sudah diikat oleh antioksidan.</div>
+            </div>
+          </div>
+          <div class="tl-item" onclick="tlClick(this)">
+            <div class="tl-dot">✨</div>
+            <div class="tl-content">
+              <div class="tl-time">8–24 Jam</div>
+              <div class="tl-title">Regenerasi Sel</div>
+              <div class="tl-desc">Vitamin C mendukung sintesis kolagen di malam hari. Prebiotik madu mendukung pertumbuhan bakteri baik usus. Siklus detoks selesai — tubuh lebih bersih dan sel lebih segar untuk hari berikutnya.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INGREDIENT EXPLORER -->
+<section id="ingredients">
+  <p class="section-eyebrow reveal">Komposisi</p>
+  <h2 class="section-heading reveal">5 Bahan Tropis,<br><em style="color:var(--lemon);font-style:italic">Satu Detoks Sempurna</em></h2>
+  <div class="ingr-grid">
+    <div class="ingr-tabs reveal" id="ingrTabs">
+      <button class="ingr-tab active" onclick="setIngr(0,this)"><span class="ingr-emoji">🍍</span><div><div class="ingr-tab-name">Nanas Segar</div><div class="ingr-tab-sub">Bromelain & kesegaran tropik</div></div></button>
+      <button class="ingr-tab" onclick="setIngr(1,this)"><span class="ingr-emoji">🍋</span><div><div class="ingr-tab-name">Lemon Segar</div><div class="ingr-tab-sub">Alkalizing & detoks hati</div></div></button>
+      <button class="ingr-tab" onclick="setIngr(2,this)"><span class="ingr-emoji">🫚</span><div><div class="ingr-tab-name">Jahe Segar</div><div class="ingr-tab-sub">Gingerol & anti-inflamasi</div></div></button>
+      <button class="ingr-tab" onclick="setIngr(3,this)"><span class="ingr-emoji">🌿</span><div><div class="ingr-tab-name">Sereh (Lemongrass)</div><div class="ingr-tab-sub">Citral & efek menenangkan</div></div></button>
+      <button class="ingr-tab" onclick="setIngr(4,this)"><span class="ingr-emoji">🍯</span><div><div class="ingr-tab-name">Madu Murni</div><div class="ingr-tab-sub">Penyeimbang rasa & prebiotik</div></div></button>
+    </div>
+    <div class="ingr-detail reveal d1" id="ingrDetail"></div>
+  </div>
+</section>
+
+<!-- AROMA WHEEL -->
+<section id="aroma">
+  <p class="section-eyebrow reveal">Profil Aroma</p>
+  <h2 class="section-heading reveal">Aroma Wheel —<br><em style="color:var(--lemon);font-style:italic">Klik & Jelajahi Aromanya</em></h2>
+  <div class="aroma-grid">
+    <div class="aroma-wheel-wrap reveal">
+      <div class="aroma-wheel">
+        <svg viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">
+          <!-- Nanas segment -->
+          <path d="M140 140 L140 30 A110 110 0 0 1 233 85 Z" fill="rgba(143,201,58,0.35)" stroke="rgba(6,10,0,0.8)" stroke-width="2" class="aroma-segment" onclick="setAroma(0,this)" id="seg0"/>
+          <!-- Lemon segment -->
+          <path d="M140 140 L233 85 A110 110 0 0 1 233 195 Z" fill="rgba(212,224,16,0.4)" stroke="rgba(6,10,0,0.8)" stroke-width="2" class="aroma-segment" onclick="setAroma(1,this)" id="seg1"/>
+          <!-- Jahe segment -->
+          <path d="M140 140 L233 195 A110 110 0 0 1 140 250 Z" fill="rgba(200,105,26,0.35)" stroke="rgba(6,10,0,0.8)" stroke-width="2" class="aroma-segment" onclick="setAroma(2,this)" id="seg2"/>
+          <!-- Sereh segment -->
+          <path d="M140 140 L140 250 A110 110 0 0 1 47 195 Z" fill="rgba(74,140,28,0.4)" stroke="rgba(6,10,0,0.8)" stroke-width="2" class="aroma-segment" onclick="setAroma(3,this)" id="seg3"/>
+          <!-- Madu segment -->
+          <path d="M140 140 L47 195 A110 110 0 0 1 140 30 Z" fill="rgba(240,165,0,0.35)" stroke="rgba(6,10,0,0.8)" stroke-width="2" class="aroma-segment" onclick="setAroma(4,this)" id="seg4"/>
+          <!-- Labels -->
+          <text x="175" y="75" fill="rgba(250,255,240,0.7)" font-size="10" text-anchor="middle" font-family="Inter,sans-serif">Nanas</text>
+          <text x="225" y="148" fill="rgba(250,255,240,0.7)" font-size="10" text-anchor="middle" font-family="Inter,sans-serif">Lemon</text>
+          <text x="200" y="225" fill="rgba(250,255,240,0.7)" font-size="10" text-anchor="middle" font-family="Inter,sans-serif">Jahe</text>
+          <text x="80" y="225" fill="rgba(250,255,240,0.7)" font-size="10" text-anchor="middle" font-family="Inter,sans-serif">Sereh</text>
+          <text x="58" y="135" fill="rgba(250,255,240,0.7)" font-size="10" text-anchor="middle" font-family="Inter,sans-serif">Madu</text>
+          <!-- Center circle -->
+          <circle cx="140" cy="140" r="42" fill="rgba(6,10,0,0.85)" stroke="rgba(143,201,58,0.3)" stroke-width="1.5"/>
+        </svg>
+        <div class="aroma-center">
+          <div class="aroma-center-emoji" id="aromaEmoji">🍍</div>
+          <div class="aroma-center-name" id="aromaName">Nanas</div>
+        </div>
+      </div>
+      <div class="aroma-legend" id="aromaLegend"></div>
+    </div>
+    <div class="aroma-detail reveal d1" id="aromaDetail"></div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz">
+  <div style="text-align:center" class="reveal">
+    <p class="section-eyebrow">Interaktif</p>
+    <h2 class="section-heading" style="max-width:none">Seberapa Paham<br><em style="color:var(--lemon);font-style:italic">Kamu soal Tropical Cleanse?</em></h2>
+    <p style="color:var(--muted);font-size:0.86rem;margin-top:0.8rem">5 pertanyaan · temukan program detoks personalmu</p>
+  </div>
+  <div class="quiz-wrap">
+    <div class="quiz-progress" id="qProg"></div>
+    <div class="quiz-q" id="qText"></div>
+    <div class="quiz-opts" id="qOpts"></div>
+    <div class="quiz-exp" id="qExp"></div>
+    <div class="quiz-result" id="qResult">
+      <div class="quiz-score" id="qScore"></div>
+      <div class="quiz-msg" id="qMsg"></div>
+      <div class="quiz-tip" id="qTip"></div>
+      <button class="btn-restart" onclick="startQuiz()">Ulangi Kuis →</button>
+    </div>
+  </div>
+</section>
+
+<!-- BENEFITS -->
+<section id="benefits">
+  <p class="section-eyebrow reveal">Manfaat</p>
+  <h2 class="section-heading reveal">6 Manfaat Tropical Cleanse<br><em style="color:var(--lemon);font-style:italic">untuk Tubuhmu</em></h2>
+  <div class="ben-grid">
+    <div class="ben-card reveal"><div class="ben-icon">🫁</div><h3>Detoks Hati Alami</h3><p>Asam sitrat lemon + citral sereh bersama memicu enzim detoksifikasi hati fase II. Membantu hati memproses dan membuang toksin lingkungan, hormon berlebih, dan sisa metabolisme.</p></div>
+    <div class="ben-card reveal d1"><div class="ben-icon">⚖️</div><h3>Alkalizing Effect</h3><p>Meski asam, lemon menghasilkan residu basa setelah dimetabolisme. Membantu menyeimbangkan pH darah menuju kondisi lebih alkalin — kondisi optimal untuk kesehatan sel.</p></div>
+    <div class="ben-card reveal d2"><div class="ben-icon">🛡️</div><h3>Imunitas & Anti-Inflamasi</h3><p>Triple protection: Vitamin C lemon + gingerol jahe + flavonoid madu. Tiga layer perlindungan imun dari sumber berbeda yang saling sinergis dan memperkuat satu sama lain.</p></div>
+    <div class="ben-card reveal"><div class="ben-icon">😌</div><h3>Relaksasi & Anti-Stres</h3><p>Sereh (lemongrass) mengandung citral yang terbukti secara ilmiah memiliki efek ansiolitik — mengurangi kecemasan. Aromanya juga menstimulasi sistem saraf parasimpatik untuk relaksasi.</p></div>
+    <div class="ben-card reveal d1"><div class="ben-icon">🫁</div><h3>Pencernaan Optimal</h3><p>Bromelain nanas + gingerol jahe = duo enzim pencernaan terkuat. Membantu memecah protein, mengurangi kembung, dan mendukung pergerakan usus yang sehat dan teratur.</p></div>
+    <div class="ben-card reveal d2"><div class="ben-icon">✨</div><h3>Kulit Cerah & Segar</h3><p>Vitamin C lemon mendukung sintesis kolagen. Antioksidan campuran menetralisir radikal bebas penyebab penuaan. Efek detoks dari dalam menghasilkan kulit lebih cerah dan bercahaya.</p></div>
+  </div>
+</section>
+
+<!-- CARA MINUM -->
+<section id="howto">
+  <div style="text-align:center" class="reveal">
+    <p class="section-eyebrow">Cara Konsumsi</p>
+    <h2 class="section-heading" style="max-width:none">4 Langkah untuk<br><em style="color:var(--lemon);font-style:italic">Detoks Maksimal</em></h2>
+  </div>
+  <div class="howto-grid">
+    <div class="how-card reveal"><div class="how-num">01</div><div class="how-emoji">🔄</div><div class="how-title">Kocok Dahulu</div><div class="how-desc">Lapisan endapan hijau-kuning keemasan di dasar adalah citral sereh dan serat nanas murni. Kocok lembut agar semua nutrisi tercampur sempurna.</div></div>
+    <div class="how-card reveal d1"><div class="how-num">02</div><div class="how-emoji">🌅</div><div class="how-title">Minum Pagi Hari</div><div class="how-desc">Waktu ideal adalah pagi sebelum sarapan dengan perut kosong. Lambung kosong memaksimalkan penyerapan Vitamin C, enzim, dan citral sereh tanpa kompetisi makanan lain.</div></div>
+    <div class="how-card reveal d2"><div class="how-num">03</div><div class="how-emoji">❄️</div><div class="how-title">Selalu Simpan Dingin</div><div class="how-desc">Habiskan 1–2 jam setelah dibuka. Vitamin C sangat sensitif terhadap oksidasi — kehilangan 30% kandungannya setiap jam setelah terpapar udara.</div></div>
+    <div class="how-card reveal d3"><div class="how-num">04</div><div class="how-emoji">📅</div><div class="how-title">Program 7 Hari</div><div class="how-desc">Rasakan program mini-cleanse 7 hari: 1 botol setiap pagi. Efek detoks, kulit lebih cerah, dan sistem pencernaan lebih ringan akan terasa mulai hari ke-3.</div></div>
+  </div>
+</section>
+
+<!-- TESTI -->
+<section id="testi">
+  <div style="display:flex;align-items:end;justify-content:space-between;flex-wrap:wrap;gap:1rem" class="reveal">
+    <div>
+      <p class="section-eyebrow">Apa Kata Mereka</p>
+      <h2 class="section-heading" style="max-width:none">Cleansed & Refreshed<br>Sudah Terbukti</h2>
+    </div>
+    <p style="color:var(--muted);font-size:0.78rem">← Geser untuk lihat →</p>
+  </div>
+  <div class="testi-scroll">
+    <div class="testi-card"><div class="stars">★★★★★</div><blockquote>"Tropical Cleanse ini jadi ritual pagi terfavorit saya! Rasa serehnya unique banget — ada hint aromaterapi yang bikin tenang sebelum mulai hari. Perut terasa ringan, kulit makin bersih."</blockquote><div class="testi-author">Lia Maharani</div><div class="testi-meta">Yoga Instructor · Palangka Raya</div></div>
+    <div class="testi-card"><div class="stars">★★★★★</div><blockquote>"Saya coba program 7 hari Tropical Cleanse dan hasilnya luar biasa! Dari hari ke-3 sudah kerasa — perut tidak kembung, energi lebih stabil, dan teman-teman bilang kulit saya lebih glowing."</blockquote><div class="testi-author">Mega Putri</div><div class="testi-meta">Mahasiswi · Banjarmasin</div></div>
+    <div class="testi-card"><div class="stars">★★★★★</div><blockquote>"Kombinasi jahe + sereh + lemon ini genius! Tidak ada yang terlalu dominan — semuanya balance. Rasa segar lemon, hangat jahe, dan aroma sereh yang elegant. Ini minuman detoks paling enak yang pernah saya coba."</blockquote><div class="testi-author">dr. Susi K.</div><div class="testi-meta">Dokter Integratif · Surabaya</div></div>
+    <div class="testi-card"><div class="stars">★★★★★</div><blockquote>"Saya minum Tropical Cleanse setiap pagi sebelum kerja. Rasanya kayak spa dalam botol — aroma serehnya terapeutik banget. Dan efek ke badan nyata: lebih fokus, pencernaan lancar, tidak ngantuk pagi."</blockquote><div class="testi-author">Budi Santoso</div><div class="testi-meta">Eksekutif · Jakarta</div></div>
+    <div class="testi-card"><div class="stars">★★★★★</div><blockquote>"Warnanya cantik banget — kuning kehijauan yang alami. Dan rasa lemonnya segar tanpa terlalu asam karena diseimbangkan madu. Langsung repeat order untuk stok seminggu!"</blockquote><div class="testi-author">Nana Fitria</div><div class="testi-meta">Content Creator · Palangka Raya</div></div>
+  </div>
+</section>
+
+<section id="cta">
+  <h2 class="reveal">Mulai Perjalanan<br><em>Cleanse</em> Tropismu</h2>
+  <p class="reveal">Fresh dibuat setiap hari — pesan sebelum jam 12 siang untuk pengiriman hari ini.</p>
+  <div class="cta-btns reveal">
+    <a href="https://wa.me/6287791299376" class="btn-cleanse" style="font-size:1rem;padding:1rem 3rem">💬 Pesan via WhatsApp</a>
+    <a href="#aroma" class="btn-outline" style="font-size:1rem;padding:1rem 2.5rem">Lihat Aroma Wheel</a>
+  </div>
+</section>
+
+<footer>
+  <div>© 2025 <span>Rumah Sehat Bunda</span> · RSB Wellness · Palangka Raya</div>
+  <div>Tropical Cleanse · Cold Pressed · Nanas·Lemon·Jahe·Sereh·Madu · UMKM Binaan BI</div>
+</footer>
+
+<script>
+// CURSOR
+const cursor=document.getElementById("cursor"),ring=document.getElementById("cursorRing");
+let cx=0,cy=0,rx=0,ry=0;
+document.addEventListener("mousemove",e=>{cx=e.clientX;cy=e.clientY;cursor.style.left=cx-5+"px";cursor.style.top=cy-5+"px";});
+(function a(){rx+=(cx-rx)*0.1;ry+=(cy-ry)*0.1;ring.style.left=rx-18+"px";ring.style.top=ry-18+"px";requestAnimationFrame(a);})();
+document.querySelectorAll("a,button,.ben-card,.testi-card,.how-card,.ingr-tab,.aroma-segment,.tl-item").forEach(el=>{
+  el.addEventListener("mouseenter",()=>ring.classList.add("h"));
+  el.addEventListener("mouseleave",()=>ring.classList.remove("h"));
+});
+
+// PARTICLES - citrus drops
+(function(){
+  const c=document.getElementById("cleanse-canvas"),ctx=c.getContext("2d");
+  let W,H,pts=[];
+  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;}
+  resize();window.addEventListener("resize",resize);
+  function pt(){return{x:Math.random()*W,y:H+20,r:1.5+Math.random()*7,vy:-(0.2+Math.random()*0.65),vx:(Math.random()-0.5)*0.3,a:0.06+Math.random()*0.22,hue:60+Math.random()*60};}
+  for(let i=0;i<65;i++){const p=pt();p.y=Math.random()*H;pts.push(p);}
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    pts.forEach((p,i)=>{
+      p.y+=p.vy;p.x+=p.vx;
+      const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r);
+      g.addColorStop(0,`hsla(${p.hue},90%,70%,${p.a})`);
+      g.addColorStop(0.5,`hsla(${p.hue},80%,50%,${p.a*0.5})`);
+      g.addColorStop(1,`hsla(${p.hue},80%,40%,0)`);
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+      if(p.y<-20)pts[i]=pt();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// NAVBAR
+window.addEventListener("scroll",()=>{document.getElementById("navbar").classList.toggle("scrolled",scrollY>60);});
+
+// CLEANSE METER BARS
+const cmObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.querySelectorAll(".cm-fill").forEach(f=>{setTimeout(()=>{f.style.width=f.dataset.w+"%";},200);});cmObs.unobserve(e.target);}
+  });
+},{threshold:0.2});
+document.querySelectorAll(".cleanse-meter").forEach(v=>cmObs.observe(v));
+
+// TIMELINE CLICK
+function tlClick(el){
+  document.querySelectorAll(".tl-item").forEach(t=>t.classList.remove("active"));
+  el.classList.add("active");
+}
+
+// INGREDIENT DATA
+const ingrData=[
+  {emoji:"🍍",name:"Nanas Segar",origin:"Ananas comosus · Buah Tropik Kalimantan",desc:"Nanas menjadi basis kesegaran Tropical Cleanse. Bromelain — enzim proteolitik eksklusif nanas — memiliki efek antiinflamasi kuat dan membantu pencernaan protein. Vitamin C nanas mendukung produksi kolagen dan sistem imun, sementara gula alaminya memberikan energi sehat yang sustain.",compounds:["Bromelain","Vitamin C","Mangan","Serat Larut","Beta-Karoten"],bars:[["Vitamin C",80],["Bromelain (Enzim)",88],["Antiinflamasi",78],["Kesegaran Rasa",95]]},
+  {emoji:"🍋",name:"Lemon Segar",origin:"Citrus limon · Citrus Premium",desc:"Lemon adalah bintang detoks dalam Tropical Cleanse. Asam sitrat lemon memicu produksi enzim glutathione — antioksidan terkuat yang diproduksi tubuh sendiri. Meski asam, lemon menghasilkan residu alkalin setelah dimetabolisme, membantu menyeimbangkan pH tubuh menuju kondisi lebih basa.",compounds:["Vitamin C","Asam Sitrat","Hesperidin","Limonene","Pektin"],bars:[["Vitamin C",95],["Alkalizing Effect",88],["Detoks Hati",90],["Antioksidan",85]]},
+  {emoji:"🫚",name:"Jahe Segar",origin:"Zingiber officinale · Rimpang Asia Tropis",desc:"Jahe memberikan 'kick' hangat yang menjadi tanda tangan Tropical Cleanse. Gingerol dan shogaol mendukung sirkulasi darah, mengurangi peradangan, dan mempercepat metabolisme. Jahe juga memiliki efek antimual yang kuat — terbukti efektif untuk morning sickness dan mabuk perjalanan.",compounds:["Gingerol","Shogaol","Zingerone","Minyak Atsiri","Paradol"],bars:[["Antiinflamasi",90],["Sirkulasi Darah",85],["Antimual",92],["Termogenesis",80]]},
+  {emoji:"🌿",name:"Sereh (Lemongrass)",origin:"Cymbopogon citratus · Tanaman Rempah Asia",desc:"Sereh adalah bahan paling unik dalam Tropical Cleanse — tidak ditemukan di cold press juice lain. Citral, senyawa utama sereh, memiliki efek ansiolitik (anti-kecemasan) yang terbukti ilmiah, serta mendukung fungsi detoksifikasi hati. Aromanya yang khas memberi dimensi terapeutik ekstra.",compounds:["Citral","Geraniol","Limonene","Myrcene","Vitamin B Kompleks"],bars:[["Citral (Relaksasi)",92],["Detoks Hati",85],["Antimikroba",82],["Aroma Terapeutik",98]]},
+  {emoji:"🍯",name:"Madu Murni",origin:"Apis mellifera · Sari Bunga Alam Kalimantan",desc:"Madu lokal Kalimantan digunakan untuk menyeimbangkan ketajaman lemon dan kehangatan jahe menjadi harmoni rasa yang menyenangkan. Lebih dari pemanis — mengandung flavonoid, prebiotik inulin, dan enzim diastase yang mendukung kesehatan usus. Indeks glikemik rendah menjaga gula darah stabil.",compounds:["Flavonoid","Prebiotik Inulin","Enzim Diastase","Vitamin B","Zinc"],bars:[["Prebiotik Usus",85],["Antioksidan",82],["Indeks GI Rendah",75],["Penyeimbang Rasa",95]]}
+];
+function setIngr(i,btn){
+  document.querySelectorAll(".ingr-tab").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  const d=ingrData[i];
+  document.getElementById("ingrDetail").innerHTML=`
+    <div class="ingr-detail-emoji">${d.emoji}</div>
+    <div class="ingr-detail-name">${d.name}</div>
+    <div class="ingr-detail-origin">${d.origin}</div>
+    <div class="ingr-detail-desc">${d.desc}</div>
+    <div class="ingr-compounds">${d.compounds.map(c=>`<span class="cpill">${c}</span>`).join("")}</div>
+    <div class="ingr-bar-group">${d.bars.map(b=>`<div class="ibarlbl"><span>${b[0]}</span></div><div class="ibar"><div class="ifill" style="width:0" data-w="${b[1]}"></div></div>`).join("")}</div>
+  `;
+  setTimeout(()=>{document.querySelectorAll(".ifill").forEach(f=>{f.style.width=f.dataset.w+"%";});},80);
+}
+setIngr(0,document.querySelector(".ingr-tab"));
+
+// AROMA WHEEL
+const aromaData=[
+  {emoji:"🍍",name:"Nanas",category:"Buah Tropis · Manis Segar",color:"rgba(143,201,58,0.6)",desc:"Aroma nanas segar yang manis dan tropik menjadi fondasi keseluruhan profil rasa Tropical Cleanse. Memberikan sensasi ceria dan ringan yang langsung dikenali saat tutup botol dibuka.",pairs:"Dikombinasikan dengan: Lemon (kecerahan), Madu (kelembutan)",notes:["Manis Tropik","Segar","Buah","Ringan"]},
+  {emoji:"🍋",name:"Lemon",category:"Citrus · Segar Tajam",color:"rgba(240,224,48,0.65)",desc:"Aroma citrus lemon yang tajam, cerah, dan membangkitkan semangat. Dalam Tropical Cleanse, lemon memberikan 'kecerahan' yang mengangkat seluruh profil aroma menjadi lebih hidup dan menyegarkan.",pairs:"Dikombinasikan dengan: Sereh (citral sinergis), Jahe (balancing)",notes:["Sitrus","Tajam","Cerah","Menyegarkan"]},
+  {emoji:"🫚",name:"Jahe",category:"Rempah Hangat · Pedas Aromatik",color:"rgba(200,105,26,0.55)",desc:"Aroma spicy-warm jahe memberikan kedalaman dan kompleksitas pada Tropical Cleanse. Tidak dominan, tapi terasa sebagai 'lapisan bawah' yang hangat dan menarik — seperti memperhatikan seseorang yang menarik.",pairs:"Dikombinasikan dengan: Madu (melembutkan), Lemon (menyeimbangkan)",notes:["Hangat","Pedas","Aromatik","Dalam"]},
+  {emoji:"🌿",name:"Sereh",category:"Herbal · Terapeutik Aromatik",color:"rgba(74,140,28,0.6)",desc:"Aroma sereh adalah kejutan terbaik dalam Tropical Cleanse. Citral dan geraniol menciptakan aroma herbal-citrus yang unik — seperti spa dalam botol. Memberikan dimensi terapeutik yang tidak ada di cold press juice lain manapun.",pairs:"Dikombinasikan dengan: Lemon (saling memperkuat citrus), Jahe (herbal harmony)",notes:["Herbal","Sitrus Unik","Spa-Like","Terapeutik"]},
+  {emoji:"🍯",name:"Madu",category:"Floral Manis · Hangat Lembut",color:"rgba(240,165,0,0.55)",desc:"Aroma madu membawa kehangatam floral yang memeluk semua komponen lain menjadi satu kesatuan. Mencegah lemon terlalu tajam, meredakan jahe terlalu pedas, dan menciptakan 'ending note' yang manis dan nyaman.",pairs:"Dikombinasikan dengan: Semua bahan (penyeimbang universal)",notes:["Floral","Manis","Hangat","Melengkapi"]}
+];
+function setAroma(i,segEl){
+  document.querySelectorAll(".aroma-segment").forEach(s=>s.classList.remove("active"));
+  if(segEl)segEl.classList.add("active");
+  const d=aromaData[i];
+  document.getElementById("aromaEmoji").textContent=d.emoji;
+  document.getElementById("aromaName").textContent=d.name;
+  document.getElementById("aromaDetail").innerHTML=`
+    <div class="ad-emoji">${d.emoji}</div>
+    <div class="ad-name">${d.name}</div>
+    <div class="ad-category">${d.category}</div>
+    <div class="ad-desc">${d.desc}</div>
+    <div class="ad-pairs"><span>Pasangan terbaik:</span> ${d.pairs}</div>
+    <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1rem">${d.notes.map(n=>`<span class="cpill">${n}</span>`).join("")}</div>
+  `;
+}
+setAroma(0,document.getElementById("seg0"));
+
+// QUIZ
+const qData=[
+  {q:"Apa yang dimaksud dengan 'alkalizing effect' dari lemon?",opts:["Lemon membuat tubuh lebih asam","Meski asam, lemon menghasilkan residu basa setelah dimetabolisme","Lemon menghilangkan semua asam dalam tubuh","Lemon sama dengan baking soda"],ans:1,exp:"Paradoks lemon: meski rasanya asam (pH ~2), setelah dimetabolisme oleh tubuh, lemon menghasilkan mineral basa seperti kalium dan kalsium. Ini meningkatkan pH urin dan darah menuju kondisi lebih alkalin — kondisi yang optimal untuk kesehatan sel dan enzim."},
+  {q:"Senyawa unik apa dalam sereh yang memberikan efek relaksasi dan anti-kecemasan?",opts:["Gingerol","Bromelain","Citral","Quercetin"],ans:2,exp:"Citral adalah senyawa monoterpen aldehida utama dalam lemongrass (sereh). Penelitian menunjukkan citral berinteraksi dengan reseptor GABA di otak — mekanisme yang sama dengan obat anti-kecemasan. Inilah mengapa sereh digunakan dalam aromaterapi dan ditemukan dalam minuman pelega stres tradisional Asia."},
+  {q:"Mengapa Tropical Cleanse paling baik diminum saat perut kosong di pagi hari?",opts:["Supaya tidak mengantuk","Karena kandungan kafeinnya tinggi","Penyerapan Vitamin C dan enzim lebih efisien tanpa kompetisi makanan lain","Karena rasanya lebih enak saat lapar"],ans:2,exp:"Saat perut kosong, lambung dan usus halus tidak sibuk mencerna makanan lain. Vitamin C (water-soluble), enzim bromelain, citral, dan gingerol dapat langsung diserap tanpa bersaing dengan nutrisi makanan. Penyerapan hingga 2x lebih efisien dibanding diminum setelah makan."},
+  {q:"Apa manfaat unik bromelain dari nanas untuk proses detoks?",opts:["Menurunkan tekanan darah","Membantu mencerna dan memecah protein serta toksin berbasis protein","Meningkatkan kadar zat besi","Menurunkan kadar kolesterol"],ans:1,exp:"Bromelain adalah enzim proteolitik — ia memecah ikatan peptida dalam protein. Dalam konteks detoks, ini berarti bromelain membantu memecah protein 'asing' dari toksin dan patogen, memudahkan sistem imun untuk mengeliminasi mereka. Juga membantu mencerna protein makanan, mengurangi kembung."},
+  {q:"Mengapa kombinasi 5 bahan dalam Tropical Cleanse lebih efektif dari jus nanas biasa saja?",opts:["Karena lebih banyak bahan = lebih mahal","Sinergisme fitokimia — setiap bahan mempotensiasi bahan lain","Karena lebih berwarna","Karena lebih kental"],ans:1,exp:"Sinergisme adalah kunci: Vitamin C lemon meningkatkan penyerapan bromelain nanas; citral sereh mendukung detoks hati untuk memproses senyawa aktif lainnya; gingerol meningkatkan sirkulasi sehingga semua nutrisi terdistribusi lebih cepat; madu menyediakan prebiotik untuk usus yang optimal menyerap semua nutrisi."}
+];
+let qi=0,qs=0,qA=false;
+function startQuiz(){qi=0;qs=0;qA=false;document.getElementById("qResult").classList.remove("show");document.getElementById("qExp").classList.remove("show");renderQ();}
+function renderQ(){
+  const d=qData[qi];
+  document.getElementById("qProg").innerHTML=qData.map((_,i)=>`<div class="quiz-dot ${i<qi?"done":i===qi?"active":""}"></div>`).join("");
+  document.getElementById("qText").textContent=(qi+1)+". "+d.q;
+  document.getElementById("qOpts").innerHTML=d.opts.map((o,i)=>`<button class="quiz-opt" onclick="ansQ(${i})">${o}</button>`).join("");
+  document.getElementById("qExp").classList.remove("show");
+  qA=false;
+}
+function ansQ(i){
+  if(qA)return;qA=true;
+  const d=qData[qi];
+  document.querySelectorAll(".quiz-opt").forEach((b,idx)=>{
+    if(idx===d.ans)b.classList.add("correct");
+    else if(idx===i&&i!==d.ans)b.classList.add("wrong");
+    b.style.pointerEvents="none";
+  });
+  document.getElementById("qExp").textContent=d.exp;
+  document.getElementById("qExp").classList.add("show");
+  if(i===d.ans)qs++;
+  setTimeout(()=>{qi++;qi<qData.length?renderQ():showResult();},2300);
+}
+function showResult(){
+  document.getElementById("qOpts").innerHTML="";document.getElementById("qText").textContent="";
+  document.getElementById("qProg").innerHTML=qData.map(()=>`<div class="quiz-dot done"></div>`).join("");
+  document.getElementById("qExp").classList.remove("show");
+  const tier=qs<=1?0:qs<=3?1:2;
+  const data=[
+    ["Cleanse Beginner 🌱","Mulai dengan program 3 hari: minum 1 botol setiap pagi sebelum sarapan. Di hari ke-2 kamu akan merasakan perut lebih ringan dan energi pagi lebih baik."],
+    ["Cleanse Explorer 🌿","Coba program 7 hari penuh! Kombinasikan dengan minum 2L air putih per hari untuk memaksimalkan efek detoksifikasi. Hasil kulit akan terasa di hari ke-5."],
+    ["Cleanse Master 🌟","Luar biasa! Pengetahuanmu sangat dalam. Coba kombinasi morning routine: Tropical Cleanse pagi + Kombucha sore + Ruby Boost sebelum olahraga — trio detoks-imunitas-energi yang komprehensif!"]
+  ];
+  document.getElementById("qScore").textContent=qs+"/"+qData.length;
+  document.getElementById("qMsg").textContent=data[tier][0]+" — Skor "+qs+" dari "+qData.length;
+  document.getElementById("qTip").textContent="🌿 "+data[tier][1];
+  document.getElementById("qResult").classList.add("show");
+}
+startQuiz();
+
+// BEN CARD GLOW
+document.querySelectorAll(".ben-card").forEach(card=>{
+  card.addEventListener("mousemove",e=>{
+    const r=card.getBoundingClientRect();
+    card.style.setProperty("--mx",((e.clientX-r.left)/r.width*100)+"%");
+    card.style.setProperty("--my",((e.clientY-r.top)/r.height*100)+"%");
+  });
+});
+
+// SCROLL REVEAL
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add("visible");});},{threshold:0.08});
+document.querySelectorAll(".reveal").forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

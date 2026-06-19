@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Tallow Balm – Skin Barrier Support | RSB Wellness</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --bg:#0d0a06;
+    --deep:#110d08;
+    --pearl:#f5ede0;
+    --muted:rgba(245,237,224,0.55);
+    --gold:#c89b4e;
+    --amber:#d4a847;
+    --cream:#e8d5b0;
+    --glow:rgba(200,155,78,0.45);
+    --warm:rgba(245,237,224,0.35);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--pearl);font-family:"DM Sans",sans-serif;overflow-x:hidden;cursor:none}
+  ::selection{background:var(--gold);color:#0d0a06}
+
+  .cursor{position:fixed;width:12px;height:12px;border-radius:50%;background:var(--gold);pointer-events:none;z-index:9999;transition:transform 0.1s;mix-blend-mode:screen}
+  .cursor-ring{position:fixed;width:36px;height:36px;border-radius:50%;border:1px solid rgba(200,155,78,0.5);pointer-events:none;z-index:9998;transition:transform 0.15s,width 0.2s,height 0.2s}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 4rem;display:flex;align-items:center;justify-content:space-between;transition:background 0.4s,padding 0.4s}
+  nav.scrolled{background:rgba(13,10,6,0.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(200,155,78,0.15);padding:1rem 4rem}
+  .logo{font-family:"Cormorant Garamond",serif;font-size:1.2rem;letter-spacing:0.18em;color:var(--gold);text-transform:uppercase;font-weight:600}
+  .logo span{color:var(--pearl)}
+  .nav-links{display:flex;gap:3rem;list-style:none}
+  .nav-links a{color:rgba(245,237,224,0.55);text-decoration:none;font-size:0.78rem;letter-spacing:0.12em;text-transform:uppercase;transition:color 0.3s;font-weight:500;cursor:none}
+  .nav-links a:hover{color:var(--gold)}
+  .nav-cta{padding:0.6rem 1.6rem;border-radius:50px;background:linear-gradient(135deg,var(--amber),var(--gold));color:#0d0a06;font-size:0.78rem;font-weight:700;letter-spacing:0.08em;text-decoration:none;transition:box-shadow 0.3s,transform 0.2s;box-shadow:0 4px 20px var(--glow);cursor:none}
+  .nav-cta:hover{transform:translateY(-1px);box-shadow:0 8px 30px var(--glow)}
+
+  #hero{position:relative;height:100vh;overflow:hidden;display:flex;align-items:center}
+  #canvas-hero{position:absolute;inset:0;z-index:0}
+  .hero-left{position:relative;z-index:10;padding:0 4rem;flex:1}
+  .hero-badge{display:inline-flex;align-items:center;gap:0.6rem;font-size:0.7rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;border:1px solid rgba(200,155,78,0.3);padding:0.4rem 1rem;border-radius:50px}
+  .hero-badge::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold);animation:blink 2s infinite}
+  .hero-title{font-family:"Cormorant Garamond",serif;font-size:clamp(2.8rem,6vw,5.5rem);font-weight:700;line-height:1.05;letter-spacing:-0.01em}
+  .hero-title .line2{font-style:italic;color:var(--gold);display:block}
+  .hero-title .line3{font-size:clamp(1.4rem,3vw,2.6rem);font-weight:300;color:rgba(245,237,224,0.65);display:block;margin-top:0.3rem;letter-spacing:0.05em}
+  .hero-desc{font-size:0.95rem;color:var(--muted);line-height:1.75;font-weight:300;max-width:440px;margin:1.6rem 0 2.4rem}
+  .hero-actions{display:flex;gap:1rem;align-items:center;flex-wrap:wrap}
+  .btn-glow{padding:0.9rem 2.2rem;border-radius:50px;border:none;background:linear-gradient(135deg,var(--amber),var(--gold),#a07a30);color:#0d0a06;font-size:0.85rem;font-weight:700;letter-spacing:0.08em;cursor:none;box-shadow:0 0 40px var(--glow);transition:transform 0.2s,box-shadow 0.3s}
+  .btn-glow:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 0 70px var(--glow)}
+  .btn-outline{padding:0.9rem 2.2rem;border-radius:50px;border:1px solid rgba(200,155,78,0.4);background:transparent;color:var(--gold);font-size:0.85rem;font-weight:500;letter-spacing:0.08em;cursor:none;transition:border-color 0.3s,background 0.3s;text-decoration:none}
+  .btn-outline:hover{border-color:var(--gold);background:rgba(200,155,78,0.08)}
+
+  .hero-right{position:relative;z-index:10;flex:1;display:flex;justify-content:center;align-items:center}
+  .jar-wrapper{position:relative;width:320px;height:320px;animation:heroFloat 5s ease-in-out infinite}
+  .jar-glow{position:absolute;inset:-30px;background:radial-gradient(ellipse,rgba(200,155,78,0.35) 0%,transparent 70%);border-radius:50%;animation:pulseGlow 3s ease-in-out infinite alternate}
+  .jar-circle{width:260px;height:260px;border-radius:50%;background:radial-gradient(ellipse at 35% 35%, #3a2a12 0%, #1a1008 60%, #0d0a06 100%);border:1px solid rgba(200,155,78,0.2);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;box-shadow:0 0 60px rgba(200,155,78,0.15),inset 0 0 40px rgba(0,0,0,0.5)}
+  .jar-label{text-align:center;font-family:"Cormorant Garamond",serif}
+  .jar-label .brand{font-size:0.55rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(200,155,78,0.7);display:block;margin-bottom:4px}
+  .jar-label .name{font-size:1.9rem;font-weight:700;color:var(--pearl);line-height:1;display:block}
+  .jar-label .name em{font-style:italic;color:var(--gold)}
+  .jar-label .sub{font-size:0.45rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:4px;display:block}
+  .jar-label .weight{font-size:0.6rem;color:rgba(200,155,78,0.5);margin-top:6px;display:block}
+  .float-tag{position:absolute;background:rgba(13,10,6,0.85);border:1px solid rgba(200,155,78,0.3);backdrop-filter:blur(8px);border-radius:12px;padding:0.6rem 0.9rem;white-space:nowrap;font-size:0.7rem;color:var(--muted)}
+  .float-tag .tag-val{color:var(--gold);font-size:1.1rem;font-weight:700;font-family:"Cormorant Garamond",serif;display:block}
+  .ft-1{top:15%;right:-15%}
+  .ft-2{bottom:20%;right:-18%}
+  .ft-3{top:30%;left:-20%}
+
+  .ticker{background:linear-gradient(90deg,#1a1008,#2a1d0d,#1a1008);padding:0.75rem 0;overflow:hidden;position:relative;z-index:5;border-top:1px solid rgba(200,155,78,0.15);border-bottom:1px solid rgba(200,155,78,0.15)}
+  .ticker-inner{display:flex;gap:3rem;width:max-content;animation:tickerScroll 30s linear infinite}
+  .ticker-item{font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(200,155,78,0.7);display:flex;align-items:center;gap:1rem;white-space:nowrap}
+  .ticker-item span{color:var(--gold)}
+
+  #stats{padding:5rem 4rem;display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-bottom:1px solid rgba(200,155,78,0.15)}
+  .stat-block{padding:2rem;border-right:1px solid rgba(200,155,78,0.12);text-align:center}
+  .stat-block:last-child{border-right:none}
+  .stat-num{font-family:"Cormorant Garamond",serif;font-size:3rem;font-weight:700;color:var(--gold);line-height:1;display:block}
+  .stat-unit{font-size:1rem;color:var(--amber)}
+  .stat-label{font-size:0.75rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-top:0.4rem}
+
+  #about{padding:6rem 4rem;background:var(--deep)}
+  .section-eyebrow{font-size:0.7rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:0.8rem}
+  .section-heading{font-family:"Cormorant Garamond",serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:700;line-height:1.1;max-width:520px}
+  .section-heading em{font-style:italic;color:var(--gold)}
+  .tabs{display:flex;gap:2rem;margin-top:3rem;border-bottom:1px solid rgba(200,155,78,0.15)}
+  .tab-btn{background:none;border:none;padding:0.75rem 0;font-size:0.82rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);cursor:none;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color 0.3s,border-color 0.3s;font-family:"DM Sans",sans-serif}
+  .tab-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
+  .tab-btn:hover{color:var(--pearl)}
+  .tab-content{display:none;padding:2.5rem 0}
+  .tab-content.active{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start}
+  .tab-text h3{font-family:"Cormorant Garamond",serif;font-size:1.8rem;font-weight:600;margin-bottom:1rem}
+  .tab-text p{color:var(--muted);line-height:1.8;font-size:0.95rem;margin-bottom:1rem}
+  .feature-list{list-style:none;margin-top:1.5rem}
+  .feature-list li{display:flex;align-items:center;gap:0.8rem;font-size:0.88rem;color:var(--muted);padding:0.5rem 0;border-bottom:1px solid rgba(200,155,78,0.08)}
+  .feature-list li::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0;box-shadow:0 0 8px var(--gold)}
+  .tab-visual{position:relative}
+  .info-card{background:rgba(255,255,255,0.03);border:1px solid rgba(200,155,78,0.15);border-radius:16px;padding:2rem;backdrop-filter:blur(4px)}
+  .info-card h4{font-family:"Cormorant Garamond",serif;font-size:1.3rem;margin-bottom:1rem;color:var(--gold)}
+  .info-card p{font-size:0.85rem;color:var(--muted);line-height:1.75}
+  .info-stat{display:flex;justify-content:space-between;align-items:center;padding:0.75rem 0;border-bottom:1px solid rgba(200,155,78,0.1)}
+  .info-stat:last-child{border-bottom:none}
+  .info-stat-label{font-size:0.78rem;color:var(--muted)}
+  .info-stat-val{font-family:"Cormorant Garamond",serif;font-size:1.2rem;color:var(--gold);font-weight:600}
+
+  #showcase{padding:6rem 4rem;background:var(--bg)}
+  .showcase-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-top:3rem}
+  .product-3d-wrap{perspective:1000px;cursor:none}
+  .product-3d-card{width:100%;height:400px;position:relative;transform-style:preserve-3d;transition:transform 0.7s cubic-bezier(0.4,0,0.2,1)}
+  .product-3d-wrap:hover .product-3d-card{transform:rotateY(180deg)}
+  .card-face{position:absolute;inset:0;border-radius:24px;backface-visibility:hidden;overflow:hidden;display:flex;align-items:center;justify-content:center}
+  .card-front{background:linear-gradient(135deg,#1a1308 0%,#2d1f0a 50%,#1a1308 100%);border:1px solid rgba(200,155,78,0.2)}
+  .card-back{background:linear-gradient(135deg,#2d1f0a 0%,#3d2910 50%,#2d1f0a 100%);border:1px solid rgba(200,155,78,0.35);transform:rotateY(180deg);padding:2.5rem}
+  .flip-hint{position:absolute;bottom:1.2rem;right:1.5rem;font-size:0.65rem;letter-spacing:0.1em;color:rgba(200,155,78,0.5);text-transform:uppercase}
+  .front-product{text-align:center}
+  .front-product .jar-big{width:160px;height:160px;border-radius:50%;background:radial-gradient(ellipse at 35% 35%, #3a2a12, #1a1008);border:2px solid rgba(200,155,78,0.3);display:inline-flex;align-items:center;justify-content:center;box-shadow:0 0 50px rgba(200,155,78,0.2);margin-bottom:1.5rem;font-family:"Cormorant Garamond",serif;font-size:1.3rem;font-style:italic;color:var(--pearl);flex-direction:column;gap:2px}
+  .front-product .jar-big .small{font-size:0.5rem;letter-spacing:0.3em;font-style:normal;color:var(--muted);text-transform:uppercase}
+  .front-product h3{font-family:"Cormorant Garamond",serif;font-size:1.6rem;margin-bottom:0.4rem}
+  .front-product p{font-size:0.75rem;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase}
+  .card-back h3{font-family:"Cormorant Garamond",serif;font-size:1.5rem;margin-bottom:1.2rem;color:var(--gold)}
+  .card-back p{font-size:0.85rem;color:var(--muted);line-height:1.75;margin-bottom:1.2rem}
+  .ingredient-tag{display:inline-block;background:rgba(200,155,78,0.12);border:1px solid rgba(200,155,78,0.25);border-radius:20px;padding:0.35rem 0.85rem;font-size:0.72rem;color:var(--gold);margin:0.25rem}
+  .showcase-info .section-heading{max-width:none}
+  .showcase-info p{color:var(--muted);line-height:1.8;margin-top:1rem;font-size:0.95rem}
+  .usage-step{display:flex;align-items:flex-start;gap:1rem;padding:1.2rem 0;border-bottom:1px solid rgba(200,155,78,0.1)}
+  .usage-step:last-child{border-bottom:none}
+  .step-num{font-family:"Cormorant Garamond",serif;font-size:1.8rem;font-weight:700;color:rgba(200,155,78,0.25);flex-shrink:0;line-height:1;margin-top:2px}
+  .step-text h4{font-size:0.88rem;font-weight:600;margin-bottom:0.3rem;color:var(--pearl)}
+  .step-text p{font-size:0.8rem;color:var(--muted)}
+
+  #benefits{padding:6rem 4rem;background:var(--deep)}
+  .benefits-header{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:end;margin-bottom:3rem}
+  .benefits-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+  .ben-card{background:rgba(255,255,255,0.02);border:1px solid rgba(200,155,78,0.12);border-radius:16px;padding:2rem;transition:border-color 0.3s,transform 0.3s,box-shadow 0.3s;position:relative;overflow:hidden}
+  .ben-card::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(200,155,78,0.05),transparent);opacity:0;transition:opacity 0.3s}
+  .ben-card:hover{border-color:rgba(200,155,78,0.4);transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,0.3)}
+  .ben-card:hover::before{opacity:1}
+  .ben-num{font-family:"Cormorant Garamond",serif;font-size:3.5rem;font-weight:700;color:rgba(200,155,78,0.1);line-height:1;margin-bottom:1rem}
+  .ben-icon{width:40px;height:40px;border-radius:10px;background:rgba(200,155,78,0.1);display:flex;align-items:center;justify-content:center;margin-bottom:1rem;font-size:1.2rem}
+  .ben-card h3{font-size:1rem;font-weight:600;margin-bottom:0.6rem}
+  .ben-card p{font-size:0.82rem;color:var(--muted);line-height:1.65}
+
+  #testimonials{padding:6rem 4rem;background:var(--bg)}
+  .testi-scroll{display:flex;gap:1.5rem;overflow-x:auto;padding-bottom:1rem;scrollbar-width:thin;scrollbar-color:var(--gold) transparent;margin-top:3rem}
+  .testi-scroll::-webkit-scrollbar{height:3px}
+  .testi-scroll::-webkit-scrollbar-thumb{background:var(--gold);border-radius:99px}
+  .testi-card{flex-shrink:0;width:300px;background:rgba(255,255,255,0.02);border:1px solid rgba(200,155,78,0.12);border-radius:16px;padding:1.8rem;transition:transform 0.3s,border-color 0.3s;cursor:none}
+  .testi-card:hover{transform:translateY(-4px);border-color:rgba(200,155,78,0.35)}
+  .stars{color:var(--gold);font-size:0.8rem;letter-spacing:0.1em;margin-bottom:1rem}
+  .testi-card blockquote{font-size:0.9rem;line-height:1.72;color:rgba(245,237,224,0.72);font-style:italic;margin-bottom:1.5rem}
+  .testi-author{font-weight:600;font-size:0.82rem;color:var(--gold)}
+  .testi-meta{font-size:0.72rem;color:var(--muted);margin-top:0.2rem}
+
+  #cta-final{padding:8rem 4rem;text-align:center;position:relative;overflow:hidden;background:var(--deep)}
+  #cta-final::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(200,155,78,0.18) 0%,transparent 65%)}
+  #cta-final h2{font-family:"Cormorant Garamond",serif;font-size:clamp(2.2rem,5vw,4rem);position:relative;z-index:1;line-height:1.1}
+  #cta-final h2 em{color:var(--gold);font-style:italic}
+  #cta-final p{margin-top:1rem;color:var(--muted);font-size:1rem;position:relative;z-index:1}
+  .cta-buttons{display:flex;gap:1rem;justify-content:center;margin-top:2.5rem;position:relative;z-index:1}
+  .wa-badge{display:inline-flex;align-items:center;gap:0.5rem;color:var(--muted);font-size:0.75rem;margin-top:1.5rem;position:relative;z-index:1}
+  .wa-badge span{color:var(--gold)}
+
+  footer{padding:2.5rem 4rem;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(200,155,78,0.15);color:rgba(245,237,224,0.3);font-size:0.75rem}
+  footer span{color:var(--gold)}
+
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s,transform 0.7s}
+  .reveal.visible{opacity:1;transform:none}
+  .reveal-delay-1{transition-delay:0.15s}
+  .reveal-delay-2{transition-delay:0.3s}
+  .reveal-delay-3{transition-delay:0.45s}
+
+  @keyframes heroFloat{0%,100%{transform:translateY(0) rotate(0deg)}33%{transform:translateY(-16px) rotate(0.5deg)}66%{transform:translateY(-8px) rotate(-0.5deg)}}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+  @keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+  @keyframes pulseGlow{0%{opacity:0.6;transform:scale(0.95)}100%{opacity:1;transform:scale(1.05)}}
+
+  @media(max-width:768px){
+    nav{padding:1rem 1.5rem}
+    .nav-links,.nav-cta{display:none}
+    #hero{flex-direction:column;justify-content:center;padding-top:5rem}
+    .hero-left{padding:0 1.5rem;text-align:center}
+    .hero-right{margin-top:2rem}
+    .hero-actions{justify-content:center}
+    .hero-desc{margin:1rem auto 0}
+    .ft-1,.ft-2,.ft-3{display:none}
+    #stats{grid-template-columns:1fr 1fr;padding:3rem 1.5rem}
+    #about,#showcase,#benefits,#testimonials,#cta-final{padding:4rem 1.5rem}
+    .tab-content.active,.showcase-grid,.benefits-header{grid-template-columns:1fr}
+    .benefits-grid{grid-template-columns:1fr 1fr}
+    footer{flex-direction:column;gap:1rem;text-align:center}
+    .cta-buttons{flex-direction:column;align-items:center}
+  }
+  @media(max-width:480px){
+    .benefits-grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav id="navbar">
+  <div class="logo">RSB <span>Wellness</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">Bahan</a></li>
+    <li><a href="#showcase">Cara Pakai</a></li>
+    <li><a href="#benefits">Manfaat</a></li>
+    <li><a href="#testimonials">Ulasan</a></li>
+  </ul>
+  <a href="https://wa.me/6287791299376" class="nav-cta">Beli Sekarang</a>
+</nav>
+
+<section id="hero">
+  <canvas id="canvas-hero"></canvas>
+  <div class="hero-left">
+    <div class="hero-badge">🌿 Natural &amp; Grass-Fed · 30g</div>
+    <h1 class="hero-title">
+      Tallow
+      <span class="line2">Balm</span>
+      <span class="line3">Skin Barrier Support</span>
+    </h1>
+    <p class="hero-desc">
+      Perawatan kulit paling murni dari lemak sapi grass-fed pilihan.
+      Menyerap sempurna, memulihkan skin barrier, dan menenangkan kulit
+      sensitif, kering, maupun iritasi.
+    </p>
+    <div class="hero-actions">
+      <button class="btn-glow" onclick="window.open('https://wa.me/6287791299376','_blank')">Pesan Sekarang</button>
+      <a href="#about" class="btn-outline">Kenali Lebih Dalam</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="jar-wrapper">
+      <div class="jar-glow"></div>
+      <div class="jar-circle">
+        <div class="jar-label">
+          <span class="brand">Rumah Sehat Bunda</span>
+          <span class="name">Tallow<br/><em>Balm</em></span>
+          <span class="sub">Skin Barrier Support</span>
+          <span class="weight">30G · Natural Process</span>
+        </div>
+      </div>
+      <div class="float-tag ft-1"><span class="tag-val">100%</span>Grass-Fed Tallow</div>
+      <div class="float-tag ft-2"><span class="tag-val">0</span>Bahan Kimia</div>
+      <div class="float-tag ft-3"><span class="tag-val">✓</span>Non-comedogenic</div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker">
+  <div class="ticker-inner" id="ticker-inner">
+    <div class="ticker-item">🌿 Grass-Fed Beef Tallow <span>·</span></div>
+    <div class="ticker-item">✨ Skin Barrier Repair <span>·</span></div>
+    <div class="ticker-item">🐄 100% Natural <span>·</span></div>
+    <div class="ticker-item">🌱 Plant Oils Blend <span>·</span></div>
+    <div class="ticker-item">💧 Deep Moisturizing <span>·</span></div>
+    <div class="ticker-item">🛡️ Anti-Inflammatory <span>·</span></div>
+  </div>
+</div>
+
+<section id="stats">
+  <div class="stat-block reveal">
+    <span class="stat-num">100<span class="stat-unit">%</span></span>
+    <div class="stat-label">Bahan Alami</div>
+  </div>
+  <div class="stat-block reveal reveal-delay-1">
+    <span class="stat-num">0</span>
+    <div class="stat-label">Bahan Kimia</div>
+  </div>
+  <div class="stat-block reveal reveal-delay-2">
+    <span class="stat-num">4</span>
+    <div class="stat-label">Manfaat Utama</div>
+  </div>
+  <div class="stat-block reveal reveal-delay-3">
+    <span class="stat-num">30<span class="stat-unit">g</span></span>
+    <div class="stat-label">Per Kemasan</div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="section-eyebrow">Tentang Produk</div>
+  <h2 class="section-heading reveal">Tallow Balm – <em>Bukan</em><br>Pelembap Biasa</h2>
+
+  <div class="tabs reveal">
+    <button class="tab-btn active" data-tab="0">Bahan Baku</button>
+    <button class="tab-btn" data-tab="1">Untuk Siapa?</button>
+    <button class="tab-btn" data-tab="2">Riset &amp; Ilmu</button>
+  </div>
+
+  <div class="tab-content active" id="tab-0">
+    <div class="tab-text">
+      <h3>Grass-Fed Beef Tallow</h3>
+      <p>Tallow yang kami gunakan berasal dari sapi yang digembalakan secara alami, bukan feedlot. Lemak hewani ini kaya akan vitamin A, D, E, K, dan K2 dalam bentuk yang mudah diserap kulit manusia.</p>
+      <p>Dikombinasikan dengan perpaduan plant oils pilihan untuk tekstur yang sempurna – tidak terlalu berat, namun memberikan perlindungan maksimal.</p>
+      <ul class="feature-list">
+        <li>Grass-Fed Beef Tallow – sumber utama nutrisi kulit</li>
+        <li>Plant Oils Blend – tekstur ringan &amp; cepat meresap</li>
+        <li>Tanpa pengawet, pewarna, atau parfum sintetis</li>
+        <li>Tanpa bahan kimia berbahaya apapun</li>
+        <li>Diproduksi secara higienis di Konnel Sehat Bantie</li>
+      </ul>
+    </div>
+    <div class="tab-visual">
+      <div class="info-card">
+        <h4>Kandungan Nutrisi Utama</h4>
+        <div class="info-stat"><span class="info-stat-label">Vitamin A (Retinol alami)</span><span class="info-stat-val">✓ Tinggi</span></div>
+        <div class="info-stat"><span class="info-stat-label">Vitamin D3</span><span class="info-stat-val">✓ Tinggi</span></div>
+        <div class="info-stat"><span class="info-stat-label">Vitamin E (Tokoferol)</span><span class="info-stat-val">✓ Ada</span></div>
+        <div class="info-stat"><span class="info-stat-label">Vitamin K2</span><span class="info-stat-val">✓ Ada</span></div>
+        <div class="info-stat"><span class="info-stat-label">Asam Lemak Konjugat (CLA)</span><span class="info-stat-val">✓ Tinggi</span></div>
+        <p style="font-size:0.75rem;color:var(--muted);margin-top:1rem">Komposisi mirip dengan sebum alami kulit manusia – itulah mengapa tallow bekerja begitu efektif.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-content" id="tab-1">
+    <div class="tab-text">
+      <h3>Cocok untuk Semua Kondisi Kulit</h3>
+      <p>Tallow Balm diformulasikan untuk semua jenis kulit, termasuk yang paling sensitif sekalipun. Komposisinya yang mirip sebum alami membuatnya tidak menyumbat pori.</p>
+      <p>Sangat direkomendasikan untuk kondisi kulit berikut:</p>
+      <ul class="feature-list">
+        <li>Kulit kering &amp; dehidrasi kronis</li>
+        <li>Eksim (eczema) &amp; psoriasis</li>
+        <li>Kulit bayi dan anak sensitif</li>
+        <li>Kulit ibu hamil (stretch marks)</li>
+        <li>Luka &amp; bekas luka yang ingin dipulihkan</li>
+        <li>Kulit pecah-pecah di tangan, kaki, atau bibir</li>
+        <li>Kulit setelah paparan sinar matahari berlebih</li>
+      </ul>
+    </div>
+    <div class="tab-visual">
+      <div class="info-card">
+        <h4>Kenapa Tallow Beda?</h4>
+        <p>Minyak nabati seringkali <em style="color:var(--gold)">tidak kompatibel</em> dengan biologi kulit manusia. Tallow, sebagai lemak hewani dengan profil asam lemak hampir identik dengan sebum manusia, diserap secara alami dan menyeluruh.</p>
+        <p style="margin-top:1rem">Ini bukan tren — nenek moyang kita sudah menggunakannya selama ribuan tahun sebelum "skincare modern" ada.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-content" id="tab-2">
+    <div class="tab-text">
+      <h3>Didukung Sains &amp; Tradisi</h3>
+      <p>Komposisi asam lemak dalam tallow (terutama asam palmitat, asam stearat, dan asam oleat) sangat mirip dengan lapisan lipid kulit manusia. Ini memungkinkan penyerapan yang efisien dan perbaikan skin barrier yang optimal.</p>
+      <p>Vitamin larut lemak (A, D, E, K) yang terdapat secara alami dalam tallow grass-fed berperan aktif dalam regenerasi sel kulit dan perlindungan antioksidan.</p>
+      <ul class="feature-list">
+        <li>Asam Oleat – melembapkan &amp; anti-inflamasi</li>
+        <li>Asam Palmitat – membentuk lapisan pelindung</li>
+        <li>Asam Stearat – memperkuat skin barrier</li>
+        <li>CLA – sifat antimikroba alami</li>
+      </ul>
+    </div>
+    <div class="tab-visual">
+      <div class="info-card">
+        <h4>Fakta Menarik</h4>
+        <div class="info-stat"><span class="info-stat-label">Kemiripan dengan sebum manusia</span><span class="info-stat-val">~95%</span></div>
+        <div class="info-stat"><span class="info-stat-label">Waktu penyerapan</span><span class="info-stat-val">Cepat</span></div>
+        <div class="info-stat"><span class="info-stat-label">Comedogenic rating</span><span class="info-stat-val">0–2 (Aman)</span></div>
+        <div class="info-stat"><span class="info-stat-label">Stabilitas oksidasi</span><span class="info-stat-val">Sangat Tinggi</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="showcase">
+  <div class="section-eyebrow">Cara Penggunaan</div>
+  <h2 class="section-heading reveal">Hover untuk<br>Lihat Komposisi</h2>
+  <div class="showcase-grid">
+    <div class="product-3d-wrap reveal">
+      <div class="product-3d-card">
+        <div class="card-face card-front">
+          <div class="front-product">
+            <div class="jar-big">Tallow<br/><em>Balm</em><span class="small">RSB Wellness</span></div>
+            <h3>Tallow Balm</h3>
+            <p>Skin Barrier Support · 30g</p>
+          </div>
+          <div class="flip-hint">Hover untuk flip →</div>
+        </div>
+        <div class="card-face card-back">
+          <div>
+            <h3>Komposisi</h3>
+            <p>Setiap tetes mengandung nutrisi terbaik dari alam:</p>
+            <div>
+              <span class="ingredient-tag">🐄 Grass-Fed Beef Tallow</span>
+              <span class="ingredient-tag">🌿 Plant Oils Blend</span>
+              <span class="ingredient-tag">💛 Vitamin A alami</span>
+              <span class="ingredient-tag">☀️ Vitamin D3</span>
+              <span class="ingredient-tag">🌰 Vitamin E</span>
+              <span class="ingredient-tag">🍃 CLA</span>
+              <span class="ingredient-tag">✨ Asam Oleat</span>
+              <span class="ingredient-tag">🛡️ Asam Palmitat</span>
+            </div>
+            <p style="margin-top:1.2rem;font-size:0.78rem;color:rgba(245,237,224,0.45)">Tanpa pengawet · Tanpa pewarna · Tanpa parfum sintetis</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="showcase-info reveal">
+      <div class="section-eyebrow">Panduan Pemakaian</div>
+      <h3 class="section-heading" style="font-size:2rem;max-width:none">4 Langkah Sederhana</h3>
+      <p>Dapatkan hasil maksimal dengan cara pemakaian yang tepat.</p>
+
+      <div class="usage-step">
+        <div class="step-num">01</div>
+        <div class="step-text"><h4>Bersihkan Area</h4><p>Cuci bersih dan keringkan area kulit yang akan diaplikasikan.</p></div>
+      </div>
+      <div class="usage-step">
+        <div class="step-num">02</div>
+        <div class="step-text"><h4>Ambil Secukupnya</h4><p>Gunakan ujung jari untuk mengambil sedikit balm dari kemasan.</p></div>
+      </div>
+      <div class="usage-step">
+        <div class="step-num">03</div>
+        <div class="step-text"><h4>Ratakan pada Kulit</h4><p>Oleskan dan pijat lembut hingga meresap sempurna ke kulit.</p></div>
+      </div>
+      <div class="usage-step">
+        <div class="step-num">04</div>
+        <div class="step-text"><h4>Gunakan Rutin</h4><p>Pagi &amp; malam hari untuk hasil terbaik. Simpan di tempat sejuk.</p></div>
+      </div>
+
+      <div style="margin-top:1.5rem;padding:1rem;background:rgba(200,155,78,0.06);border:1px solid rgba(200,155,78,0.15);border-radius:10px;font-size:0.8rem;color:var(--muted)">
+        💡 <strong style="color:var(--gold)">Pro Tip:</strong> Disarankan disimpan di kulkas untuk tekstur lebih padat dan sensasi menyegarkan saat diaplikasikan.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="benefits">
+  <div class="benefits-header">
+    <div class="reveal">
+      <div class="section-eyebrow">Mengapa Tallow Balm?</div>
+      <h2 class="section-heading">4 Manfaat Utama<br/>untuk Kulitmu</h2>
+    </div>
+    <div class="reveal" style="color:var(--muted);font-size:0.9rem;line-height:1.8">
+      Berbeda dari pelembap biasa, Tallow Balm bekerja pada level biologis kulit – memperbaiki, melindungi, dan menghidrasi secara bersamaan.
+    </div>
+  </div>
+
+  <div class="benefits-grid">
+    <div class="ben-card reveal">
+      <div class="ben-num">01</div>
+      <div class="ben-icon">💧</div>
+      <h3>Melembapkan Intensif</h3>
+      <p>Menghidrasi kulit secara mendalam berkat profil asam lemak yang identik dengan sebum alami. Kelembapan bertahan lebih lama.</p>
+    </div>
+    <div class="ben-card reveal reveal-delay-1">
+      <div class="ben-num">02</div>
+      <div class="ben-icon">🛡️</div>
+      <h3>Menenangkan Iritasi</h3>
+      <p>Kandungan CLA dan vitamin alami memiliki sifat anti-inflamasi yang efektif meredakan kemerahan, gatal, dan iritasi kulit.</p>
+    </div>
+    <div class="ben-card reveal reveal-delay-2">
+      <div class="ben-num">03</div>
+      <div class="ben-icon">🌿</div>
+      <h3>Mendukung Penyembuhan</h3>
+      <p>Vitamin A, D, dan E dalam tallow aktif mendorong regenerasi sel kulit dan mempercepat proses penyembuhan alami.</p>
+    </div>
+    <div class="ben-card reveal">
+      <div class="ben-num">04</div>
+      <div class="ben-icon">⏱️</div>
+      <h3>Perlindungan Tahan Lama</h3>
+      <p>Membentuk lapisan pelindung alami yang tidak menyumbat pori, menjaga kulit tetap terlindungi sepanjang hari.</p>
+    </div>
+    <div class="ben-card reveal reveal-delay-1">
+      <div class="ben-num">05</div>
+      <div class="ben-icon">🐣</div>
+      <h3>Aman untuk Bayi</h3>
+      <p>100% natural tanpa bahan kimia berbahaya, aman untuk kulit sensitif bayi &amp; anak, termasuk kondisi eksim.</p>
+    </div>
+    <div class="ben-card reveal reveal-delay-2">
+      <div class="ben-num">06</div>
+      <div class="ben-icon">🌸</div>
+      <h3>Anti-Aging Alami</h3>
+      <p>Retinol alami dalam tallow grass-fed membantu merangsang produksi kolagen dan menjaga elastisitas kulit.</p>
+    </div>
+  </div>
+</section>
+
+<section id="testimonials">
+  <div style="display:flex;align-items:end;justify-content:space-between;flex-wrap:wrap;gap:1rem" class="reveal">
+    <div>
+      <div class="section-eyebrow">Testimoni</div>
+      <h2 class="section-heading" style="max-width:none">Yang Mereka<br>Rasakan Sendiri</h2>
+    </div>
+    <div style="color:var(--muted);font-size:0.85rem">★ 4.9/5 — Ratusan pelanggan puas</div>
+  </div>
+
+  <div class="testi-scroll">
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <blockquote>"Sudah 3 tahun berjuang dengan eksim di tangan. Baru 2 minggu pakai Tallow Balm ini, kemerahan dan gatal berkurang drastis. Produk terbaik yang pernah saya coba!"</blockquote>
+      <div class="testi-author">Ibu Sari W.</div>
+      <div class="testi-meta">Penderita Eksim Kronis · Jakarta</div>
+    </div>
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <blockquote>"Saya rekomendasikan ke pasien saya yang kulitnya sangat sensitif. Hasilnya mengagumkan – skin barrier membaik signifikan dalam waktu singkat."</blockquote>
+      <div class="testi-author">dr. Rina Kusuma</div>
+      <div class="testi-meta">Dokter Kulit · Bandung</div>
+    </div>
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <blockquote>"Awalnya ragu pakai produk berbasis lemak sapi, tapi ternyata tidak berminyak sama sekali! Kulit anak saya yang kering parah langsung terasa lebih halus."</blockquote>
+      <div class="testi-author">Mama Dinda</div>
+      <div class="testi-meta">Ibu Rumah Tangga · Surabaya</div>
+    </div>
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <blockquote>"Kulit kaki saya selalu pecah-pecah sampai berdarah setiap musim kering. Pakai Tallow Balm ini rutin pagi malam, dalam 10 hari sudah beda banget!"</blockquote>
+      <div class="testi-author">Pak Budi S.</div>
+      <div class="testi-meta">Petani · Yogyakarta</div>
+    </div>
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <blockquote>"Pakai untuk stretch marks kehamilan. Tidak ada yang menghilangkan 100%, tapi ini yang paling efektif meringankan dan menjaga kelembapan kulit perut saya."</blockquote>
+      <div class="testi-author">Bunda Fitri</div>
+      <div class="testi-meta">Ibu Hamil 7 Bulan · Bekasi</div>
+    </div>
+  </div>
+</section>
+
+<section id="cta-final">
+  <h2 class="reveal">Kembalikan Kulit Sehatmu<br><em>Dengan Cara Alami</em></h2>
+  <p class="reveal">Dipercaya oleh ratusan pelanggan RSB Wellness. Stok terbatas setiap bulannya.</p>
+  <div class="cta-buttons reveal">
+    <button class="btn-glow" onclick="window.open('https://wa.me/6287791299376?text=Halo%2C%20saya%20mau%20pesan%20Tallow%20Balm','_blank')">💬 Chat WhatsApp Admin</button>
+    <a href="#about" class="btn-outline">Pelajari Lebih Lanjut</a>
+  </div>
+  <div class="wa-badge reveal">Admin RSB Wellness: <span>0877-9129-9376</span> · Atau melalui Link di Bio Instagram</div>
+</section>
+
+<footer>
+  <div>Tallow Balm <span>·</span> Skin Barrier Support · RSB Wellness · Konnel Sehat Bantie</div>
+  <div>© 2025 <span>RSB Wellness</span></div>
+</footer>
+
+<script>
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let cx = 0, cy = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => {
+    cx = e.clientX; cy = e.clientY;
+    cursor.style.left = cx - 6 + 'px';
+    cursor.style.top = cy - 6 + 'px';
+  });
+  function animateRing() {
+    rx += (cx - rx - 18) * 0.12;
+    ry += (cy - ry - 18) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  const nav = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = btn.dataset.tab;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + idx).classList.add('active');
+    });
+  });
+
+  const canvas = document.getElementById('canvas-hero');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+
+  function resize() {
+    W = canvas.width = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  for (let i = 0; i < 60; i++) {
+    particles.push({
+      x: Math.random() * 2000,
+      y: Math.random() * 900,
+      r: Math.random() * 1.5 + 0.3,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: -Math.random() * 0.4 - 0.1,
+      alpha: Math.random() * 0.5 + 0.1,
+    });
+  }
+
+  function drawCanvas() {
+    ctx.clearRect(0, 0, W, H);
+    const grad = ctx.createRadialGradient(W * 0.65, H * 0.5, 0, W * 0.65, H * 0.5, W * 0.5);
+    grad.addColorStop(0, 'rgba(200,155,78,0.08)');
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.y < -5) p.y = H + 5;
+      if (p.x < -5) p.x = W + 5;
+      if (p.x > W + 5) p.x = -5;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(200,155,78,${p.alpha})`;
+      ctx.fill();
+    });
+
+    requestAnimationFrame(drawCanvas);
+  }
+  drawCanvas();
+
+  const ti = document.getElementById('ticker-inner');
+  ti.innerHTML += ti.innerHTML;
+</script>
+</body>
+</html>

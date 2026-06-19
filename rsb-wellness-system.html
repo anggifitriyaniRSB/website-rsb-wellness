@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#37463A">
+<title>RSB Wellness — Sistem Operasional</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root {
+  --cream: #FDFBF7;
+  --lavender: #E8DFF5;
+  --lavender-soft: #F1EBFA;
+  --sage: #4A5D4E;
+  --sage-dark: #37463A;
+  --sage-light: #E6EDE7;
+  --gold: #D4AF37;
+  --gold-soft: #F3E8C7;
+  --ink: #332E2C;
+  --ink-soft: #74695F;
+  --white: #FFFFFF;
+  --red: #B3433D;
+  --red-bg: #FBEAE8;
+  --green: #2E7D32;
+  --green-bg: #E8F5E9;
+  --blue: #1565C0;
+  --blue-bg: #E3F2FD;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --shadow: 0 4px 14px rgba(74,93,78,0.08);
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Work Sans', -apple-system, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--cream);
+  font-family: var(--font-body);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+/* ── NAV ── */
+.app-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--sage-dark);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 16px; height: 56px;
+}
+.nav-brand { font-family: var(--font-display); color: var(--white); font-size: 1.05rem; }
+.nav-brand span { color: var(--gold); }
+.nav-tabs { display: flex; gap: 2px; }
+.nav-tab {
+  padding: 6px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: 600;
+  color: rgba(255,255,255,0.6); cursor: pointer; border: none; background: transparent;
+  font-family: var(--font-body); white-space: nowrap; transition: all 0.15s;
+}
+.nav-tab.active { background: rgba(255,255,255,0.15); color: var(--white); }
+.nav-tab:hover:not(.active) { color: rgba(255,255,255,0.85); }
+
+/* ── PAGES ── */
+.page { display: none; padding: 16px 12px 72px; max-width: 520px; margin: 0 auto; }
+.page.active { display: block; }
+
+/* ── DASHBOARD ── */
+.dash-header { margin-bottom: 20px; }
+.dash-header h2 { font-family: var(--font-display); font-size: 1.4rem; color: var(--sage-dark); }
+.dash-header p { font-size: 0.8rem; color: var(--ink-soft); margin-top: 3px; }
+.kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.kpi-card {
+  background: var(--white); border-radius: var(--radius); padding: 14px 16px;
+  box-shadow: var(--shadow); border: 1px solid rgba(74,93,78,0.06);
+}
+.kpi-card .kpi-val { font-size: 1.5rem; font-weight: 700; margin-bottom: 2px; color: var(--sage-dark); }
+.kpi-card .kpi-label { font-size: 0.7rem; font-weight: 600; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.04em; }
+.kpi-card.highlight .kpi-val { color: var(--green); }
+.kpi-card.warn .kpi-val { color: var(--red); }
+
+.section-title { font-family: var(--font-display); font-size: 1.05rem; color: var(--sage-dark); margin-bottom: 12px; }
+.activity-list { display: flex; flex-direction: column; gap: 8px; }
+.activity-row {
+  background: var(--white); border-radius: var(--radius); padding: 11px 14px;
+  box-shadow: var(--shadow); display: flex; justify-content: space-between; align-items: center;
+}
+.activity-row .act-left h4 { font-size: 0.88rem; font-weight: 700; }
+.activity-row .act-left p { font-size: 0.72rem; color: var(--ink-soft); margin-top: 2px; }
+.activity-row .act-right { text-align: right; }
+.activity-row .act-amount { font-size: 0.9rem; font-weight: 700; color: var(--green); }
+.activity-row .act-type {
+  font-size: 0.65rem; font-weight: 700; padding: 2px 7px; border-radius: 4px;
+  text-transform: uppercase; margin-top: 3px; display: inline-block;
+}
+.type-penjualan { background: var(--green-bg); color: var(--green); }
+.type-layanan { background: var(--lavender-soft); color: #6B3FA0; }
+.type-batch { background: var(--gold-soft); color: #7A5A0A; }
+
+/* ── CARDS & FORMS ── */
+.card {
+  background: var(--white); border-radius: var(--radius-lg); padding: 16px;
+  box-shadow: var(--shadow); border: 1px solid rgba(232,223,245,0.5); margin-bottom: 16px;
+}
+.card-title { font-family: var(--font-display); font-size: 1.05rem; color: var(--sage-dark); margin-bottom: 14px; }
+
+.field { margin-bottom: 12px; }
+.field label { display: block; font-size: 0.78rem; font-weight: 600; margin-bottom: 4px; color: var(--ink-soft); }
+.field input, .field select, .field textarea {
+  width: 100%; padding: 10px 12px; border: 1.5px solid var(--lavender);
+  border-radius: var(--radius); font-size: 0.88rem; background: var(--cream);
+  font-family: var(--font-body); color: var(--ink); resize: none;
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  outline: none; border-color: var(--sage);
+}
+.row-fields { display: flex; gap: 10px; margin-bottom: 12px; }
+.row-fields .field { flex: 1; margin-bottom: 0; }
+
+.btn {
+  width: 100%; padding: 12px; background: var(--sage); color: var(--white);
+  border-radius: var(--radius); font-weight: 700; font-size: 0.9rem;
+  border: none; cursor: pointer; font-family: var(--font-body); transition: background 0.15s;
+}
+.btn:hover { background: var(--sage-dark); }
+.btn-outline {
+  background: transparent; border: 1.5px solid var(--sage); color: var(--sage-dark);
+}
+.btn-outline:hover { background: var(--sage-light); }
+.btn-sm {
+  width: auto; padding: 7px 14px; font-size: 0.8rem;
+}
+.btn-red { background: var(--red); }
+.btn-red:hover { background: #8E3430; }
+
+/* ── CART / ITEM LIST ── */
+.cart-area {
+  background: var(--cream); border-radius: var(--radius); padding: 12px;
+  margin-bottom: 12px; min-height: 60px; border: 1.5px dashed var(--lavender);
+}
+.cart-empty { font-size: 0.8rem; color: var(--ink-soft); text-align: center; padding: 12px 0; }
+.cart-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 0; border-bottom: 1px solid var(--lavender);
+}
+.cart-item:last-child { border-bottom: none; }
+.cart-item .ci-name { font-size: 0.85rem; font-weight: 600; }
+.cart-item .ci-detail { font-size: 0.72rem; color: var(--ink-soft); margin-top: 2px; }
+.cart-item .ci-price { font-size: 0.88rem; font-weight: 700; color: var(--sage-dark); }
+.cart-item .ci-remove { background: none; border: none; color: var(--ink-soft); cursor: pointer; font-size: 1rem; margin-left: 8px; }
+.cart-item .ci-remove:hover { color: var(--red); }
+
+.total-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 0 4px; border-top: 2px solid var(--sage-light);
+}
+.total-row .total-label { font-size: 0.85rem; font-weight: 600; color: var(--ink-soft); }
+.total-row .total-val { font-size: 1.15rem; font-weight: 700; color: var(--sage-dark); }
+
+/* ── HISTORY TABLE ── */
+.history-controls { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
+.history-controls input, .history-controls select {
+  padding: 8px 12px; border: 1.5px solid var(--lavender); border-radius: var(--radius);
+  font-size: 0.82rem; background: var(--cream); font-family: var(--font-body); color: var(--ink);
+  flex: 1;
+}
+.history-list { display: flex; flex-direction: column; gap: 8px; }
+.history-row {
+  background: var(--white); border-radius: var(--radius); padding: 12px 14px;
+  box-shadow: var(--shadow); border-left: 4px solid var(--sage);
+}
+.history-row.hl-layanan { border-left-color: #9C6BC5; }
+.history-row.hl-batch { border-left-color: var(--gold); }
+.history-row .hr-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
+.history-row .hr-name { font-size: 0.9rem; font-weight: 700; }
+.history-row .hr-amount { font-size: 0.9rem; font-weight: 700; color: var(--green); }
+.history-row .hr-meta { font-size: 0.72rem; color: var(--ink-soft); }
+.tag {
+  display: inline-block; font-size: 0.62rem; font-weight: 700; padding: 2px 7px;
+  border-radius: 4px; text-transform: uppercase; margin-left: 6px;
+}
+
+/* ── BATCH ── */
+.ingredient-row {
+  display: flex; gap: 8px; align-items: center; margin-bottom: 8px;
+}
+.ingredient-row select, .ingredient-row input {
+  padding: 8px 10px; border: 1.5px solid var(--lavender); border-radius: var(--radius);
+  font-size: 0.82rem; background: var(--cream); font-family: var(--font-body);
+}
+.ingredient-row select { flex: 2; }
+.ingredient-row input { flex: 1; }
+.ingredient-row button { background: none; border: none; cursor: pointer; color: var(--ink-soft); font-size: 1rem; }
+.ingredient-row button:hover { color: var(--red); }
+
+.stock-check {
+  background: var(--lavender-soft); border-radius: var(--radius); padding: 12px;
+  margin-bottom: 12px; font-size: 0.8rem;
+}
+.stock-check .sc-title { font-weight: 700; margin-bottom: 6px; color: var(--sage-dark); }
+.sc-item { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--lavender); }
+.sc-item:last-child { border-bottom: none; }
+.sc-ok { color: var(--green); font-weight: 700; }
+.sc-fail { color: var(--red); font-weight: 700; }
+
+/* ── PAYMENT SELECTOR ── */
+.payment-opts { display: flex; gap: 8px; margin-bottom: 12px; }
+.pay-opt {
+  flex: 1; padding: 10px; border: 2px solid var(--lavender); border-radius: var(--radius);
+  text-align: center; cursor: pointer; font-size: 0.8rem; font-weight: 600; color: var(--ink-soft);
+  background: var(--cream); transition: all 0.15s;
+}
+.pay-opt.selected { border-color: var(--sage); background: var(--sage-light); color: var(--sage-dark); }
+
+/* ── INVENTORY BADGE ── */
+.inv-badge {
+  display: inline-block; font-size: 0.68rem; font-weight: 700; padding: 1px 6px;
+  border-radius: 4px; margin-left: 4px;
+}
+.inv-ok { background: var(--green-bg); color: var(--green); }
+.inv-low { background: var(--red-bg); color: var(--red); }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+  background: var(--sage-dark); color: var(--white); padding: 12px 20px;
+  border-radius: 999px; font-size: 0.82rem; font-weight: 600;
+  box-shadow: 0 8px 24px rgba(55,70,58,0.25);
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s;
+  opacity: 0; z-index: 1000; white-space: nowrap; max-width: 90vw;
+}
+.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+/* ── MODAL ── */
+.overlay {
+  position: fixed; inset: 0; background: rgba(55,70,58,0.4); z-index: 200;
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+  opacity: 0; pointer-events: none; transition: opacity 0.2s;
+}
+.overlay.visible { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--white); border-radius: var(--radius-lg); padding: 22px;
+  max-width: 360px; width: 100%; box-shadow: 0 20px 60px rgba(55,70,58,0.2);
+  transform: scale(0.95); transition: transform 0.2s;
+}
+.overlay.visible .modal { transform: scale(1); }
+.modal h3 { font-family: var(--font-display); font-size: 1.1rem; color: var(--sage-dark); margin-bottom: 8px; }
+.modal p { font-size: 0.84rem; color: var(--ink-soft); margin-bottom: 16px; line-height: 1.5; }
+.modal-btns { display: flex; gap: 10px; }
+.modal-btns button { flex: 1; padding: 10px; border-radius: var(--radius); font-weight: 700; font-size: 0.85rem; cursor: pointer; font-family: var(--font-body); border: none; }
+.modal-cancel { background: var(--cream); border: 1.5px solid var(--lavender) !important; color: var(--ink-soft); }
+
+/* ── RECEIPT ── */
+.receipt {
+  background: var(--white); border: 1px dashed var(--lavender); border-radius: var(--radius-lg);
+  padding: 20px; font-size: 0.82rem; line-height: 1.8; color: var(--ink);
+}
+.receipt .rc-title { font-family: var(--font-display); font-size: 1.1rem; color: var(--sage-dark); margin-bottom: 2px; }
+.receipt .rc-sub { font-size: 0.72rem; color: var(--ink-soft); margin-bottom: 12px; }
+.receipt hr { border: none; border-top: 1px dashed var(--lavender); margin: 10px 0; }
+.receipt .rc-total { font-weight: 700; font-size: 1rem; color: var(--sage-dark); }
+.receipt .rc-footer { font-size: 0.72rem; color: var(--ink-soft); text-align: center; margin-top: 10px; }
+
+.empty-state { text-align: center; padding: 30px; font-size: 0.82rem; color: var(--ink-soft); }
+
+/* bottom navigation for mobile */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 90;
+  background: var(--white); border-top: 1px solid var(--lavender);
+  display: flex; justify-content: space-around; padding: 6px 0 calc(6px + env(safe-area-inset-bottom));
+  box-shadow: 0 -4px 16px rgba(74,93,78,0.08);
+}
+.bnav-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 4px 12px; border: none; background: transparent; cursor: pointer;
+  font-family: var(--font-body);
+}
+.bnav-btn .bnav-icon { font-size: 1.2rem; line-height: 1; }
+.bnav-btn .bnav-label { font-size: 0.62rem; font-weight: 600; color: var(--ink-soft); }
+.bnav-btn.active .bnav-label { color: var(--sage); }
+.bnav-btn.active .bnav-icon { filter: none; }
+</style>
+</head>
+<body>
+
+<nav class="app-nav">
+  <div class="nav-brand">RSB <span>Wellness</span></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" data-page="dashboard">Dashboard</button>
+    <button class="nav-tab" data-page="penjualan">Kasir</button>
+    <button class="nav-tab" data-page="layanan">Layanan</button>
+    <button class="nav-tab" data-page="batch">Batch</button>
+    <button class="nav-tab" data-page="laporan">Laporan</button>
+  </div>
+</nav>
+
+<!-- ═══════════════ DASHBOARD ═══════════════ -->
+<div class="page active" id="page-dashboard">
+  <div class="dash-header" style="margin-top:16px;">
+    <h2>Selamat Datang 👋</h2>
+    <p id="dash-date">Memuat tanggal...</p>
+  </div>
+  <div class="kpi-grid" id="kpi-grid"></div>
+  <p class="section-title">Aktivitas Terkini</p>
+  <div class="activity-list" id="activity-list">
+    <div class="empty-state">Belum ada aktivitas hari ini.</div>
+  </div>
+</div>
+
+<!-- ═══════════════ KASIR / PENJUALAN ═══════════════ -->
+<div class="page" id="page-penjualan">
+  <div class="card" style="margin-top:16px;">
+    <h3 class="card-title">Kasir — Penjualan Produk</h3>
+
+    <div class="row-fields">
+      <div class="field">
+        <label>Nama Pelanggan</label>
+        <input type="text" id="sale-customer" placeholder="Nama / No. HP">
+      </div>
+      <div class="field">
+        <label>Tanggal</label>
+        <input type="date" id="sale-date">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Tambah Produk dari Inventaris</label>
+      <select id="sale-product-select">
+        <option value="">— Pilih Produk —</option>
+      </select>
+    </div>
+    <div class="row-fields">
+      <div class="field">
+        <label>Jumlah</label>
+        <input type="number" id="sale-qty" min="1" value="1" placeholder="1">
+      </div>
+      <div class="field">
+        <label>Harga Satuan (Rp)</label>
+        <input type="number" id="sale-price" min="0" placeholder="0">
+      </div>
+    </div>
+    <button class="btn btn-outline btn-sm" id="btn-add-cart" style="width:100%; margin-bottom:14px;">+ Tambah ke Keranjang</button>
+
+    <div class="cart-area" id="cart-area">
+      <div class="cart-empty">Keranjang kosong. Tambah produk di atas.</div>
+    </div>
+    <div class="total-row">
+      <span class="total-label">Total Transaksi</span>
+      <span class="total-val" id="cart-total">Rp 0</span>
+    </div>
+
+    <div class="field" style="margin-top:12px;">
+      <label>Metode Pembayaran</label>
+      <div class="payment-opts">
+        <div class="pay-opt selected" data-pay="Tunai">💵 Tunai</div>
+        <div class="pay-opt" data-pay="QRIS">📱 QRIS</div>
+        <div class="pay-opt" data-pay="Transfer">🏦 Transfer</div>
+      </div>
+    </div>
+    <div class="field">
+      <label>Catatan (opsional)</label>
+      <textarea id="sale-note" rows="2" placeholder="Diskon, keterangan khusus..."></textarea>
+    </div>
+    <button class="btn" id="btn-save-sale">✅ Selesaikan Transaksi</button>
+  </div>
+</div>
+
+<!-- ═══════════════ LAYANAN ═══════════════ -->
+<div class="page" id="page-layanan">
+  <div class="card" style="margin-top:16px;">
+    <h3 class="card-title">Catat Layanan Treatment</h3>
+
+    <div class="row-fields">
+      <div class="field">
+        <label>Nama Pasien / Tamu</label>
+        <input type="text" id="svc-patient" placeholder="Nama lengkap">
+      </div>
+      <div class="field">
+        <label>Tanggal</label>
+        <input type="date" id="svc-date">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Jenis Layanan</label>
+      <select id="svc-type">
+        <option value="Facial Treatment">Facial Treatment</option>
+        <option value="Body Massage">Body Massage</option>
+        <option value="Herbal Therapy">Herbal Therapy</option>
+        <option value="Konsultasi Wellness">Konsultasi Wellness</option>
+        <option value="Perawatan Postpartum">Perawatan Postpartum</option>
+        <option value="Reflexology">Reflexology</option>
+        <option value="Lainnya">Lainnya</option>
+      </select>
+    </div>
+
+    <div class="row-fields">
+      <div class="field">
+        <label>Durasi (menit)</label>
+        <input type="number" id="svc-duration" min="15" step="15" placeholder="60">
+      </div>
+      <div class="field">
+        <label>Tarif (Rp)</label>
+        <input type="number" id="svc-fee" min="0" placeholder="0">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Terapis / Petugas</label>
+      <input type="text" id="svc-therapist" placeholder="Nama terapis">
+    </div>
+
+    <div class="field">
+      <label>Bahan Habis Pakai (dari Inventaris)</label>
+      <div id="svc-materials-list"></div>
+      <button class="btn btn-outline btn-sm" id="btn-add-svc-material" style="width:100%; margin-top:6px;">+ Tambah Bahan</button>
+    </div>
+
+    <div class="field">
+      <label>Metode Pembayaran</label>
+      <div class="payment-opts" id="svc-payment-opts">
+        <div class="pay-opt selected" data-pay="Tunai">💵 Tunai</div>
+        <div class="pay-opt" data-pay="QRIS">📱 QRIS</div>
+        <div class="pay-opt" data-pay="Transfer">🏦 Transfer</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Catatan Layanan</label>
+      <textarea id="svc-note" rows="2" placeholder="Keluhan, kondisi kulit, preferensi tamu..."></textarea>
+    </div>
+    <button class="btn" id="btn-save-svc">✅ Simpan Layanan</button>
+  </div>
+</div>
+
+<!-- ═══════════════ BATCH PRODUKSI ═══════════════ -->
+<div class="page" id="page-batch">
+  <div class="card" style="margin-top:16px;">
+    <h3 class="card-title">Batch Produksi</h3>
+
+    <div class="row-fields">
+      <div class="field">
+        <label>Nama Produk Jadi</label>
+        <input type="text" id="batch-name" placeholder="Contoh: Krim Bawang Dayak 30ml">
+      </div>
+      <div class="field">
+        <label>Jumlah Batch</label>
+        <input type="number" id="batch-qty" min="1" value="1" placeholder="1">
+      </div>
+    </div>
+
+    <div class="row-fields">
+      <div class="field">
+        <label>No. Batch</label>
+        <input type="text" id="batch-no" placeholder="BT-2026-001">
+      </div>
+      <div class="field">
+        <label>Tanggal Produksi</label>
+        <input type="date" id="batch-date">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Bahan Baku (dari Inventaris)</label>
+      <div id="batch-ingredients"></div>
+      <button class="btn btn-outline btn-sm" id="btn-add-ingredient" style="width:100%; margin-top:6px;">+ Tambah Bahan</button>
+    </div>
+
+    <div id="batch-stock-check" class="stock-check" style="display:none;"></div>
+
+    <div class="field">
+      <label>Catatan Produksi</label>
+      <textarea id="batch-note" rows="2" placeholder="Kondisi produksi, suhu, catatan QC..."></textarea>
+    </div>
+
+    <button class="btn" id="btn-save-batch">✅ Rekam Batch Produksi</button>
+  </div>
+</div>
+
+<!-- ═══════════════ LAPORAN ═══════════════ -->
+<div class="page" id="page-laporan">
+  <div class="card" style="margin-top:16px;">
+    <h3 class="card-title">Ekspor Laporan</h3>
+    <div class="row-fields">
+      <div class="field">
+        <label>Dari Tanggal</label>
+        <input type="date" id="rep-from">
+      </div>
+      <div class="field">
+        <label>Hingga Tanggal</label>
+        <input type="date" id="rep-to">
+      </div>
+    </div>
+    <div class="field">
+      <label>Jenis Laporan</label>
+      <select id="rep-type">
+        <option value="all">Semua (Penjualan + Layanan + Batch)</option>
+        <option value="penjualan">Penjualan Produk Saja</option>
+        <option value="layanan">Layanan Treatment Saja</option>
+        <option value="batch">Batch Produksi Saja</option>
+      </select>
+    </div>
+    <button class="btn" id="btn-export-xlsx" style="margin-bottom:10px;">⬇️ Unduh Excel (.xlsx)</button>
+    <button class="btn btn-outline" id="btn-export-copy">📋 Salin Ringkasan ke Clipboard</button>
+  </div>
+
+  <p class="section-title">Riwayat Semua Transaksi</p>
+  <div class="history-controls">
+    <input type="text" id="history-search" placeholder="Cari nama / jenis...">
+    <select id="history-filter">
+      <option value="all">Semua</option>
+      <option value="penjualan">Penjualan</option>
+      <option value="layanan">Layanan</option>
+      <option value="batch">Batch</option>
+    </select>
+  </div>
+  <div class="history-list" id="history-list"></div>
+</div>
+
+<!-- Modal konfirmasi -->
+<div class="overlay" id="confirm-overlay">
+  <div class="modal">
+    <h3 id="confirm-title">Konfirmasi</h3>
+    <p id="confirm-body">Yakin lanjutkan?</p>
+    <div class="modal-btns">
+      <button class="modal-cancel" id="confirm-cancel">Batal</button>
+      <button class="btn btn-sm" id="confirm-ok" style="flex:1;">Ya, Lanjutkan</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+
+// ── STATE ──────────────────────────────────────────────────────────────────
+const INV_KEY = 'rsb_inventory_data';
+const TXN_KEY = 'rsb_wellness_txns';
+
+const INITIAL_STOK = [
+  { id:1, name:"Oksitosin 10 IU Injection", category:"Obat & Vaksin", zone:"Lemari Es (2-8°C)", stock:12, min:20, exp:"2026-07-10", twobin:false },
+  { id:2, name:"Spet 3cc Terumo", category:"BMHP", zone:"Rak A (Mata/Dada)", stock:150, min:50, exp:"2028-12-01", twobin:true },
+  { id:3, name:"Simplisia Bawang Dayak Kering", category:"Bahan Pangan", zone:"Wadah Bahan Baku", stock:3, min:5, exp:"2026-09-18", twobin:false }
+];
+
+let inventory = JSON.parse(localStorage.getItem(INV_KEY)) || INITIAL_STOK;
+let transactions = JSON.parse(localStorage.getItem(TXN_KEY)) || [];
+
+let saleCart = [];
+let salePayment = 'Tunai';
+let svcPayment = 'Tunai';
+let pendingConfirm = null;
+
+// ── UTILS ──────────────────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const fmt = n => 'Rp ' + Number(n).toLocaleString('id-ID');
+const today = () => new Date().toISOString().split('T')[0];
+const nowLabel = () => {
+  const d = new Date();
+  return `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+};
+const fmtDateDisplay = s => {
+  if(!s) return '-';
+  const d = new Date(s);
+  return `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
+};
+
+function saveInventory(){ localStorage.setItem(INV_KEY, JSON.stringify(inventory)); }
+function saveTransactions(){ localStorage.setItem(TXN_KEY, JSON.stringify(transactions)); }
+
+function showToast(msg, dur=2800){
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), dur);
+}
+
+function deductStock(itemId, qty){
+  const item = inventory.find(i => i.id === itemId);
+  if(!item) return false;
+  if(item.stock < qty) return false;
+  item.stock -= qty;
+  saveInventory();
+  return true;
+}
+
+function formatDateLong(dateStr){
+  const d = new Date(dateStr);
+  const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+  const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  return `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+// ── CONFIRM MODAL ─────────────────────────────────────────────────────────
+function showConfirm(title, body, onOk, okLabel='Ya, Lanjutkan', okClass=''){
+  $('confirm-title').textContent = title;
+  $('confirm-body').textContent = body;
+  const okBtn = $('confirm-ok');
+  okBtn.textContent = okLabel;
+  okBtn.className = 'btn btn-sm' + (okClass ? ' '+okClass : '');
+  $('confirm-overlay').classList.add('visible');
+  pendingConfirm = onOk;
+}
+$('confirm-ok').onclick = () => {
+  $('confirm-overlay').classList.remove('visible');
+  if(pendingConfirm) pendingConfirm();
+  pendingConfirm = null;
+};
+$('confirm-cancel').onclick = () => {
+  $('confirm-overlay').classList.remove('visible');
+  pendingConfirm = null;
+};
+$('confirm-overlay').onclick = e => {
+  if(e.target === $('confirm-overlay')){
+    $('confirm-overlay').classList.remove('visible');
+    pendingConfirm = null;
+  }
+};
+
+// ── NAV ───────────────────────────────────────────────────────────────────
+document.querySelectorAll('.nav-tab').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const pg = btn.getAttribute('data-page');
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    $('page-'+pg).classList.add('active');
+    if(pg==='dashboard') renderDashboard();
+    if(pg==='laporan') renderHistory();
+  };
+});
+
+// ── POPULATE SELECTS ──────────────────────────────────────────────────────
+function populateInventorySelects(){
+  const selects = [$('sale-product-select')];
+  selects.forEach(sel => {
+    if(!sel) return;
+    const cur = sel.value;
+    sel.innerHTML = '<option value="">— Pilih Produk —</option>';
+    inventory.forEach(item => {
+      const opt = document.createElement('option');
+      opt.value = item.id;
+      opt.textContent = `${item.name} (Stok: ${item.stock})`;
+      sel.appendChild(opt);
+    });
+    sel.value = cur;
+  });
+}
+
+function makeIngredientRow(containerEl, purpose='batch'){
+  const row = document.createElement('div');
+  row.className = 'ingredient-row';
+  const sel = document.createElement('select');
+  sel.innerHTML = '<option value="">— Pilih Bahan —</option>';
+  inventory.forEach(item=>{
+    const o = document.createElement('option');
+    o.value = item.id;
+    o.textContent = `${item.name} (${item.stock})`;
+    sel.appendChild(o);
+  });
+  const inp = document.createElement('input');
+  inp.type = 'number'; inp.min='0.01'; inp.step='0.01'; inp.placeholder='Jumlah';
+  const rmv = document.createElement('button');
+  rmv.innerHTML = '&times;';
+  rmv.onclick = ()=>row.remove();
+  row.appendChild(sel); row.appendChild(inp); row.appendChild(rmv);
+  containerEl.appendChild(row);
+}
+
+function getIngredientRows(containerEl){
+  return Array.from(containerEl.querySelectorAll('.ingredient-row')).map(row=>{
+    const sel = row.querySelector('select');
+    const inp = row.querySelector('input');
+    return { itemId: parseInt(sel.value), qty: parseFloat(inp.value) };
+  }).filter(r => r.itemId && r.qty > 0);
+}
+
+// ── DASHBOARD ─────────────────────────────────────────────────────────────
+function renderDashboard(){
+  const d = new Date();
+  $('dash-date').textContent = formatDateLong(d.toISOString().split('T')[0]);
+
+  const todayStr = today();
+  const todayTxns = transactions.filter(t => t.date === todayStr);
+  const salesTotal = todayTxns.filter(t=>t.type==='penjualan').reduce((s,t)=>s+t.total,0);
+  const svcTotal = todayTxns.filter(t=>t.type==='layanan').reduce((s,t)=>s+t.fee,0);
+  const batchCount = todayTxns.filter(t=>t.type==='batch').length;
+  const lowStock = inventory.filter(i=>i.stock<=i.min).length;
+
+  $('kpi-grid').innerHTML = `
+    <div class="kpi-card highlight">
+      <div class="kpi-val">${fmt(salesTotal+svcTotal)}</div>
+      <div class="kpi-label">Pendapatan Hari Ini</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">${todayTxns.length}</div>
+      <div class="kpi-label">Transaksi Hari Ini</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">${batchCount}</div>
+      <div class="kpi-label">Batch Produksi</div>
+    </div>
+    <div class="kpi-card ${lowStock>0?'warn':''}">
+      <div class="kpi-val">${lowStock}</div>
+      <div class="kpi-label">Stok Menipis</div>
+    </div>
+  `;
+
+  const recent = [...transactions].sort((a,b)=>b.createdAt-a.createdAt).slice(0,8);
+  if(recent.length===0){
+    $('activity-list').innerHTML = '<div class="empty-state">Belum ada aktivitas. Mulai catat transaksi pertama!</div>';
+    return;
+  }
+  $('activity-list').innerHTML = recent.map(t=>{
+    let name='', sub='', amount='', typeClass='', typeLabel='';
+    if(t.type==='penjualan'){
+      name = t.customer||'Pelanggan'; sub=`${t.items?.length||0} item · ${t.payment}`;
+      amount=fmt(t.total); typeClass='type-penjualan'; typeLabel='Penjualan';
+    } else if(t.type==='layanan'){
+      name=t.patient||'Tamu'; sub=`${t.svcType} · ${t.therapist||'-'} · ${t.payment}`;
+      amount=fmt(t.fee); typeClass='type-layanan'; typeLabel='Layanan';
+    } else {
+      name=t.batchName||'Batch'; sub=`Batch #${t.batchNo||'-'} · ${t.qty} unit`;
+      amount='-'; typeClass='type-batch'; typeLabel='Batch';
+    }
+    return `<div class="activity-row">
+      <div class="act-left"><h4>${name}</h4><p>${sub} · ${fmtDateDisplay(t.date)}</p></div>
+      <div class="act-right">
+        <div class="act-amount">${amount}</div>
+        <span class="act-type ${typeClass}">${typeLabel}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── PENJUALAN / KASIR ─────────────────────────────────────────────────────
+function renderCart(){
+  const area = $('cart-area');
+  if(saleCart.length===0){
+    area.innerHTML='<div class="cart-empty">Keranjang kosong. Tambah produk di atas.</div>';
+    $('cart-total').textContent='Rp 0';
+    return;
+  }
+  let total=0;
+  area.innerHTML = saleCart.map((ci,idx)=>{
+    total += ci.qty*ci.price;
+    return `<div class="cart-item">
+      <div>
+        <div class="ci-name">${ci.name}</div>
+        <div class="ci-detail">${ci.qty} × ${fmt(ci.price)}</div>
+      </div>
+      <div style="display:flex;align-items:center;">
+        <span class="ci-price">${fmt(ci.qty*ci.price)}</span>
+        <button class="ci-remove" data-idx="${idx}">&times;</button>
+      </div>
+    </div>`;
+  }).join('');
+  $('cart-total').textContent = fmt(total);
+  area.querySelectorAll('.ci-remove').forEach(btn=>{
+    btn.onclick=()=>{ saleCart.splice(parseInt(btn.dataset.idx),1); renderCart(); };
+  });
+}
+
+$('btn-add-cart').onclick = ()=>{
+  const id = parseInt($('sale-product-select').value);
+  const qty = parseInt($('sale-qty').value)||1;
+  const price = parseFloat($('sale-price').value)||0;
+  if(!id){ showToast('⚠️ Pilih produk terlebih dahulu.'); return; }
+  const item = inventory.find(i=>i.id===id);
+  if(!item){ showToast('Produk tidak ditemukan.'); return; }
+  if(item.stock < qty){ showToast(`⚠️ Stok tidak cukup! Tersedia: ${item.stock}`); return; }
+  const existing = saleCart.find(c=>c.itemId===id);
+  if(existing){ existing.qty+=qty; }
+  else { saleCart.push({itemId:id, name:item.name, qty, price}); }
+  renderCart();
+  $('sale-product-select').value=''; $('sale-qty').value=1; $('sale-price').value='';
+};
+
+document.querySelectorAll('#page-penjualan .pay-opt').forEach(opt=>{
+  opt.onclick=()=>{
+    document.querySelectorAll('#page-penjualan .pay-opt').forEach(o=>o.classList.remove('selected'));
+    opt.classList.add('selected'); salePayment=opt.dataset.pay;
+  };
+});
+
+$('btn-save-sale').onclick = ()=>{
+  if(saleCart.length===0){ showToast('⚠️ Keranjang masih kosong.'); return; }
+  const customer = $('sale-customer').value.trim()||'Umum';
+  const date = $('sale-date').value||today();
+  const total = saleCart.reduce((s,c)=>s+c.qty*c.price,0);
+  showConfirm(
+    'Selesaikan Transaksi?',
+    `${customer} · ${saleCart.length} item · ${fmt(total)} via ${salePayment}`,
+    ()=>{
+      // Kurangi stok
+      let ok = true;
+      saleCart.forEach(ci=>{
+        if(!deductStock(ci.itemId, ci.qty)){
+          showToast(`⚠️ Stok tidak cukup untuk ${ci.name}`); ok=false;
+        }
+      });
+      if(!ok) return;
+      const txn = {
+        id: Date.now(), type:'penjualan', customer, date, payment:salePayment,
+        items:[...saleCart], total, note:$('sale-note').value.trim(),
+        createdAt: Date.now()
+      };
+      transactions.push(txn); saveTransactions();
+      saleCart=[];
+      $('sale-customer').value=''; $('sale-note').value=''; $('sale-date').value=today();
+      renderCart(); populateInventorySelects();
+      showToast(`✅ Transaksi ${fmt(total)} berhasil disimpan!`);
+    }
+  );
+};
+
+// ── LAYANAN ───────────────────────────────────────────────────────────────
+$('btn-add-svc-material').onclick = ()=>makeIngredientRow($('svc-materials-list'),'svc');
+
+document.querySelectorAll('#page-layanan .pay-opt').forEach(opt=>{
+  opt.onclick=()=>{
+    document.querySelectorAll('#page-layanan .pay-opt').forEach(o=>o.classList.remove('selected'));
+    opt.classList.add('selected'); svcPayment=opt.dataset.pay;
+  };
+});
+
+$('btn-save-svc').onclick = ()=>{
+  const patient = $('svc-patient').value.trim();
+  const date = $('svc-date').value||today();
+  const svcType = $('svc-type').value;
+  const duration = parseInt($('svc-duration').value)||0;
+  const fee = parseFloat($('svc-fee').value)||0;
+  const therapist = $('svc-therapist').value.trim();
+  if(!patient){ showToast('⚠️ Nama pasien/tamu wajib diisi.'); return; }
+  const materials = getIngredientRows($('svc-materials-list'));
+
+  // Cek stok bahan
+  let stockOk = true;
+  materials.forEach(m=>{
+    const item = inventory.find(i=>i.id===m.itemId);
+    if(item && item.stock < m.qty){ showToast(`⚠️ Stok ${item.name} tidak cukup.`); stockOk=false; }
+  });
+  if(!stockOk) return;
+
+  showConfirm(
+    'Simpan Layanan?',
+    `${patient} · ${svcType} ${duration}mnt · ${fmt(fee)} via ${svcPayment}`,
+    ()=>{
+      materials.forEach(m=>deductStock(m.itemId, m.qty));
+      const txn = {
+        id:Date.now(), type:'layanan', patient, date, svcType, duration, fee,
+        therapist, payment:svcPayment, materials,
+        note:$('svc-note').value.trim(), createdAt:Date.now()
+      };
+      transactions.push(txn); saveTransactions(); populateInventorySelects();
+      $('svc-patient').value=''; $('svc-duration').value=''; $('svc-fee').value='';
+      $('svc-therapist').value=''; $('svc-note').value='';
+      $('svc-materials-list').innerHTML='';
+      showToast(`✅ Layanan ${svcType} untuk ${patient} tersimpan!`);
+    }
+  );
+};
+
+// ── BATCH PRODUKSI ────────────────────────────────────────────────────────
+$('btn-add-ingredient').onclick = ()=>{
+  makeIngredientRow($('batch-ingredients'));
+  checkBatchStock();
+};
+
+$('batch-ingredients').addEventListener('change', checkBatchStock);
+$('batch-ingredients').addEventListener('input', checkBatchStock);
+
+function checkBatchStock(){
+  const checkEl = $('batch-stock-check');
+  const ingr = getIngredientRows($('batch-ingredients'));
+  const batchQty = parseInt($('batch-qty').value)||1;
+  if(ingr.length===0){ checkEl.style.display='none'; return; }
+  checkEl.style.display='block';
+  let html = '<div class="sc-title">Cek Ketersediaan Stok:</div>';
+  let allOk = true;
+  ingr.forEach(m=>{
+    const item = inventory.find(i=>i.id===m.itemId);
+    if(!item) return;
+    const needed = m.qty * batchQty;
+    const ok = item.stock >= needed;
+    if(!ok) allOk=false;
+    html += `<div class="sc-item">
+      <span>${item.name}</span>
+      <span class="${ok?'sc-ok':'sc-fail'}">${ok?'✅':'❌'} Butuh ${needed}, Stok ${item.stock}</span>
+    </div>`;
+  });
+  if(allOk) html += '<div style="margin-top:6px;font-weight:700;color:var(--green);">✅ Semua bahan tersedia</div>';
+  else html += '<div style="margin-top:6px;font-weight:700;color:var(--red);">❌ Stok tidak mencukupi</div>';
+  checkEl.innerHTML = html;
+}
+
+$('batch-qty').oninput = checkBatchStock;
+
+$('btn-save-batch').onclick = ()=>{
+  const batchName = $('batch-name').value.trim();
+  const batchQty = parseInt($('batch-qty').value)||1;
+  const batchNo = $('batch-no').value.trim();
+  const date = $('batch-date').value||today();
+  if(!batchName){ showToast('⚠️ Nama produk wajib diisi.'); return; }
+  const ingr = getIngredientRows($('batch-ingredients'));
+
+  // Cek stok
+  let stockOk = true;
+  ingr.forEach(m=>{
+    const item = inventory.find(i=>i.id===m.itemId);
+    const needed = m.qty * batchQty;
+    if(!item||item.stock<needed){ showToast(`⚠️ Stok tidak cukup untuk batch ini.`); stockOk=false; }
+  });
+  if(!stockOk) return;
+
+  showConfirm(
+    'Rekam Batch Produksi?',
+    `${batchQty}× ${batchName}${batchNo?' ('+batchNo+')':''} — ${ingr.length} bahan baku`,
+    ()=>{
+      ingr.forEach(m=>deductStock(m.itemId, m.qty*batchQty));
+      const txn = {
+        id:Date.now(), type:'batch', batchName, batchNo, qty:batchQty, date, ingredients:ingr,
+        note:$('batch-note').value.trim(), createdAt:Date.now()
+      };
+      transactions.push(txn); saveTransactions(); populateInventorySelects();
+      $('batch-name').value=''; $('batch-no').value=''; $('batch-qty').value=1; $('batch-note').value='';
+      $('batch-ingredients').innerHTML=''; $('batch-stock-check').style.display='none';
+      showToast(`✅ Batch ${batchQty}× ${batchName} berhasil direkam!`);
+    }
+  );
+};
+
+// ── LAPORAN ───────────────────────────────────────────────────────────────
+function renderHistory(){
+  const search = ($('history-search').value||'').toLowerCase();
+  const filter = $('history-filter').value;
+  let list = [...transactions].sort((a,b)=>b.createdAt-a.createdAt);
+  if(filter!=='all') list = list.filter(t=>t.type===filter);
+  if(search) list = list.filter(t=>{
+    const s = t.type==='penjualan' ? (t.customer||'') :
+              t.type==='layanan' ? (t.patient+' '+t.svcType) :
+              (t.batchName+' '+t.batchNo);
+    return s.toLowerCase().includes(search);
+  });
+  if(list.length===0){
+    $('history-list').innerHTML='<div class="empty-state">Tidak ada data yang cocok.</div>';
+    return;
+  }
+  $('history-list').innerHTML = list.map(t=>{
+    if(t.type==='penjualan'){
+      return `<div class="history-row">
+        <div class="hr-top"><span class="hr-name">${t.customer||'Umum'} <span class="tag type-penjualan">Penjualan</span></span><span class="hr-amount">${fmt(t.total)}</span></div>
+        <div class="hr-meta">${fmtDateDisplay(t.date)} · ${t.items?.length||0} item · ${t.payment}${t.note?' · '+t.note:''}</div>
+      </div>`;
+    } else if(t.type==='layanan'){
+      return `<div class="history-row hl-layanan">
+        <div class="hr-top"><span class="hr-name">${t.patient||'Tamu'} <span class="tag type-layanan">Layanan</span></span><span class="hr-amount">${fmt(t.fee)}</span></div>
+        <div class="hr-meta">${fmtDateDisplay(t.date)} · ${t.svcType} ${t.duration}mnt · ${t.therapist||'-'} · ${t.payment}</div>
+      </div>`;
+    } else {
+      return `<div class="history-row hl-batch">
+        <div class="hr-top"><span class="hr-name">${t.batchName||'Batch'} <span class="tag type-batch">Batch</span></span><span style="font-size:0.85rem;font-weight:700;color:var(--ink-soft);">${t.qty} unit</span></div>
+        <div class="hr-meta">${fmtDateDisplay(t.date)} · #${t.batchNo||'-'} · ${t.ingredients?.length||0} bahan${t.note?' · '+t.note:''}</div>
+      </div>`;
+    }
+  }).join('');
+}
+
+$('history-search').oninput = renderHistory;
+$('history-filter').onchange = renderHistory;
+
+function getFilteredTxns(){
+  const from = $('rep-from').value;
+  const to = $('rep-to').value;
+  const type = $('rep-type').value;
+  return transactions.filter(t=>{
+    if(type!=='all' && t.type!==type) return false;
+    if(from && t.date < from) return false;
+    if(to && t.date > to) return false;
+    return true;
+  });
+}
+
+$('btn-export-xlsx').onclick = ()=>{
+  const data = getFilteredTxns();
+  if(data.length===0){ showToast('⚠️ Tidak ada data untuk diekspor.'); return; }
+
+  const wb = XLSX.utils.book_new();
+  const d = new Date();
+  const stamp = `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+
+  // Sheet: Penjualan
+  const saleTxns = data.filter(t=>t.type==='penjualan');
+  if(saleTxns.length>0){
+    const rows = saleTxns.map(t=>({
+      'Tanggal': fmtDateDisplay(t.date),
+      'Pelanggan': t.customer||'Umum',
+      'Jumlah Item': t.items?.length||0,
+      'Total (Rp)': t.total,
+      'Pembayaran': t.payment,
+      'Catatan': t.note||''
+    }));
+    const ws = XLSX.utils.json_to_sheet(rows);
+    ws['!cols']=[{wch:12},{wch:20},{wch:12},{wch:14},{wch:12},{wch:25}];
+    XLSX.utils.book_append_sheet(wb, ws, 'Penjualan');
+  }
+
+  // Sheet: Layanan
+  const svcTxns = data.filter(t=>t.type==='layanan');
+  if(svcTxns.length>0){
+    const rows = svcTxns.map(t=>({
+      'Tanggal': fmtDateDisplay(t.date),
+      'Pasien / Tamu': t.patient||'-',
+      'Jenis Layanan': t.svcType,
+      'Durasi (mnt)': t.duration,
+      'Tarif (Rp)': t.fee,
+      'Terapis': t.therapist||'-',
+      'Pembayaran': t.payment,
+      'Catatan': t.note||''
+    }));
+    const ws = XLSX.utils.json_to_sheet(rows);
+    ws['!cols']=[{wch:12},{wch:20},{wch:22},{wch:12},{wch:14},{wch:18},{wch:12},{wch:25}];
+    XLSX.utils.book_append_sheet(wb, ws, 'Layanan');
+  }
+
+  // Sheet: Batch
+  const batchTxns = data.filter(t=>t.type==='batch');
+  if(batchTxns.length>0){
+    const rows = batchTxns.map(t=>({
+      'Tanggal': fmtDateDisplay(t.date),
+      'Produk': t.batchName,
+      'No. Batch': t.batchNo||'-',
+      'Jumlah Unit': t.qty,
+      'Jml Bahan': t.ingredients?.length||0,
+      'Catatan': t.note||''
+    }));
+    const ws = XLSX.utils.json_to_sheet(rows);
+    ws['!cols']=[{wch:12},{wch:28},{wch:14},{wch:12},{wch:10},{wch:25}];
+    XLSX.utils.book_append_sheet(wb, ws, 'Batch Produksi');
+  }
+
+  // Sheet: Ringkasan
+  const totalSales = saleTxns.reduce((s,t)=>s+t.total,0);
+  const totalSvc = svcTxns.reduce((s,t)=>s+t.fee,0);
+  const summaryRows = [
+    { 'Kategori':'Penjualan Produk', 'Jumlah Transaksi':saleTxns.length, 'Total Pendapatan (Rp)':totalSales },
+    { 'Kategori':'Layanan Treatment', 'Jumlah Transaksi':svcTxns.length, 'Total Pendapatan (Rp)':totalSvc },
+    { 'Kategori':'Batch Produksi', 'Jumlah Transaksi':batchTxns.length, 'Total Pendapatan (Rp)':'-' },
+    { 'Kategori':'TOTAL PENDAPATAN', 'Jumlah Transaksi':saleTxns.length+svcTxns.length+batchTxns.length, 'Total Pendapatan (Rp)':totalSales+totalSvc },
+  ];
+  const wsSummary = XLSX.utils.json_to_sheet(summaryRows);
+  wsSummary['!cols']=[{wch:22},{wch:20},{wch:24}];
+  XLSX.utils.book_append_sheet(wb, wsSummary, 'Ringkasan');
+
+  XLSX.writeFile(wb, `Laporan_RSB_Wellness_${stamp}.xlsx`);
+  showToast('✅ File Excel berhasil diunduh!');
+};
+
+$('btn-export-copy').onclick = ()=>{
+  const data = getFilteredTxns();
+  if(data.length===0){ showToast('⚠️ Tidak ada data.'); return; }
+  const from = $('rep-from').value; const to = $('rep-to').value;
+  const saleTxns = data.filter(t=>t.type==='penjualan');
+  const svcTxns  = data.filter(t=>t.type==='layanan');
+  const batchTxns= data.filter(t=>t.type==='batch');
+  const totalSales = saleTxns.reduce((s,t)=>s+t.total,0);
+  const totalSvc   = svcTxns.reduce((s,t)=>s+t.fee,0);
+  let txt = `*LAPORAN RSB WELLNESS*\n`;
+  if(from||to) txt+=`Periode: ${from||'awal'} s/d ${to||'sekarang'}\n`;
+  txt += `----------------------------\n`;
+  txt += `Penjualan : ${saleTxns.length} transaksi · Rp ${totalSales.toLocaleString('id-ID')}\n`;
+  txt += `Layanan   : ${svcTxns.length} transaksi · Rp ${totalSvc.toLocaleString('id-ID')}\n`;
+  txt += `Batch     : ${batchTxns.length} produksi\n`;
+  txt += `----------------------------\n`;
+  txt += `TOTAL     : Rp ${(totalSales+totalSvc).toLocaleString('id-ID')}\n`;
+  navigator.clipboard.writeText(txt).then(()=>showToast('📋 Ringkasan disalin ke clipboard!'))
+    .catch(()=>showToast('Gagal menyalin. Coba browser lain.'));
+};
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+function init(){
+  $('sale-date').value = today();
+  $('svc-date').value  = today();
+  $('batch-date').value= today();
+  $('rep-from').value  = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0];
+  $('rep-to').value    = today();
+  populateInventorySelects();
+  renderDashboard();
+}
+
+init();
+
+})();
+</script>
+</body>
+</html>

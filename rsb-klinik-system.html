@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1B3A4B">
+<title>RSB Klinik — Sistem Operasional</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{--cream:#F7F9FB;--navy:#1B3A4B;--navy-mid:#2C5364;--navy-soft:#E8EEF2;--teal:#2A7F7F;--teal-soft:#E0F2F2;--gold:#C9973A;--gold-soft:#FBF0DC;--ink:#1A2530;--ink-soft:#5A6A74;--white:#FFFFFF;--red:#C0392B;--red-bg:#FDECEA;--green:#1E6B45;--green-bg:#E6F4ED;--purple:#6B3FA0;--purple-bg:#F0EAF8;--radius:11px;--radius-lg:16px;--shadow:0 3px 12px rgba(27,58,75,0.09);--shadow-md:0 6px 20px rgba(27,58,75,0.13);--font-display:'Fraunces',Georgia,serif;--font-body:'Work Sans',-apple-system,sans-serif;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--cream);font-family:var(--font-body);color:var(--ink);min-height:100vh;}
+.app-nav{position:sticky;top:0;z-index:100;background:var(--navy);display:flex;align-items:center;justify-content:space-between;padding:0 14px;height:54px;box-shadow:0 2px 12px rgba(27,58,75,0.25);}
+.nav-brand{font-family:var(--font-display);color:var(--white);font-size:1rem;flex-shrink:0;}
+.nav-brand span{color:#7DD3D3;}
+.nav-tabs{display:flex;gap:2px;overflow-x:auto;}
+.nav-tab{padding:6px 11px;border-radius:7px;font-size:0.73rem;font-weight:600;color:rgba(255,255,255,0.55);cursor:pointer;border:none;background:transparent;font-family:var(--font-body);white-space:nowrap;transition:all 0.15s;flex-shrink:0;}
+.nav-tab.active{background:rgba(255,255,255,0.15);color:var(--white);}
+.page{display:none;padding:14px 12px 80px;max-width:540px;margin:0 auto;}
+.page.active{display:block;}
+.card{background:var(--white);border-radius:var(--radius-lg);padding:16px;box-shadow:var(--shadow);border:1px solid rgba(27,58,75,0.07);margin-bottom:14px;}
+.card-title{font-family:var(--font-display);font-size:1.05rem;color:var(--navy);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.field{margin-bottom:11px;}
+.field label{display:block;font-size:0.75rem;font-weight:700;margin-bottom:4px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.03em;}
+.field input,.field select,.field textarea{width:100%;padding:9px 12px;border:1.5px solid #D1DCE4;border-radius:var(--radius);font-size:0.87rem;background:var(--cream);font-family:var(--font-body);color:var(--ink);resize:none;transition:border-color 0.15s;}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--teal);}
+.row-fields{display:flex;gap:10px;margin-bottom:11px;}
+.row-fields .field{flex:1;margin-bottom:0;}
+.soap-block{margin-bottom:10px;}
+.soap-label{display:inline-block;font-size:0.72rem;font-weight:700;padding:3px 10px;border-radius:6px;margin-bottom:5px;letter-spacing:0.04em;}
+.soap-s{background:var(--teal-soft);color:var(--teal);}
+.soap-o{background:var(--navy-soft);color:var(--navy);}
+.soap-a{background:var(--gold-soft);color:var(--gold);}
+.soap-p{background:var(--green-bg);color:var(--green);}
+.btn{width:100%;padding:11px;background:var(--navy);color:var(--white);border-radius:var(--radius);font-weight:700;font-size:0.88rem;border:none;cursor:pointer;font-family:var(--font-body);transition:background 0.15s;}
+.btn:hover{background:var(--navy-mid);}
+.btn-teal{background:var(--teal);}
+.btn-teal:hover{background:#1F6060;}
+.btn-outline{background:transparent;border:1.5px solid var(--navy);color:var(--navy);}
+.btn-outline:hover{background:var(--navy-soft);}
+.btn-sm{width:auto;padding:7px 14px;font-size:0.78rem;}
+.btn-row{display:flex;gap:8px;margin-top:4px;}
+.btn-row .btn{flex:1;}
+.queue-hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);border-radius:var(--radius-lg);padding:20px;text-align:center;color:var(--white);margin-bottom:14px;box-shadow:var(--shadow-md);}
+.queue-hero .q-now-label{font-size:0.75rem;font-weight:600;opacity:0.65;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;}
+.queue-hero .q-now-num{font-family:var(--font-display);font-size:3.5rem;font-weight:700;line-height:1;color:#7DD3D3;}
+.queue-hero .q-now-name{font-size:0.9rem;margin-top:6px;opacity:0.85;}
+.queue-hero .q-now-poli{font-size:0.75rem;opacity:0.6;margin-top:2px;}
+.queue-stats{display:flex;gap:8px;margin-bottom:14px;}
+.q-stat{flex:1;background:var(--white);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow);text-align:center;border:1px solid rgba(27,58,75,0.07);}
+.q-stat .qs-num{font-size:1.4rem;font-weight:700;color:var(--navy);}
+.q-stat .qs-label{font-size:0.68rem;font-weight:600;color:var(--ink-soft);text-transform:uppercase;}
+.queue-list{display:flex;flex-direction:column;gap:8px;}
+.queue-row{background:var(--white);border-radius:var(--radius);padding:12px 14px;box-shadow:var(--shadow);display:flex;justify-content:space-between;align-items:center;border-left:4px solid #D1DCE4;}
+.queue-row.status-menunggu{border-left-color:var(--gold);}
+.queue-row.status-dilayani{border-left-color:var(--teal);background:linear-gradient(90deg,var(--teal-soft) 0%,var(--white) 100%);}
+.queue-row.status-selesai{border-left-color:var(--green);opacity:0.65;}
+.queue-row .qr-num{font-family:var(--font-display);font-size:1.4rem;font-weight:700;color:var(--navy);min-width:44px;}
+.queue-row .qr-info h4{font-size:0.9rem;font-weight:700;}
+.queue-row .qr-info p{font-size:0.72rem;color:var(--ink-soft);margin-top:2px;}
+.queue-row .qr-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end;}
+.qr-btn{padding:5px 10px;border-radius:7px;font-size:0.72rem;font-weight:700;border:none;cursor:pointer;font-family:var(--font-body);white-space:nowrap;}
+.qr-btn-panggil{background:var(--teal-soft);color:var(--teal);}
+.qr-btn-selesai{background:var(--green-bg);color:var(--green);}
+.qr-btn-rm{background:var(--navy-soft);color:var(--navy);}
+.tag{display:inline-block;font-size:0.62rem;font-weight:700;padding:2px 7px;border-radius:5px;text-transform:uppercase;letter-spacing:0.03em;}
+.tag-bpjs{background:var(--teal-soft);color:var(--teal);}
+.tag-umum{background:var(--navy-soft);color:var(--navy);}
+.tag-asuransi{background:var(--purple-bg);color:var(--purple);}
+.tag-kebidanan{background:#FDE8F0;color:#9B2257;}
+.tag-tradisional{background:var(--gold-soft);color:var(--gold);}
+.tag-menunggu{background:var(--gold-soft);color:var(--gold);}
+.tag-dilayani{background:var(--teal-soft);color:var(--teal);}
+.tag-selesai{background:var(--green-bg);color:var(--green);}
+.poli-opts{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:11px;}
+.poli-opt{padding:7px 13px;border:1.5px solid #D1DCE4;border-radius:8px;font-size:0.78rem;font-weight:600;color:var(--ink-soft);cursor:pointer;background:var(--cream);transition:all 0.15s;white-space:nowrap;}
+.poli-opt.selected{border-color:var(--navy);background:var(--navy);color:var(--white);}
+.pay-opts{display:flex;gap:7px;margin-bottom:11px;flex-wrap:wrap;}
+.pay-opt{flex:1;min-width:80px;padding:9px;border:2px solid #D1DCE4;border-radius:var(--radius);text-align:center;cursor:pointer;font-size:0.78rem;font-weight:600;color:var(--ink-soft);background:var(--cream);transition:all 0.15s;}
+.pay-opt.selected{border-color:var(--teal);background:var(--teal-soft);color:var(--teal);}
+.rm-record{background:var(--white);border-radius:var(--radius-lg);padding:15px;box-shadow:var(--shadow);margin-bottom:11px;border:1px solid rgba(27,58,75,0.07);}
+.rm-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
+.rm-header h4{font-size:0.92rem;font-weight:700;color:var(--navy);}
+.rm-header p{font-size:0.72rem;color:var(--ink-soft);margin-top:2px;}
+.rm-soap{background:var(--cream);border-radius:var(--radius);padding:10px;margin:8px 0;}
+.rm-soap-item{margin-bottom:6px;}
+.rm-soap-item:last-child{margin-bottom:0;}
+.rm-soap-item strong{font-size:0.7rem;font-weight:700;color:var(--ink-soft);text-transform:uppercase;display:block;margin-bottom:2px;}
+.rm-soap-item p{font-size:0.83rem;color:var(--ink);line-height:1.45;}
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px;}
+.kpi-card{background:var(--white);border-radius:var(--radius);padding:13px 14px;box-shadow:var(--shadow);border:1px solid rgba(27,58,75,0.07);}
+.kpi-card .kv{font-size:1.45rem;font-weight:700;color:var(--navy);margin-bottom:2px;}
+.kpi-card .kl{font-size:0.68rem;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.04em;}
+.kpi-card.hi .kv{color:var(--teal);}
+.kpi-card.warn .kv{color:var(--gold);}
+.history-controls{display:flex;gap:8px;margin-bottom:10px;}
+.history-controls input,.history-controls select{padding:8px 11px;border:1.5px solid #D1DCE4;border-radius:var(--radius);font-size:0.82rem;background:var(--white);font-family:var(--font-body);flex:1;}
+.section-title{font-family:var(--font-display);font-size:1rem;color:var(--navy);margin-bottom:10px;}
+.divider{height:1px;background:#E2EAF0;margin:13px 0;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--navy);color:var(--white);padding:11px 20px;border-radius:999px;font-size:0.82rem;font-weight:600;box-shadow:0 8px 24px rgba(27,58,75,0.28);transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1),opacity 0.3s;opacity:0;z-index:1000;white-space:nowrap;max-width:90vw;}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+.overlay{position:fixed;inset:0;background:rgba(27,58,75,0.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity 0.2s;}
+.overlay.visible{opacity:1;pointer-events:all;}
+.modal{background:var(--white);border-radius:var(--radius-lg);padding:20px;max-width:400px;width:100%;box-shadow:0 20px 60px rgba(27,58,75,0.22);transform:scale(0.95);transition:transform 0.2s;max-height:90vh;overflow-y:auto;}
+.overlay.visible .modal{transform:scale(1);}
+.modal-title{font-family:var(--font-display);font-size:1.05rem;color:var(--navy);margin-bottom:12px;}
+.modal-btns{display:flex;gap:9px;margin-top:14px;}
+.modal-btns button{flex:1;padding:10px;border-radius:var(--radius);font-weight:700;font-size:0.83rem;cursor:pointer;font-family:var(--font-body);border:none;}
+.modal-cancel{background:var(--cream);border:1.5px solid #D1DCE4 !important;color:var(--ink-soft);}
+.modal-ok{background:var(--navy);color:var(--white);}
+.empty-state{text-align:center;padding:28px;font-size:0.82rem;color:var(--ink-soft);line-height:1.6;}
+</style>
+</head>
+<body>
+<nav class="app-nav">
+  <div class="nav-brand">RSB <span>Klinik</span></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" data-page="dashboard">Dashboard</button>
+    <button class="nav-tab" data-page="antrian">Antrian</button>
+    <button class="nav-tab" data-page="rekam">Rekam Medis</button>
+    <button class="nav-tab" data-page="riwayat">Riwayat RM</button>
+    <button class="nav-tab" data-page="laporan">Laporan</button>
+  </div>
+</nav>
+
+<!-- DASHBOARD -->
+<div class="page active" id="page-dashboard">
+  <div style="margin-top:14px;margin-bottom:16px;">
+    <div style="font-family:var(--font-display);font-size:1.35rem;color:var(--navy);">Selamat Datang 👋</div>
+    <div style="font-size:0.8rem;color:var(--ink-soft);margin-top:3px;" id="dash-date">—</div>
+  </div>
+  <div class="kpi-grid" id="kpi-grid"></div>
+  <p class="section-title">Antrian Aktif Hari Ini</p>
+  <div id="dash-queue"></div>
+  <div class="divider"></div>
+  <p class="section-title">Kunjungan Terkini</p>
+  <div id="dash-recent"></div>
+</div>
+
+<!-- ANTRIAN -->
+<div class="page" id="page-antrian">
+  <div class="queue-hero" style="margin-top:14px;">
+    <div class="q-now-label">Sedang Dilayani</div>
+    <div class="q-now-num" id="q-now-num">—</div>
+    <div class="q-now-name" id="q-now-name">Tidak ada pasien aktif</div>
+    <div class="q-now-poli" id="q-now-poli"></div>
+  </div>
+  <div class="queue-stats">
+    <div class="q-stat"><div class="qs-num" id="qs-menunggu">0</div><div class="qs-label">Menunggu</div></div>
+    <div class="q-stat"><div class="qs-num" id="qs-dilayani">0</div><div class="qs-label">Dilayani</div></div>
+    <div class="q-stat"><div class="qs-num" id="qs-selesai">0</div><div class="qs-label">Selesai</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">➕ Daftarkan Pasien Baru</div>
+    <div class="row-fields">
+      <div class="field"><label>Nama Pasien</label><input type="text" id="q-name" placeholder="Nama lengkap"></div>
+      <div class="field"><label>No. RM (opsional)</label><input type="text" id="q-rm" placeholder="Auto jika kosong"></div>
+    </div>
+    <div class="row-fields">
+      <div class="field"><label>Usia</label><input type="text" id="q-age" placeholder="25 th / 3 bln"></div>
+      <div class="field"><label>Jenis Kelamin</label><select id="q-gender"><option value="Perempuan">Perempuan</option><option value="Laki-laki">Laki-laki</option></select></div>
+    </div>
+    <div class="field">
+      <label>Poli / Layanan</label>
+      <div class="poli-opts" id="poli-opts">
+        <div class="poli-opt selected" data-poli="Kebidanan / KIA">🤱 Kebidanan</div>
+        <div class="poli-opt" data-poli="Bekam">🔵 Bekam</div>
+        <div class="poli-opt" data-poli="Baby Spa">🛁 Baby Spa</div>
+        <div class="poli-opt" data-poli="Akupuntur">📍 Akupuntur</div>
+        <div class="poli-opt" data-poli="Akupresur">👐 Akupresur</div>
+        <div class="poli-opt" data-poli="Umum">🏥 Umum</div>
+      </div>
+    </div>
+    <div class="field">
+      <label>Jenis Pembayaran</label>
+      <div class="pay-opts" id="q-pay-opts">
+        <div class="pay-opt selected" data-pay="BPJS">🏥 BPJS</div>
+        <div class="pay-opt" data-pay="Umum">💵 Umum</div>
+        <div class="pay-opt" data-pay="Asuransi">🛡️ Asuransi</div>
+      </div>
+    </div>
+    <div class="field"><label>Keluhan Utama</label><input type="text" id="q-complaint" placeholder="Singkat — detail di SOAP"></div>
+    <button class="btn btn-teal" id="btn-register-queue">🎫 Ambil Nomor Antrian</button>
+  </div>
+  <p class="section-title">Daftar Antrian Hari Ini</p>
+  <div class="queue-list" id="queue-list"></div>
+</div>
+
+<!-- REKAM MEDIS -->
+<div class="page" id="page-rekam">
+  <div class="card" style="margin-top:14px;">
+    <div class="card-title">📋 Input Rekam Medis & SOAP</div>
+    <div class="field">
+      <label>Pilih Pasien (dari Antrian Aktif)</label>
+      <select id="rm-patient-select"><option value="">— Pilih Pasien —</option></select>
+    </div>
+    <div id="rm-patient-info" style="display:none;background:var(--navy-soft);border-radius:var(--radius);padding:10px 13px;margin-bottom:11px;font-size:0.82rem;color:var(--navy);line-height:1.6;"></div>
+    <div class="row-fields">
+      <div class="field"><label>Tanggal Kunjungan</label><input type="date" id="rm-date"></div>
+      <div class="field">
+        <label>Tenaga Kesehatan</label>
+        <select id="rm-nakes">
+          <option value="">— Pilih —</option>
+          <optgroup label="Bidan"><option>Bidan Dewi</option><option>Bidan Sari</option><option>Bidan Lainnya</option></optgroup>
+          <optgroup label="Dokter"><option>dr. Umum</option><option>dr. Spesialis</option></optgroup>
+          <optgroup label="Terapis Tradisional"><option>Terapis Bekam</option><option>Terapis Akupuntur</option><option>Terapis Akupresur</option><option>Terapis Baby Spa</option></optgroup>
+        </select>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <p style="font-size:0.75rem;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;">SOAP — Catatan Klinis</p>
+    <div class="soap-block">
+      <span class="soap-label soap-s">S — Subjektif</span>
+      <div class="field" style="margin-bottom:0;"><textarea id="soap-s" rows="2" placeholder="Keluhan pasien, riwayat penyakit, riwayat kehamilan/persalinan..."></textarea></div>
+    </div>
+    <div class="soap-block">
+      <span class="soap-label soap-o">O — Objektif</span>
+      <div class="row-fields">
+        <div class="field"><label>TD (mmHg)</label><input type="text" id="vital-td" placeholder="120/80"></div>
+        <div class="field"><label>Nadi (/mnt)</label><input type="text" id="vital-nadi" placeholder="80"></div>
+        <div class="field"><label>Suhu (°C)</label><input type="text" id="vital-suhu" placeholder="36.5"></div>
+      </div>
+      <div class="row-fields">
+        <div class="field"><label>RR (/mnt)</label><input type="text" id="vital-rr" placeholder="20"></div>
+        <div class="field"><label>SpO2 (%)</label><input type="text" id="vital-spo2" placeholder="98"></div>
+        <div class="field"><label>BB (kg)</label><input type="text" id="vital-bb" placeholder="—"></div>
+      </div>
+      <div class="field" style="margin-bottom:0;"><textarea id="soap-o" rows="2" placeholder="Pemeriksaan fisik, TFU, DJJ, hasil lab..."></textarea></div>
+    </div>
+    <div class="soap-block">
+      <span class="soap-label soap-a">A — Assessment</span>
+      <div class="field" style="margin-bottom:0;"><textarea id="soap-a" rows="2" placeholder="Diagnosa / masalah, kode ICD-10..."></textarea></div>
+    </div>
+    <div class="soap-block" style="margin-bottom:0;">
+      <span class="soap-label soap-p">P — Plan</span>
+      <div class="field" style="margin-bottom:0;"><textarea id="soap-p" rows="3" placeholder="Tindakan, resep, edukasi, rujukan, kontrol ulang..."></textarea></div>
+    </div>
+    <div class="divider"></div>
+    <div class="row-fields">
+      <div class="field"><label>Tarif / Biaya (Rp)</label><input type="number" id="rm-fee" min="0" placeholder="0"></div>
+      <div class="field"><label>No. SEP BPJS (jika ada)</label><input type="text" id="rm-sep" placeholder="—"></div>
+    </div>
+    <div class="field"><label>Catatan Tambahan</label><textarea id="rm-note" rows="2" placeholder="Instruksi khusus, alergi, edukasi keluarga..."></textarea></div>
+    <button class="btn" id="btn-save-rm">💾 Simpan Rekam Medis</button>
+  </div>
+</div>
+
+<!-- RIWAYAT RM -->
+<div class="page" id="page-riwayat">
+  <div style="margin-top:14px;margin-bottom:12px;">
+    <div class="history-controls">
+      <input type="text" id="riwayat-search" placeholder="Cari nama pasien...">
+      <select id="riwayat-filter">
+        <option value="all">Semua Poli</option>
+        <option value="Kebidanan / KIA">Kebidanan</option>
+        <option value="Bekam">Bekam</option>
+        <option value="Baby Spa">Baby Spa</option>
+        <option value="Akupuntur">Akupuntur</option>
+        <option value="Akupresur">Akupresur</option>
+        <option value="Umum">Umum</option>
+      </select>
+    </div>
+  </div>
+  <div id="riwayat-list"></div>
+</div>
+
+<!-- LAPORAN -->
+<div class="page" id="page-laporan">
+  <div class="card" style="margin-top:14px;">
+    <div class="card-title">📊 Ekspor Laporan</div>
+    <div class="row-fields">
+      <div class="field"><label>Dari Tanggal</label><input type="date" id="rep-from"></div>
+      <div class="field"><label>Hingga Tanggal</label><input type="date" id="rep-to"></div>
+    </div>
+    <div class="field">
+      <label>Filter</label>
+      <select id="rep-type">
+        <option value="all">Semua Kunjungan</option>
+        <option value="Kebidanan / KIA">Kebidanan / KIA</option>
+        <option value="Bekam">Bekam</option>
+        <option value="Baby Spa">Baby Spa</option>
+        <option value="Akupuntur">Akupuntur</option>
+        <option value="Akupresur">Akupresur</option>
+        <option value="Umum">Umum</option>
+        <option value="BPJS">Pasien BPJS</option>
+        <option value="Umum-pay">Pasien Umum</option>
+        <option value="Asuransi">Pasien Asuransi</option>
+      </select>
+    </div>
+    <div class="btn-row">
+      <button class="btn" id="btn-export-xlsx">⬇️ Unduh Excel</button>
+      <button class="btn btn-outline" id="btn-export-copy">📋 Salin Ringkasan</button>
+    </div>
+  </div>
+  <p class="section-title">Rekap Bulan Ini</p>
+  <div class="kpi-grid" id="rep-kpi"></div>
+</div>
+
+<!-- Modal Detail RM -->
+<div class="overlay" id="rm-detail-overlay">
+  <div class="modal">
+    <div class="modal-title">Detail Rekam Medis</div>
+    <div id="rm-detail-content"></div>
+    <div class="modal-btns"><button class="modal-cancel" id="rm-detail-close">Tutup</button></div>
+  </div>
+</div>
+
+<!-- Modal Konfirmasi -->
+<div class="overlay" id="confirm-overlay">
+  <div class="modal">
+    <div class="modal-title" id="confirm-title">Konfirmasi</div>
+    <p style="font-size:0.84rem;color:var(--ink-soft);line-height:1.5;" id="confirm-body"></p>
+    <div class="modal-btns">
+      <button class="modal-cancel" id="confirm-cancel">Batal</button>
+      <button class="modal-ok" id="confirm-ok">Ya, Simpan</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+const QUEUE_KEY='rsb_klinik_queue';
+const RM_KEY='rsb_klinik_rm';
+const CTR_KEY='rsb_klinik_counter';
+let queue=JSON.parse(localStorage.getItem(QUEUE_KEY))||[];
+let records=JSON.parse(localStorage.getItem(RM_KEY))||[];
+let pendingConfirm=null;
+const $=id=>document.getElementById(id);
+const today=()=>new Date().toISOString().split('T')[0];
+const fmt=n=>'Rp '+Number(n).toLocaleString('id-ID');
+const fmtDate=s=>{if(!s)return'-';const d=new Date(s);return`${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;};
+function save(){localStorage.setItem(QUEUE_KEY,JSON.stringify(queue));localStorage.setItem(RM_KEY,JSON.stringify(records));}
+function showToast(msg,dur=2800){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur);}
+function getTodayCounter(){const s=JSON.parse(localStorage.getItem(CTR_KEY)||'{}');const t=today();if(s.date!==t){s.date=t;s.counter=0;localStorage.setItem(CTR_KEY,JSON.stringify(s));}return s;}
+function nextQueueNum(){const c=getTodayCounter();c.counter++;localStorage.setItem(CTR_KEY,JSON.stringify(c));return c.counter;}
+function genRM(){const d=new Date();return`RM${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}${String(Math.floor(Math.random()*900)+100)}`;}
+function formatDateLong(s){const d=new Date(s);const days=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];const mo=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];return`${days[d.getDay()]}, ${d.getDate()} ${mo[d.getMonth()]} ${d.getFullYear()}`;}
+function showConfirm(title,body,onOk){$('confirm-title').textContent=title;$('confirm-body').textContent=body;$('confirm-overlay').classList.add('visible');pendingConfirm=onOk;}
+$('confirm-ok').onclick=()=>{$('confirm-overlay').classList.remove('visible');if(pendingConfirm)pendingConfirm();pendingConfirm=null;};
+$('confirm-cancel').onclick=()=>{$('confirm-overlay').classList.remove('visible');pendingConfirm=null;};
+$('confirm-overlay').onclick=e=>{if(e.target===$('confirm-overlay')){$('confirm-overlay').classList.remove('visible');pendingConfirm=null;}};
+$('rm-detail-close').onclick=()=>$('rm-detail-overlay').classList.remove('visible');
+$('rm-detail-overlay').onclick=e=>{if(e.target===$('rm-detail-overlay'))$('rm-detail-overlay').classList.remove('visible');};
+function showRMDetail(rec){
+  const v=rec.vitals||{};
+  const vStr=[v.td?`TD: ${v.td}`:'',v.nadi?`Nadi: ${v.nadi}/mnt`:'',v.suhu?`Suhu: ${v.suhu}°C`:'',v.rr?`RR: ${v.rr}/mnt`:'',v.spo2?`SpO2: ${v.spo2}%`:'',v.bb?`BB: ${v.bb}kg`:''].filter(Boolean).join(' · ');
+  const payTag=rec.payment==='BPJS'?'bpjs':rec.payment==='Asuransi'?'asuransi':'umum';
+  const poliTag=rec.poli==='Kebidanan / KIA'?'kebidanan':'tradisional';
+  $('rm-detail-content').innerHTML=`
+    <div style="margin-bottom:10px;">
+      <div style="font-size:0.95rem;font-weight:700;color:var(--navy);">${rec.patientName}</div>
+      <div style="font-size:0.75rem;color:var(--ink-soft);margin-top:3px;line-height:1.7;">
+        No. RM: ${rec.rmNo} · ${rec.age||'-'} · ${rec.gender||'-'}<br>
+        ${fmtDate(rec.date)} · <span class="tag tag-${poliTag}">${rec.poli}</span> <span class="tag tag-${payTag}">${rec.payment}</span><br>
+        Nakes: ${rec.nakes||'-'}${rec.sepNo?' · SEP: '+rec.sepNo:''}
+      </div>
+    </div>
+    <div class="rm-soap">
+      ${rec.soap?.s?`<div class="rm-soap-item"><strong>S — Subjektif</strong><p>${rec.soap.s}</p></div>`:''}
+      ${vStr?`<div class="rm-soap-item"><strong>Tanda Vital</strong><p>${vStr}</p></div>`:''}
+      ${rec.soap?.o?`<div class="rm-soap-item"><strong>O — Objektif</strong><p>${rec.soap.o}</p></div>`:''}
+      ${rec.soap?.a?`<div class="rm-soap-item"><strong>A — Assessment</strong><p>${rec.soap.a}</p></div>`:''}
+      ${rec.soap?.p?`<div class="rm-soap-item"><strong>P — Plan</strong><p>${rec.soap.p}</p></div>`:''}
+    </div>
+    ${rec.note?`<div style="font-size:0.8rem;color:var(--ink-soft);margin-top:6px;">📝 ${rec.note}</div>`:''}
+    <div style="display:flex;justify-content:space-between;margin-top:10px;padding-top:8px;border-top:1px solid #E2EAF0;">
+      <span style="font-size:0.75rem;color:var(--ink-soft);">Tarif</span>
+      <span style="font-size:0.95rem;font-weight:700;color:var(--green);">${fmt(rec.fee||0)}</span>
+    </div>`;
+  $('rm-detail-overlay').classList.add('visible');
+}
+document.querySelectorAll('.nav-tab').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const pg=btn.dataset.page;
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    $('page-'+pg).classList.add('active');
+    if(pg==='dashboard')renderDashboard();
+    if(pg==='antrian')renderQueue();
+    if(pg==='rekam')populateRMPatientSelect();
+    if(pg==='riwayat')renderRiwayat();
+    if(pg==='laporan')renderRepKPI();
+  };
+});
+let selectedPoli='Kebidanan / KIA';
+let selectedQPay='BPJS';
+document.querySelectorAll('#poli-opts .poli-opt').forEach(opt=>{opt.onclick=()=>{document.querySelectorAll('#poli-opts .poli-opt').forEach(o=>o.classList.remove('selected'));opt.classList.add('selected');selectedPoli=opt.dataset.poli;};});
+document.querySelectorAll('#q-pay-opts .pay-opt').forEach(opt=>{opt.onclick=()=>{document.querySelectorAll('#q-pay-opts .pay-opt').forEach(o=>o.classList.remove('selected'));opt.classList.add('selected');selectedQPay=opt.dataset.pay;};});
+$('btn-register-queue').onclick=()=>{
+  const name=$('q-name').value.trim();
+  if(!name){showToast('⚠️ Nama pasien wajib diisi.');return;}
+  const rmNo=$('q-rm').value.trim()||genRM();
+  const num=nextQueueNum();
+  const entry={id:Date.now(),num,rmNo,name,age:$('q-age').value.trim(),gender:$('q-gender').value,poli:selectedPoli,payment:selectedQPay,complaint:$('q-complaint').value.trim(),date:today(),status:'menunggu',createdAt:Date.now()};
+  queue.push(entry);save();renderQueue();populateRMPatientSelect();
+  $('q-name').value='';$('q-rm').value='';$('q-age').value='';$('q-complaint').value='';
+  showToast(`✅ Antrian ${String(num).padStart(3,'0')} — ${name} (${rmNo})`);
+};
+function todayQueue(){return queue.filter(q=>q.date===today());}
+function poliTag(poli){return poli==='Kebidanan / KIA'?'kebidanan':'tradisional';}
+function payTag(p){return p==='BPJS'?'bpjs':p==='Asuransi'?'asuransi':'umum';}
+function renderQueue(){
+  const tq=todayQueue();
+  const active=tq.find(q=>q.status==='dilayani');
+  if(active){$('q-now-num').textContent=String(active.num).padStart(3,'0');$('q-now-name').textContent=active.name;$('q-now-poli').textContent=active.poli+' · '+active.payment;}
+  else{$('q-now-num').textContent='—';$('q-now-name').textContent='Tidak ada pasien aktif';$('q-now-poli').textContent='';}
+  $('qs-menunggu').textContent=tq.filter(q=>q.status==='menunggu').length;
+  $('qs-dilayani').textContent=tq.filter(q=>q.status==='dilayani').length;
+  $('qs-selesai').textContent=tq.filter(q=>q.status==='selesai').length;
+  const el=$('queue-list');
+  if(tq.length===0){el.innerHTML='<div class="empty-state">Belum ada pasien terdaftar hari ini.</div>';return;}
+  el.innerHTML='';
+  [...tq].sort((a,b)=>a.num-b.num).forEach(entry=>{
+    const row=document.createElement('div');
+    row.className=`queue-row status-${entry.status}`;
+    row.innerHTML=`
+      <div class="qr-num">${String(entry.num).padStart(3,'0')}</div>
+      <div class="qr-info" style="flex:1;margin:0 10px;">
+        <h4>${entry.name} <span class="tag tag-${poliTag(entry.poli)}">${entry.poli}</span></h4>
+        <p>${entry.age||'-'} · ${entry.gender} · <span class="tag tag-${payTag(entry.payment)}">${entry.payment}</span>${entry.complaint?' · '+entry.complaint:''}</p>
+        <p style="margin-top:2px;font-size:0.68rem;">No. RM: ${entry.rmNo}</p>
+      </div>
+      <div class="qr-actions"></div>`;
+    const actions=row.querySelector('.qr-actions');
+    if(entry.status==='menunggu'){
+      const b=document.createElement('button');b.className='qr-btn qr-btn-panggil';b.textContent='Panggil';
+      b.onclick=()=>{if(tq.find(q=>q.status==='dilayani')){showToast('⚠️ Ada pasien yang sedang dilayani.');return;}entry.status='dilayani';save();renderQueue();populateRMPatientSelect();showToast(`📢 Memanggil ${String(entry.num).padStart(3,'0')} — ${entry.name}`);};
+      actions.appendChild(b);
+    }
+    if(entry.status==='dilayani'){
+      const b1=document.createElement('button');b1.className='qr-btn qr-btn-rm';b1.textContent='Input RM';
+      b1.onclick=()=>{document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.querySelector('[data-page="rekam"]').classList.add('active');document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));$('page-rekam').classList.add('active');populateRMPatientSelect();setTimeout(()=>{$('rm-patient-select').value=entry.id;$('rm-patient-select').dispatchEvent(new Event('change'));},100);};
+      const b2=document.createElement('button');b2.className='qr-btn qr-btn-selesai';b2.textContent='Selesai';
+      b2.onclick=()=>{entry.status='selesai';save();renderQueue();populateRMPatientSelect();showToast(`✅ ${entry.name} selesai dilayani.`);};
+      actions.appendChild(b1);actions.appendChild(b2);
+    }
+    if(entry.status==='selesai'){const sp=document.createElement('span');sp.className='tag tag-selesai';sp.textContent='Selesai';actions.appendChild(sp);}
+    el.appendChild(row);
+  });
+}
+function populateRMPatientSelect(){
+  const sel=$('rm-patient-select');const cur=sel.value;
+  sel.innerHTML='<option value="">— Pilih Pasien —</option>';
+  todayQueue().filter(q=>q.status==='dilayani'||q.status==='menunggu').sort((a,b)=>a.num-b.num).forEach(q=>{
+    const o=document.createElement('option');o.value=q.id;o.textContent=`[${String(q.num).padStart(3,'0')}] ${q.name} · ${q.poli}`;sel.appendChild(o);
+  });
+  if(cur)sel.value=cur;
+}
+$('rm-patient-select').onchange=function(){
+  const entry=queue.find(q=>q.id===parseInt(this.value));
+  const info=$('rm-patient-info');
+  if(!entry){info.style.display='none';return;}
+  info.style.display='block';
+  info.innerHTML=`<strong>${entry.name}</strong> · ${entry.age||'-'} · ${entry.gender}<br>No. RM: ${entry.rmNo} · <span class="tag tag-${poliTag(entry.poli)}">${entry.poli}</span> <span class="tag tag-${payTag(entry.payment)}">${entry.payment}</span>${entry.complaint?'<br><em style="font-size:0.78rem;">Keluhan: '+entry.complaint+'</em>':''}`;
+};
+$('btn-save-rm').onclick=()=>{
+  const patientId=parseInt($('rm-patient-select').value);
+  if(!patientId){showToast('⚠️ Pilih pasien dari antrian.');return;}
+  const entry=queue.find(q=>q.id===patientId);if(!entry)return;
+  const nakes=$('rm-nakes').value;if(!nakes){showToast('⚠️ Pilih tenaga kesehatan.');return;}
+  const soapS=$('soap-s').value.trim();const soapA=$('soap-a').value.trim();
+  if(!soapS||!soapA){showToast('⚠️ Minimal isi Subjektif dan Assessment.');return;}
+  showConfirm('Simpan Rekam Medis?',`${entry.name} · ${entry.poli} · ${fmtDate($('rm-date').value||today())} · ${nakes}`,()=>{
+    const rec={id:Date.now(),rmNo:entry.rmNo,patientId:entry.id,patientName:entry.name,age:entry.age,gender:entry.gender,poli:entry.poli,payment:entry.payment,date:$('rm-date').value||today(),nakes,sepNo:$('rm-sep').value.trim(),vitals:{td:$('vital-td').value,nadi:$('vital-nadi').value,suhu:$('vital-suhu').value,rr:$('vital-rr').value,spo2:$('vital-spo2').value,bb:$('vital-bb').value},soap:{s:soapS,o:$('soap-o').value.trim(),a:soapA,p:$('soap-p').value.trim()},fee:parseFloat($('rm-fee').value)||0,note:$('rm-note').value.trim(),createdAt:Date.now()};
+    records.push(rec);entry.status='selesai';save();
+    [$('soap-s'),$('soap-o'),$('soap-a'),$('soap-p'),$('rm-note'),$('rm-sep'),$('rm-fee')].forEach(el=>el.value='');
+    [$('vital-td'),$('vital-nadi'),$('vital-suhu'),$('vital-rr'),$('vital-spo2'),$('vital-bb')].forEach(el=>el.value='');
+    $('rm-patient-select').value='';$('rm-patient-info').style.display='none';$('rm-nakes').value='';
+    renderQueue();populateRMPatientSelect();
+    showToast(`✅ Rekam medis ${entry.name} tersimpan!`);
+  });
+};
+function renderRiwayat(){
+  const search=($('riwayat-search').value||'').toLowerCase();
+  const filter=$('riwayat-filter').value;
+  let list=[...records].sort((a,b)=>b.createdAt-a.createdAt);
+  if(filter!=='all')list=list.filter(r=>r.poli===filter);
+  if(search)list=list.filter(r=>(r.patientName||'').toLowerCase().includes(search));
+  const el=$('riwayat-list');
+  if(list.length===0){el.innerHTML='<div class="empty-state">Belum ada rekam medis.<br>Lengkapi SOAP dari halaman Rekam Medis.</div>';return;}
+  el.innerHTML='';
+  list.forEach(rec=>{
+    const v=rec.vitals||{};
+    const vStr=[v.td?`TD:${v.td}`:'',v.nadi?`N:${v.nadi}`:'',v.suhu?`S:${v.suhu}°`:''].filter(Boolean).join(' · ');
+    const div=document.createElement('div');div.className='rm-record';
+    div.innerHTML=`
+      <div class="rm-header">
+        <div><h4>${rec.patientName} <span class="tag tag-${poliTag(rec.poli)}">${rec.poli}</span></h4>
+        <p>No.RM: ${rec.rmNo} · ${rec.age||'-'} · ${rec.nakes||'-'}</p>
+        <p>${fmtDate(rec.date)} · <span class="tag tag-${payTag(rec.payment)}">${rec.payment}</span>${rec.sepNo?' · SEP: '+rec.sepNo:''}</p></div>
+        <div style="text-align:right;"><div style="font-size:0.9rem;font-weight:700;color:var(--green);">${fmt(rec.fee||0)}</div></div>
+      </div>
+      <div class="rm-soap">
+        ${rec.soap?.s?`<div class="rm-soap-item"><strong>Keluhan</strong><p>${rec.soap.s}</p></div>`:''}
+        ${vStr?`<div class="rm-soap-item"><strong>Vital</strong><p>${vStr}</p></div>`:''}
+        ${rec.soap?.a?`<div class="rm-soap-item"><strong>Assessment</strong><p>${rec.soap.a}</p></div>`:''}
+        ${rec.soap?.p?`<div class="rm-soap-item"><strong>Plan</strong><p>${rec.soap.p}</p></div>`:''}
+      </div>
+      <button class="qr-btn qr-btn-rm" style="margin-top:8px;width:100%;" data-id="${rec.id}">Lihat Detail Lengkap</button>`;
+    div.querySelector('[data-id]').onclick=()=>showRMDetail(rec);
+    el.appendChild(div);
+  });
+}
+$('riwayat-search').oninput=renderRiwayat;
+$('riwayat-filter').onchange=renderRiwayat;
+function renderDashboard(){
+  const d=new Date();$('dash-date').textContent=formatDateLong(d.toISOString().split('T')[0]);
+  const tq=todayQueue();
+  const todayRecs=records.filter(r=>r.date===today());
+  const income=todayRecs.reduce((s,r)=>s+(r.fee||0),0);
+  $('kpi-grid').innerHTML=`
+    <div class="kpi-card hi"><div class="kv">${fmt(income)}</div><div class="kl">Pendapatan Hari Ini</div></div>
+    <div class="kpi-card"><div class="kv">${tq.length}</div><div class="kl">Pasien Terdaftar</div></div>
+    <div class="kpi-card"><div class="kv">${tq.filter(q=>q.status==='selesai').length}</div><div class="kl">Selesai Dilayani</div></div>
+    <div class="kpi-card ${tq.filter(q=>q.status==='menunggu').length>5?'warn':''}"><div class="kv">${tq.filter(q=>q.status==='menunggu').length}</div><div class="kl">Masih Menunggu</div></div>`;
+  const aq=tq.filter(q=>q.status!=='selesai').sort((a,b)=>a.num-b.num);
+  $('dash-queue').innerHTML=aq.length===0?'<div class="empty-state">Tidak ada antrian aktif.</div>':
+    aq.map(q=>`<div class="queue-row status-${q.status}" style="margin-bottom:8px;">
+      <div class="qr-num">${String(q.num).padStart(3,'0')}</div>
+      <div class="qr-info" style="flex:1;margin:0 10px;"><h4>${q.name} <span class="tag tag-${poliTag(q.poli)}">${q.poli}</span></h4>
+      <p><span class="tag tag-${q.status==='menunggu'?'menunggu':'dilayani'}">${q.status}</span> · ${q.payment}</p></div>
+    </div>`).join('');
+  const recent=[...records].sort((a,b)=>b.createdAt-a.createdAt).slice(0,5);
+  $('dash-recent').innerHTML=recent.length===0?'<div class="empty-state">Belum ada rekam medis.</div>':
+    recent.map(r=>`<div class="rm-record" style="margin-bottom:8px;">
+      <div class="rm-header">
+        <div><h4>${r.patientName} <span class="tag tag-${poliTag(r.poli)}">${r.poli}</span></h4>
+        <p style="font-size:0.72rem;color:var(--ink-soft);">${fmtDate(r.date)} · ${r.nakes||'-'}</p>
+        <p style="font-size:0.78rem;margin-top:2px;">${r.soap?.a||'—'}</p></div>
+        <span style="font-size:0.88rem;font-weight:700;color:var(--green);white-space:nowrap;">${fmt(r.fee||0)}</span>
+      </div>
+    </div>`).join('');
+}
+function renderRepKPI(){
+  const now=new Date();const mo=now.getMonth();const yr=now.getFullYear();
+  const moRecs=records.filter(r=>{const d=new Date(r.date);return d.getMonth()===mo&&d.getFullYear()===yr;});
+  const inc=moRecs.reduce((s,r)=>s+(r.fee||0),0);
+  $('rep-kpi').innerHTML=`
+    <div class="kpi-card hi"><div class="kv">${fmt(inc)}</div><div class="kl">Total Pendapatan</div></div>
+    <div class="kpi-card"><div class="kv">${moRecs.length}</div><div class="kl">Total Kunjungan</div></div>
+    <div class="kpi-card"><div class="kv">${moRecs.filter(r=>r.payment==='BPJS').length}</div><div class="kl">Pasien BPJS</div></div>
+    <div class="kpi-card"><div class="kv">${moRecs.filter(r=>r.payment!=='BPJS').length}</div><div class="kl">Umum & Asuransi</div></div>`;
+}
+function getFilteredRecs(){
+  const from=$('rep-from').value;const to=$('rep-to').value;const type=$('rep-type').value;
+  return records.filter(r=>{
+    if(from&&r.date<from)return false;if(to&&r.date>to)return false;
+    if(type==='all')return true;
+    if(type==='BPJS')return r.payment==='BPJS';
+    if(type==='Umum-pay')return r.payment==='Umum';
+    if(type==='Asuransi')return r.payment==='Asuransi';
+    return r.poli===type;
+  });
+}
+$('btn-export-xlsx').onclick=()=>{
+  const data=getFilteredRecs();
+  if(data.length===0){showToast('⚠️ Tidak ada data pada rentang ini.');return;}
+  const wb=XLSX.utils.book_new();
+  const d=new Date();const stamp=`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+  const rows=data.map(r=>({
+    'Tanggal':fmtDate(r.date),'No. RM':r.rmNo,'Nama Pasien':r.patientName,
+    'Usia':r.age||'-','Jenis Kelamin':r.gender||'-','Poli / Layanan':r.poli,
+    'Pembayaran':r.payment,'No. SEP':r.sepNo||'-','Tenaga Kesehatan':r.nakes||'-',
+    'S - Keluhan':r.soap?.s||'-',
+    'Vital Signs':[r.vitals?.td?'TD:'+r.vitals.td:'',r.vitals?.nadi?'N:'+r.vitals.nadi:'',r.vitals?.suhu?'S:'+r.vitals.suhu+'°C':''].filter(Boolean).join(' | ')||'-',
+    'O - Objektif':r.soap?.o||'-','A - Assessment':r.soap?.a||'-','P - Plan':r.soap?.p||'-',
+    'Tarif (Rp)':r.fee||0,'Catatan':r.note||''
+  }));
+  const ws=XLSX.utils.json_to_sheet(rows);
+  ws['!cols']=[{wch:12},{wch:16},{wch:22},{wch:8},{wch:12},{wch:18},{wch:10},{wch:16},{wch:20},{wch:30},{wch:24},{wch:25},{wch:28},{wch:30},{wch:12},{wch:25}];
+  XLSX.utils.book_append_sheet(wb,ws,'Kunjungan Pasien');
+  const polis=['Kebidanan / KIA','Bekam','Baby Spa','Akupuntur','Akupresur','Umum'];
+  const sumRows=polis.map(p=>{const pr=data.filter(r=>r.poli===p);return{'Poli':p,'Kunjungan':pr.length,'BPJS':pr.filter(r=>r.payment==='BPJS').length,'Umum':pr.filter(r=>r.payment==='Umum').length,'Asuransi':pr.filter(r=>r.payment==='Asuransi').length,'Total Tarif (Rp)':pr.reduce((s,r)=>s+(r.fee||0),0)};});
+  sumRows.push({'Poli':'TOTAL','Kunjungan':data.length,'BPJS':data.filter(r=>r.payment==='BPJS').length,'Umum':data.filter(r=>r.payment==='Umum').length,'Asuransi':data.filter(r=>r.payment==='Asuransi').length,'Total Tarif (Rp)':data.reduce((s,r)=>s+(r.fee||0),0)});
+  const ws2=XLSX.utils.json_to_sheet(sumRows);ws2['!cols']=[{wch:20},{wch:10},{wch:8},{wch:8},{wch:10},{wch:18}];
+  XLSX.utils.book_append_sheet(wb,ws2,'Rekap per Poli');
+  XLSX.writeFile(wb,`Laporan_Klinik_RSB_${stamp}.xlsx`);
+  showToast('✅ File Excel berhasil diunduh!');
+};
+$('btn-export-copy').onclick=()=>{
+  const data=getFilteredRecs();if(data.length===0){showToast('⚠️ Tidak ada data.');return;}
+  const inc=data.reduce((s,r)=>s+(r.fee||0),0);
+  const from=$('rep-from').value;const to=$('rep-to').value;
+  let txt=`*LAPORAN RSB KLINIK*\n`;
+  if(from||to)txt+=`Periode: ${from||'awal'} s/d ${to||'sekarang'}\n`;
+  txt+=`----------------------------\n`;
+  txt+=`Total Kunjungan : ${data.length} pasien\n`;
+  txt+=`BPJS            : ${data.filter(r=>r.payment==='BPJS').length} pasien\n`;
+  txt+=`Umum            : ${data.filter(r=>r.payment==='Umum').length} pasien\n`;
+  txt+=`Asuransi        : ${data.filter(r=>r.payment==='Asuransi').length} pasien\n`;
+  txt+=`----------------------------\n`;
+  txt+=`TOTAL TARIF     : Rp ${inc.toLocaleString('id-ID')}\n`;
+  navigator.clipboard.writeText(txt).then(()=>showToast('📋 Ringkasan disalin!')).catch(()=>showToast('Gagal menyalin.'));
+};
+function init(){
+  $('rm-date').value=today();
+  $('rep-from').value=new Date(new Date().getFullYear(),new Date().getMonth(),1).toISOString().split('T')[0];
+  $('rep-to').value=today();
+  renderDashboard();renderQueue();populateRMPatientSelect();renderRepKPI();
+}
+init();
+})();
+</script>
+</body>
+</html>

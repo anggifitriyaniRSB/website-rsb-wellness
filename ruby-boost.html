@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ruby Boost — RSB Wellness</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0008;--deep:#0e000b;
+  --ruby:#c0143c;--magenta:#9b1a6e;--berry:#7b0d5e;
+  --rose:#e8437a;--pink:#f472b6;--beet:#8b1a4a;
+  --cream:#fff5f8;--muted:rgba(255,245,248,0.5);
+  --glass:rgba(192,20,60,0.08);
+  --glow:rgba(192,20,60,0.35);--glow2:rgba(232,67,122,0.28);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--cream);font-family:"Inter",sans-serif;overflow-x:hidden;cursor:none}
+.cursor{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--pink);pointer-events:none;z-index:9999;mix-blend-mode:screen}
+.cursor-ring{position:fixed;width:36px;height:36px;border-radius:50%;border:1.5px solid rgba(244,114,182,0.45);pointer-events:none;z-index:9998;transition:transform 0.15s,width 0.3s,height 0.3s}
+.cursor-ring.h{width:54px;height:54px;opacity:0.4}
+#ruby-canvas{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:0.35}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:1.3rem 4rem;display:flex;align-items:center;justify-content:space-between;transition:background 0.4s}
+nav.scrolled{background:rgba(10,0,8,0.96);backdrop-filter:blur(18px);border-bottom:1px solid rgba(192,20,60,0.18)}
+.logo{font-family:"Playfair Display",serif;font-size:1.1rem;letter-spacing:0.18em;color:var(--pink);text-transform:uppercase;font-weight:600;text-decoration:none}
+.logo span{color:var(--cream)}
+.nav-links{display:flex;gap:2.8rem;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.74rem;letter-spacing:0.13em;text-transform:uppercase;transition:color 0.3s;font-weight:500}
+.nav-links a:hover{color:var(--pink)}
+.nav-cta{padding:0.55rem 1.5rem;border-radius:50px;background:linear-gradient(135deg,var(--ruby),var(--rose),var(--pink));color:white;font-size:0.74rem;font-weight:700;letter-spacing:0.08em;text-decoration:none;box-shadow:0 4px 20px var(--glow);transition:transform 0.2s,box-shadow 0.2s}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 8px 30px var(--glow)}
+
+/* HERO */
+#hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 75% at 65% 50%,rgba(192,20,60,0.16) 0%,rgba(155,26,110,0.08) 40%,transparent 65%),radial-gradient(ellipse 35% 45% at 20% 70%,rgba(123,13,94,0.1) 0%,transparent 60%);pointer-events:none}
+.hero-left{position:relative;z-index:10;padding:0 4rem;flex:1;max-width:580px}
+.hero-badge{display:inline-flex;align-items:center;gap:0.5rem;padding:0.38rem 1.1rem;border-radius:50px;border:1px solid rgba(232,67,122,0.4);background:rgba(192,20,60,0.08);font-size:0.67rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--rose);margin-bottom:1.6rem;opacity:0;animation:fadeUp 0.7s 0.2s forwards}
+.hero-badge::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--rose);animation:blink 2s infinite}
+.hero-title{font-family:"Playfair Display",serif;font-size:clamp(2.6rem,6vw,5.2rem);font-weight:700;line-height:1.0;opacity:0;animation:fadeUp 0.8s 0.4s forwards}
+.hero-title em{font-style:italic;color:var(--pink);display:block}
+.hero-title .sub{font-size:clamp(0.9rem,1.8vw,1.2rem);font-weight:400;color:var(--muted);display:block;margin-top:0.5rem;font-style:normal;letter-spacing:0.1em;text-transform:uppercase;font-family:"Inter",sans-serif}
+.hero-desc{margin-top:1.4rem;max-width:420px;font-size:0.92rem;color:var(--muted);line-height:1.82;font-weight:300;opacity:0;animation:fadeUp 0.8s 0.65s forwards}
+.hero-pills{display:flex;flex-wrap:wrap;gap:0.6rem;margin-top:1.5rem;opacity:0;animation:fadeUp 0.8s 0.8s forwards}
+.h-pill{padding:0.32rem 0.9rem;border-radius:50px;border:1px solid rgba(232,67,122,0.3);font-size:0.7rem;color:var(--rose);background:rgba(192,20,60,0.07)}
+.hero-actions{margin-top:2rem;display:flex;gap:1rem;align-items:center;opacity:0;animation:fadeUp 0.8s 0.95s forwards}
+.btn-ruby{padding:0.85rem 2.2rem;border-radius:50px;background:linear-gradient(135deg,var(--ruby),var(--rose),var(--pink));border:none;color:white;font-size:0.88rem;font-weight:700;letter-spacing:0.04em;cursor:none;box-shadow:0 0 35px var(--glow);transition:transform 0.2s,box-shadow 0.2s;text-decoration:none;display:inline-block}
+.btn-ruby:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 0 65px var(--glow)}
+.btn-outline{padding:0.85rem 2.2rem;border-radius:50px;border:1px solid rgba(232,67,122,0.35);color:var(--rose);font-size:0.88rem;font-weight:500;cursor:none;background:transparent;transition:border-color 0.3s,background 0.3s;text-decoration:none;display:inline-block}
+.btn-outline:hover{border-color:var(--pink);background:rgba(192,20,60,0.08)}
+.hero-right{position:relative;z-index:10;flex:1;display:flex;justify-content:center;align-items:center;padding:6rem 4rem 6rem 0}
+.bottle-wrapper{animation:heroFloat 5s ease-in-out infinite;position:relative}
+.bottle-glow{position:absolute;inset:-60px;background:radial-gradient(ellipse at center,rgba(192,20,60,0.3) 0%,rgba(155,26,110,0.14) 45%,transparent 68%);border-radius:50%;animation:pulseGlow 3.5s ease-in-out infinite;pointer-events:none}
+.bottle-img{width:min(260px,34vw);filter:drop-shadow(0 30px 70px rgba(192,20,60,0.6)) drop-shadow(0 0 40px rgba(244,114,182,0.2));border-radius:14px}
+.float-tag{position:absolute;background:rgba(10,0,8,0.92);border:1px solid rgba(232,67,122,0.28);border-radius:14px;padding:0.5rem 1rem;backdrop-filter:blur(12px);font-size:0.73rem;font-weight:500;animation:tagFloat 4s ease-in-out infinite;white-space:nowrap}
+.float-tag .tv{color:var(--pink);font-size:1rem;font-weight:700;font-family:"Playfair Display",serif;display:block}
+.ft-1{top:10%;right:-62%;animation-delay:0s}
+.ft-2{top:48%;left:-70%;animation-delay:1.5s}
+.ft-3{bottom:12%;right:-60%;animation-delay:2.8s}
+
+/* TICKER */
+.ticker{background:linear-gradient(90deg,#3d0020,#1a000f,#3d0020);padding:0.7rem 0;overflow:hidden;position:relative;z-index:5}
+.ticker-inner{display:flex;gap:3rem;animation:tickerScroll 22s linear infinite;white-space:nowrap}
+.ticker-item{font-size:0.68rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,245,248,0.72);flex-shrink:0}
+.ticker-sep{color:rgba(232,67,122,0.5)}
+
+/* STATS */
+#stats{padding:4.5rem 4rem;display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid rgba(192,20,60,0.14)}
+.stat-block{padding:2rem;border-right:1px solid rgba(192,20,60,0.1);text-align:center}
+.stat-block:last-child{border-right:none}
+.stat-num{font-family:"Playfair Display",serif;font-size:2.8rem;font-weight:700;color:var(--pink);line-height:1;display:block}
+.stat-unit{font-size:0.88rem;color:var(--rose)}
+.stat-label{font-size:0.7rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-top:0.4rem}
+.section-eyebrow{font-size:0.67rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--rose);margin-bottom:0.8rem}
+.section-heading{font-family:"Playfair Display",serif;font-size:clamp(1.8rem,3.5vw,3rem);font-weight:700;line-height:1.15}
+
+/* BLOOD BOOST METER - NITRAT INTERAKTIF */
+#nitrate{padding:6rem 4rem;background:var(--deep);display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.nitrate-visual{padding:2.5rem;border-radius:24px;background:var(--glass);border:1px solid rgba(192,20,60,0.22)}
+.nitrate-title{font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--rose);margin-bottom:1.8rem}
+.blood-flow{display:flex;flex-direction:column;gap:0.5rem;margin-bottom:1.5rem}
+.bf-label{font-size:0.72rem;color:var(--muted);margin-bottom:0.3rem}
+.bf-vessel{height:22px;border-radius:50px;background:rgba(192,20,60,0.1);overflow:hidden;position:relative;cursor:none}
+.bf-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--berry),var(--ruby),var(--rose),var(--pink));transition:width 1.5s cubic-bezier(0.4,0,0.2,1);position:relative;overflow:hidden}
+.bf-fill::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);animation:shimmer 2s infinite}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.bf-val{font-size:0.75rem;color:var(--pink);margin-top:0.3rem;text-align:right}
+.nitrate-toggle{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:1.5rem}
+.ntoggle{padding:0.38rem 1rem;border-radius:50px;border:1px solid rgba(232,67,122,0.3);background:transparent;color:var(--muted);font-size:0.72rem;cursor:none;transition:all 0.3s;font-family:"Inter",sans-serif}
+.ntoggle.active,.ntoggle:hover{background:rgba(192,20,60,0.15);border-color:var(--rose);color:var(--pink)}
+.nitrate-number{font-family:"Playfair Display",serif;font-size:4.5rem;color:var(--pink);line-height:1;text-align:center;margin-top:1rem}
+.nitrate-unit{text-align:center;font-size:0.8rem;color:var(--muted);margin-top:0.3rem}
+
+/* INGREDIENT EXPLORER */
+#ingredients{padding:6rem 4rem;background:var(--bg)}
+.ingr-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;margin-top:3rem}
+.ingr-tabs{display:flex;flex-direction:column;gap:0.5rem}
+.ingr-tab{padding:1.2rem 1.5rem;border-radius:16px;border:1px solid rgba(192,20,60,0.15);background:transparent;display:flex;align-items:center;gap:1rem;cursor:none;transition:all 0.35s;text-align:left;font-family:"Inter",sans-serif;color:var(--cream)}
+.ingr-tab:hover{border-color:rgba(232,67,122,0.4);background:rgba(192,20,60,0.06)}
+.ingr-tab.active{border-color:var(--rose);background:rgba(192,20,60,0.1);box-shadow:0 0 25px rgba(192,20,60,0.12)}
+.ingr-emoji{font-size:1.8rem;flex-shrink:0;width:48px;text-align:center}
+.ingr-tab-name{font-weight:600;font-size:0.9rem;color:var(--cream)}
+.ingr-tab-sub{font-size:0.72rem;color:var(--muted);margin-top:0.2rem}
+.ingr-detail{position:sticky;top:5rem;padding:2rem;border-radius:22px;background:var(--glass);border:1px solid rgba(192,20,60,0.2);min-height:390px}
+.ingr-detail-emoji{font-size:4rem;margin-bottom:1.2rem}
+.ingr-detail-name{font-family:"Playfair Display",serif;font-size:1.6rem;color:var(--pink);margin-bottom:0.5rem}
+.ingr-detail-origin{font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--rose);margin-bottom:1rem}
+.ingr-detail-desc{font-size:0.88rem;color:var(--muted);line-height:1.78;margin-bottom:1.2rem}
+.ingr-compounds{display:flex;flex-wrap:wrap;gap:0.5rem}
+.cpill{padding:0.28rem 0.85rem;border-radius:50px;border:1px solid rgba(232,67,122,0.3);font-size:0.7rem;color:var(--rose);background:rgba(192,20,60,0.07)}
+.ingr-bar-group{margin-top:1.5rem}
+.ibarlbl{display:flex;justify-content:space-between;font-size:0.72rem;margin-bottom:0.3rem;color:var(--cream)}
+.ibar{height:6px;border-radius:3px;background:rgba(192,20,60,0.1);overflow:hidden;margin-bottom:0.8rem}
+.ifill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--ruby),var(--pink));transition:width 0.9s cubic-bezier(0.4,0,0.2,1)}
+
+/* HEAT METER - JAHE INTERAKTIF */
+#heat{padding:6rem 4rem;background:var(--deep)}
+.heat-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.heat-thermometer{display:flex;flex-direction:column;align-items:center;gap:1.5rem}
+.thermo-wrap{position:relative;width:80px;height:280px}
+.thermo-tube{width:24px;height:220px;border-radius:12px;background:rgba(192,20,60,0.1);border:2px solid rgba(232,67,122,0.25);position:absolute;top:0;left:50%;transform:translateX(-50%);overflow:hidden}
+.thermo-mercury{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,var(--ruby),var(--rose),var(--pink));transition:height 1.2s cubic-bezier(0.4,0,0.2,1);border-radius:12px}
+.thermo-bulb{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--ruby),var(--rose));position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);box-shadow:0 0 20px var(--glow)}
+.thermo-scale{position:absolute;right:-40px;top:0;height:220px;display:flex;flex-direction:column;justify-content:space-between}
+.thermo-scale span{font-size:0.65rem;color:var(--muted)}
+.heat-label{font-size:0.8rem;color:var(--muted);text-align:center}
+.heat-big{font-family:"Playfair Display",serif;font-size:3rem;color:var(--pink);text-align:center;line-height:1}
+.heat-slider-wrap{flex:1;padding:2rem;border-radius:22px;background:var(--glass);border:1px solid rgba(192,20,60,0.2)}
+.hs-title{font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--rose);margin-bottom:1.5rem}
+.hs-label{display:flex;justify-content:space-between;font-size:0.75rem;margin-bottom:0.4rem;color:var(--cream)}
+input[type=range]{width:100%;-webkit-appearance:none;height:4px;border-radius:2px;background:rgba(192,20,60,0.2);outline:none;cursor:none;margin-bottom:1.2rem}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--rose);box-shadow:0 0 12px var(--glow);cursor:none}
+.hs-effect{padding:1rem 1.2rem;border-radius:14px;background:rgba(192,20,60,0.08);border-left:3px solid var(--ruby);font-size:0.82rem;color:var(--muted);line-height:1.65;margin-top:0.5rem;min-height:90px}
+.hs-compound{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1.2rem}
+
+/* QUIZ */
+#quiz{padding:6rem 4rem;background:var(--bg)}
+.quiz-wrap{max-width:680px;margin:3rem auto 0}
+.quiz-q{font-family:"Playfair Display",serif;font-size:1.5rem;margin-bottom:1.8rem;line-height:1.35;min-height:76px}
+.quiz-progress{display:flex;gap:0.4rem;margin-bottom:2rem}
+.quiz-dot{width:8px;height:8px;border-radius:50%;background:rgba(192,20,60,0.2);transition:background 0.3s}
+.quiz-dot.done{background:var(--rose)}
+.quiz-dot.active{background:var(--pink);box-shadow:0 0 10px var(--glow2)}
+.quiz-opts{display:grid;grid-template-columns:1fr 1fr;gap:0.9rem}
+.quiz-opt{padding:1rem 1.3rem;border-radius:16px;border:1px solid rgba(192,20,60,0.22);background:var(--glass);color:var(--cream);font-size:0.86rem;cursor:none;transition:all 0.3s;text-align:left;font-family:"Inter",sans-serif;line-height:1.4}
+.quiz-opt:hover{border-color:var(--rose);background:rgba(192,20,60,0.1);transform:translateY(-2px)}
+.quiz-opt.correct{border-color:#5cb85c;background:rgba(92,184,92,0.12);color:#a8e6ab}
+.quiz-opt.wrong{border-color:#e57373;background:rgba(229,115,115,0.1);color:#ffb3b3}
+.quiz-exp{margin-top:0.9rem;padding:0.85rem 1.2rem;border-radius:12px;background:rgba(139,26,74,0.12);border-left:3px solid var(--beet);font-size:0.78rem;color:var(--muted);line-height:1.65;display:none}
+.quiz-exp.show{display:block}
+.quiz-result{text-align:center;padding:2.5rem;border-radius:24px;background:var(--glass);border:1px solid rgba(192,20,60,0.22);display:none}
+.quiz-result.show{display:block}
+.quiz-score{font-family:"Playfair Display",serif;font-size:4rem;color:var(--pink);margin-bottom:0.5rem}
+.quiz-msg{font-size:0.92rem;color:var(--muted);line-height:1.7}
+.quiz-tip{margin-top:1.5rem;padding:1rem 1.5rem;border-radius:14px;background:rgba(192,20,60,0.07);border:1px solid rgba(192,20,60,0.2);font-size:0.83rem;color:var(--cream);line-height:1.65}
+.btn-restart{margin-top:1.5rem;padding:0.75rem 2rem;border-radius:50px;background:linear-gradient(135deg,var(--ruby),var(--rose));border:none;color:white;font-size:0.83rem;font-weight:700;cursor:none;font-family:"Inter",sans-serif}
+
+/* BENEFITS */
+#benefits{padding:6rem 4rem;background:var(--deep)}
+.ben-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-top:3rem}
+.ben-card{padding:2rem;border-radius:20px;background:rgba(192,20,60,0.05);border:1px solid rgba(192,20,60,0.13);transition:all 0.4s;position:relative;overflow:hidden;cursor:none}
+.ben-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(192,20,60,0.12),transparent 60%);opacity:0;transition:opacity 0.4s}
+.ben-card:hover{transform:translateY(-5px);border-color:rgba(232,67,122,0.5);box-shadow:0 20px 50px rgba(192,20,60,0.14)}
+.ben-card:hover::before{opacity:1}
+.ben-icon{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,var(--ruby),var(--rose));display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:1.2rem;box-shadow:0 6px 18px rgba(192,20,60,0.3)}
+.ben-card h3{font-size:0.9rem;font-weight:600;margin-bottom:0.45rem}
+.ben-card p{font-size:0.79rem;color:var(--muted);line-height:1.65}
+
+/* CARA MINUM */
+#howto{padding:6rem 4rem;background:var(--bg)}
+.howto-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-top:3rem}
+.how-card{padding:2rem 1.5rem;border-radius:20px;background:var(--glass);border:1px solid rgba(192,20,60,0.14);text-align:center;transition:all 0.35s;cursor:none}
+.how-card:hover{transform:translateY(-6px);border-color:rgba(244,114,182,0.5);box-shadow:0 20px 50px rgba(192,20,60,0.12)}
+.how-num{font-family:"Playfair Display",serif;font-size:3rem;font-weight:700;color:rgba(192,20,60,0.15);line-height:1;margin-bottom:0.8rem}
+.how-emoji{font-size:2rem;margin-bottom:0.8rem}
+.how-title{font-weight:600;font-size:0.88rem;margin-bottom:0.4rem;color:var(--pink)}
+.how-desc{font-size:0.77rem;color:var(--muted);line-height:1.6}
+
+/* TESTI */
+#testi{padding:6rem 4rem;background:var(--deep)}
+.testi-scroll{display:flex;gap:1.5rem;overflow-x:auto;padding-bottom:1rem;scrollbar-width:thin;scrollbar-color:var(--ruby) transparent;margin-top:3rem}
+.testi-scroll::-webkit-scrollbar{height:3px}
+.testi-scroll::-webkit-scrollbar-thumb{background:var(--rose);border-radius:99px}
+.testi-card{min-width:300px;max-width:300px;background:var(--glass);border:1px solid rgba(192,20,60,0.18);border-radius:20px;padding:1.8rem;flex-shrink:0;transition:transform 0.3s,border-color 0.3s;cursor:none}
+.testi-card:hover{transform:translateY(-4px);border-color:rgba(232,67,122,0.45)}
+.stars{color:var(--pink);letter-spacing:0.1em;font-size:0.85rem;margin-bottom:0.9rem}
+.testi-card blockquote{font-size:0.86rem;line-height:1.72;color:rgba(255,245,248,0.65);font-style:italic;margin-bottom:1.4rem}
+.testi-author{font-weight:600;font-size:0.78rem;color:var(--rose)}
+.testi-meta{font-size:0.68rem;color:var(--muted);margin-top:0.2rem}
+
+/* CTA */
+#cta{padding:8rem 4rem;text-align:center;background:linear-gradient(135deg,#080006,#0e000b,#060004);position:relative;overflow:hidden}
+#cta::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(192,20,60,0.2) 0%,transparent 65%)}
+#cta h2{font-family:"Playfair Display",serif;font-size:clamp(2rem,4.5vw,3.8rem);position:relative;z-index:1;line-height:1.1}
+#cta h2 em{color:var(--pink);font-style:italic}
+#cta p{margin-top:1rem;color:var(--muted);font-size:0.95rem;position:relative;z-index:1}
+.cta-btns{display:flex;gap:1rem;justify-content:center;margin-top:2.5rem;position:relative;z-index:1}
+footer{padding:2.5rem 4rem;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(192,20,60,0.1);color:rgba(255,245,248,0.25);font-size:0.72rem}
+footer span{color:var(--rose)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes heroFloat{0%,100%{transform:translateY(0)}40%{transform:translateY(-13px)}70%{transform:translateY(-6px)}}
+@keyframes pulseGlow{0%,100%{transform:scale(1);opacity:0.5}50%{transform:scale(1.1);opacity:0.9}}
+@keyframes tagFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+@keyframes tickerScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.8s ease,transform 0.8s ease}
+.reveal.visible{opacity:1;transform:none}
+.d1{transition-delay:0.1s}.d2{transition-delay:0.2s}.d3{transition-delay:0.3s}
+@media(max-width:920px){
+  nav{padding:1rem 1.5rem}.nav-links,.nav-cta{display:none}
+  #hero{flex-direction:column;padding-top:5rem}
+  .hero-left{padding:2rem 1.5rem;max-width:none;text-align:center}
+  .hero-pills,.hero-actions{justify-content:center}
+  .hero-desc{margin:1rem auto 0}
+  .hero-right{padding:2rem 1.5rem}
+  #stats{grid-template-columns:1fr 1fr;padding:3rem 1.5rem}
+  #nitrate,#heat{grid-template-columns:1fr}
+  #ingredients,#nitrate,#heat,#quiz,#benefits,#howto,#testi,#cta{padding:4rem 1.5rem}
+  .ingr-grid{grid-template-columns:1fr}
+  .ben-grid{grid-template-columns:1fr 1fr}
+  .howto-grid{grid-template-columns:1fr 1fr}
+  .quiz-opts{grid-template-columns:1fr}
+  .ft-1,.ft-2,.ft-3{display:none}
+  footer{flex-direction:column;gap:1rem;text-align:center}
+  .cta-btns{flex-direction:column;align-items:center}
+}
+@media(max-width:560px){.ben-grid,.howto-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<canvas id="ruby-canvas"></canvas>
+
+<nav id="navbar">
+  <a href="#" class="logo">RSB <span>Wellness</span></a>
+  <ul class="nav-links">
+    <li><a href="#nitrate">Nitrat Bit</a></li>
+    <li><a href="#ingredients">Bahan</a></li>
+    <li><a href="#heat">Heat Meter</a></li>
+    <li><a href="#quiz">Kuis</a></li>
+  </ul>
+  <a href="https://wa.me/6287791299376" class="nav-cta">Pesan Sekarang</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-left">
+    <div class="hero-badge">❤️ Cold Pressed Juice · Detoks & Boost</div>
+    <h1 class="hero-title">
+      <em>Ruby Boost</em>
+      Cold Pressed Juice
+      <span class="sub">Bit · Nanas · Jahe · Madu</span>
+    </h1>
+    <p class="hero-desc">Kekuatan bit merah + kepedasan jahe + kesegaran nanas + kelembutan madu — dipres dingin untuk mempertahankan nitrat alami, betalain, dan gingerol 100% aktif. Detoks, energi, dan imunitas dalam satu botol.</p>
+    <div class="hero-pills">
+      <span class="h-pill">🫀 Buah Bit</span>
+      <span class="h-pill">🍍 Nanas</span>
+      <span class="h-pill">🫚 Jahe</span>
+      <span class="h-pill">🍯 Madu</span>
+      <span class="h-pill">Zero Sugar Added</span>
+      <span class="h-pill">Zero Pengawet</span>
+    </div>
+    <div class="hero-actions">
+      <a href="https://wa.me/6287791299376" class="btn-ruby">Pesan via WhatsApp</a>
+      <a href="#nitrate" class="btn-outline">Lihat Nitrat Meter →</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div style="position:relative">
+      <div class="bottle-wrapper">
+        <div class="bottle-glow"></div>
+        <img src="1001371194.png" alt="Ruby Boost Cold Pressed Juice" class="bottle-img">
+        <div class="float-tag ft-1"><span class="tv">Betalain</span>Antioksidan Terkuat</div>
+        <div class="float-tag ft-2"><span class="tv">Nitrat</span>Tekanan Darah Sehat</div>
+        <div class="float-tag ft-3"><span class="tv">Gingerol</span>Anti-Inflamasi Aktif</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item">Ruby Boost</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Buah Bit Merah</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Nitrat Alami</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Betalain Antioksidan</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Gingerol Jahe</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Cold Pressed</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">RSB Wellness</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Detoks & Energi</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Ruby Boost</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Buah Bit Merah</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Nitrat Alami</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Betalain Antioksidan</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Gingerol Jahe</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Cold Pressed</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">RSB Wellness</span><span class="ticker-sep">✦</span>
+    <span class="ticker-item">Detoks & Energi</span><span class="ticker-sep">✦</span>
+  </div>
+</div>
+
+<section id="stats">
+  <div class="stat-block reveal"><span class="stat-num">4</span><div class="stat-unit">Bahan Super</div><div class="stat-label">Bit · Nanas · Jahe · Madu</div></div>
+  <div class="stat-block reveal d1"><span class="stat-num">0</span><div class="stat-unit">Tambahan</div><div class="stat-label">No Sugar · No Water · No Preserv.</div></div>
+  <div class="stat-block reveal d2"><span class="stat-num">250</span><div class="stat-unit">ml</div><div class="stat-label">Per Botol</div></div>
+  <div class="stat-block reveal d3"><span class="stat-num">3x</span><div class="stat-unit">Lebih Kuat</div><div class="stat-label">Antioksidan vs Jus Biasa</div></div>
+</section>
+
+<!-- NITRAT METER INTERAKTIF -->
+<section id="nitrate">
+  <div class="reveal">
+    <p class="section-eyebrow">Ilmu di Balik Bit</p>
+    <h2 class="section-heading">Nitrat Alami —<br><em style="color:var(--pink);font-style:italic">Rahasia Bit Merah</em></h2>
+    <p style="color:var(--muted);font-size:0.9rem;line-height:1.82;margin-top:1.2rem">Buah bit adalah salah satu sumber nitrat alami tertinggi di dunia. Di dalam tubuh, nitrat diubah menjadi nitric oxide (NO) yang melebarkan pembuluh darah, menurunkan tekanan darah, dan meningkatkan aliran oksigen ke otot. Efeknya: energi meledak, stamina lebih lama, dan otak lebih fokus.</p>
+    <p style="color:var(--muted);font-size:0.88rem;line-height:1.75;margin-top:1rem">Bit juga mengandung <strong style="color:var(--pink)">betalain</strong> — pigmen merah-ungu yang menjadi antioksidan paling unik di alam. Betalain tidak ditemukan di bahan makanan lain selain bit dan beberapa kaktus.</p>
+  </div>
+  <div class="reveal d1">
+    <div class="nitrate-visual">
+      <div class="nitrate-title">Perbandingan Aliran Darah & Oksigen</div>
+      <div class="blood-flow">
+        <div class="bf-label" id="bfLabel1">Aliran Darah (Tanpa Ruby Boost)</div>
+        <div class="bf-vessel"><div class="bf-fill" id="bfFill1" style="width:0" data-w="42"></div></div>
+        <div class="bf-val" id="bfVal1">42%</div>
+      </div>
+      <div class="blood-flow">
+        <div class="bf-label" id="bfLabel2">Aliran Darah (Dengan Ruby Boost)</div>
+        <div class="bf-vessel"><div class="bf-fill" id="bfFill2" style="width:0" data-w="78"></div></div>
+        <div class="bf-val" id="bfVal2">78%</div>
+      </div>
+      <div class="blood-flow" style="margin-top:0.5rem">
+        <div class="bf-label" id="bfLabel3">Kadar Nitric Oxide Darah</div>
+        <div class="bf-vessel"><div class="bf-fill" id="bfFill3" style="width:0" data-w="85"></div></div>
+        <div class="bf-val" id="bfVal3">+85% vs baseline</div>
+      </div>
+      <div class="nitrate-number" id="nitrateNum">250</div>
+      <div class="nitrate-unit" id="nitrateUnit">mg nitrat per 250ml — Ruby Boost RSB</div>
+      <div class="nitrate-toggle">
+        <button class="ntoggle active" onclick="setNitrate('ruby',this)">Ruby Boost</button>
+        <button class="ntoggle" onclick="setNitrate('bayam',this)">Bayam</button>
+        <button class="ntoggle" onclick="setNitrate('seledri',this)">Seledri</button>
+        <button class="ntoggle" onclick="setNitrate('selada',this)">Selada</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INGREDIENT EXPLORER -->
+<section id="ingredients">
+  <p class="section-eyebrow reveal">Komposisi Super</p>
+  <h2 class="section-heading reveal">4 Bahan Super,<br><em style="color:var(--pink);font-style:italic">Satu Powerhouse</em></h2>
+  <div class="ingr-grid">
+    <div class="ingr-tabs reveal" id="ingrTabs">
+      <button class="ingr-tab active" onclick="setIngr(0,this)">
+        <span class="ingr-emoji">🫀</span>
+        <div><div class="ingr-tab-name">Buah Bit Merah</div><div class="ingr-tab-sub">Raja nitrat & betalain</div></div>
+      </button>
+      <button class="ingr-tab" onclick="setIngr(1,this)">
+        <span class="ingr-emoji">🍍</span>
+        <div><div class="ingr-tab-name">Nanas Segar</div><div class="ingr-tab-sub">Bromelain & Vitamin C</div></div>
+      </button>
+      <button class="ingr-tab" onclick="setIngr(2,this)">
+        <span class="ingr-emoji">🫚</span>
+        <div><div class="ingr-tab-name">Jahe Segar</div><div class="ingr-tab-sub">Gingerol & anti-inflamasi</div></div>
+      </button>
+      <button class="ingr-tab" onclick="setIngr(3,this)">
+        <span class="ingr-emoji">🍯</span>
+        <div><div class="ingr-tab-name">Madu Murni</div><div class="ingr-tab-sub">Penyeimbang & antioksidan</div></div>
+      </button>
+    </div>
+    <div class="ingr-detail reveal d1" id="ingrDetail"></div>
+  </div>
+</section>
+
+<!-- HEAT METER - JAHE -->
+<section id="heat">
+  <p class="section-eyebrow reveal">Kekuatan Jahe</p>
+  <h2 class="section-heading reveal">Heat Meter —<br><em style="color:var(--pink);font-style:italic">Ukur Intensitas Gingerol</em></h2>
+  <div class="heat-grid">
+    <div class="heat-thermometer reveal">
+      <div class="thermo-wrap">
+        <div class="thermo-tube">
+          <div class="thermo-mercury" id="thermoMercury" style="height:0%"></div>
+        </div>
+        <div class="thermo-bulb"></div>
+        <div class="thermo-scale">
+          <span>Kuat</span><span></span><span>Sedang</span><span></span><span>Ringan</span>
+        </div>
+      </div>
+      <div class="heat-big" id="heatNum">5g</div>
+      <div class="heat-label" id="heatLabel">Jahe per 250ml</div>
+    </div>
+    <div class="heat-slider-wrap reveal d1">
+      <div class="hs-title">Sesuaikan Intensitas Jahe</div>
+      <div class="hs-label"><span>Ringan</span><span id="sliderVal">5g Jahe</span><span>Kuat</span></div>
+      <input type="range" id="gingerSlider" min="1" max="10" value="5" oninput="updateHeat(this.value)">
+      <div class="hs-effect" id="hsEffect"></div>
+      <div class="hs-compound" id="hsCompound"></div>
+    </div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz">
+  <div style="text-align:center" class="reveal">
+    <p class="section-eyebrow">Interaktif</p>
+    <h2 class="section-heading" style="max-width:none">Seberapa Kenal<br><em style="color:var(--pink);font-style:italic">Kamu dengan Ruby Boost?</em></h2>
+    <p style="color:var(--muted);font-size:0.86rem;margin-top:0.8rem">5 pertanyaan · temukan program detoks personalmu</p>
+  </div>
+  <div class="quiz-wrap">
+    <div class="quiz-progress" id="qProg"></div>
+    <div class="quiz-q" id="qText"></div>
+    <div class="quiz-opts" id="qOpts"></div>
+    <div class="quiz-exp" id="qExp"></div>
+    <div class="quiz-result" id="qResult">
+      <div class="quiz-score" id="qScore"></div>
+      <div class="quiz-msg" id="qMsg"></div>
+      <div class="quiz-tip" id="qTip"></div>
+      <button class="btn-restart" onclick="startQuiz()">Ulangi Kuis →</button>
+    </div>
+  </div>
+</section>
+
+<!-- BENEFITS -->
+<section id="benefits">
+  <p class="section-eyebrow reveal">Manfaat</p>
+  <h2 class="section-heading reveal">6 Alasan Ruby Boost<br><em style="color:var(--pink);font-style:italic">Adalah Superdrink-mu</em></h2>
+  <div class="ben-grid">
+    <div class="ben-card reveal"><div class="ben-icon">❤️</div><h3>Jantung & Tekanan Darah</h3><p>Nitrat bit diubah menjadi nitric oxide yang melebarkan pembuluh darah secara alami. Penelitian menunjukkan konsumsi rutin bit menurunkan tekanan darah sistolik hingga 4-10 mmHg.</p></div>
+    <div class="ben-card reveal d1"><div class="ben-icon">⚡</div><h3>Energi & Stamina</h3><p>Nitric oxide meningkatkan efisiensi penggunaan oksigen oleh otot hingga 16%. Efek: stamina lebih lama, kelelahan datang lebih lambat — ideal untuk pra-olahraga.</p></div>
+    <div class="ben-card reveal d2"><div class="ben-icon">🧠</div><h3>Fokus & Kognisi</h3><p>Aliran darah yang lebih baik ke otak meningkatkan kecepatan reaksi, konsentrasi, dan fungsi kognitif. Betalain juga melindungi sel saraf dari kerusakan oksidatif.</p></div>
+    <div class="ben-card reveal"><div class="ben-icon">🛡️</div><h3>Imunitas & Anti-Inflamasi</h3><p>Gingerol jahe adalah salah satu senyawa antiinflamasi alami terkuat. Bekerja sinergis dengan vitamin C nanas dan flavonoid madu untuk sistem imun yang kokoh.</p></div>
+    <div class="ben-card reveal d1"><div class="ben-icon">🫁</div><h3>Detoks Hati</h3><p>Betaine dalam bit mendukung proses metilasi dan detoksifikasi hati. Membantu hati memproses lemak, toksin, dan alkohol lebih efisien secara alami.</p></div>
+    <div class="ben-card reveal d2"><div class="ben-icon">✨</div><h3>Kulit & Anti-Aging</h3><p>Betalain adalah antioksidan unik yang melawan radikal bebas 3x lebih kuat dari Vitamin C. Mengurangi peradangan kulit, mendukung produksi kolagen, dan memperlambat penuaan sel.</p></div>
+  </div>
+</section>
+
+<!-- CARA MINUM -->
+<section id="howto">
+  <div style="text-align:center" class="reveal">
+    <p class="section-eyebrow">Cara Konsumsi</p>
+    <h2 class="section-heading" style="max-width:none">4 Langkah untuk<br><em style="color:var(--pink);font-style:italic">Hasil Ruby Optimal</em></h2>
+  </div>
+  <div class="howto-grid">
+    <div class="how-card reveal"><div class="how-num">01</div><div class="how-emoji">🔄</div><div class="how-title">Kocok Dahulu</div><div class="how-desc">Endapan merah-ungu di dasar adalah betalain murni — justru yang paling bergizi. Kocok lembut agar tercampur sempurna sebelum diminum.</div></div>
+    <div class="how-card reveal d1"><div class="how-num">02</div><div class="how-emoji">🏃</div><div class="how-title">30 Menit Pra-Olahraga</div><div class="how-desc">Untuk stamina optimal, minum 30-60 menit sebelum olahraga. Nitrat membutuhkan 1-2 jam untuk puncak konversi nitric oxide dalam tubuh.</div></div>
+    <div class="how-card reveal d2"><div class="how-num">03</div><div class="how-emoji">❄️</div><div class="how-title">Simpan Dingin & Segera</div><div class="how-desc">Habiskan 1-2 jam setelah dibuka. Tanpa pengawet, vitamin C dan enzim aktif segera berkurang setelah terpapar udara dan cahaya.</div></div>
+    <div class="how-card reveal d3"><div class="how-num">04</div><div class="how-emoji">📅</div><div class="how-title">Rutin 21 Hari</div><div class="how-desc">Efek penurunan tekanan darah dan peningkatan stamina terasa signifikan setelah 3 minggu konsumsi rutin. Mulai program Ruby Boostmu hari ini!</div></div>
+  </div>
+</section>
+
+<!-- TESTI -->
+<section id="testi">
+  <div style="display:flex;align-items:end;justify-content:space-between;flex-wrap:wrap;gap:1rem" class="reveal">
+    <div>
+      <p class="section-eyebrow">Apa Kata Mereka</p>
+      <h2 class="section-heading" style="max-width:none">Boosted Sudah<br>Terbukti</h2>
+    </div>
+    <p style="color:var(--muted);font-size:0.78rem">← Geser untuk lihat →</p>
+  </div>
+  <div class="testi-scroll">
+    <div class="testi-card"><div class="stars">★★★★★</div><blockquote>"Dokter saya kaget tekanan darah saya turun setelah rutin minum Ruby Boost 3 minggu. Dulu 140/90, sekarang sudah di 120/80. Rasa beet-nya enak, tidak langu sama sekali karena jahe dan nanas-nya."</blockquote><div class="testi-author">Pak Hendra</div><div class="testi-meta">Pegawai Negeri · Palangka Raya</div></div>
+    <div class="testi-card"><div class="stars">★★★★★</div><blockquote>"Sebagai atlet lari, Ruby Boost mengubah game saya. Pre-workout alami ini beneran kerasa — endurance meningkat, recovery lebih cepat. Sekarang ini jadi ritual sebelum setiap latihan."</blockquote><div class="testi-author">Faris Rahman</div><div class="testi-meta">Pelari Marathon · Banjarmasin</div></div>
+    <div class="testi-card"><div class="stars">★★★★★</div><blockquote>"Warnanya yang deep ruby bikin excited duluan sebelum minum! Dan rasanya surprisingly enak — manis madu, segar nanas, hangat jahe. Tidak ada rasa 'obat' sama sekali. Langsung repeat order!"</blockquote><div class="testi-author">Nada Putri</div><div class="testi-meta">Food Enthusiast · Jakarta</div></div>
+    <div class="testi-card"><div class="stars">★★★★★</div><blockquote>"Sudah 2 bulan konsumsi Ruby Boost pagi hari. Energi lebih stabil, tidak ngantuk di jam 2 siang lagi. Dan bonus yang tidak disangka: kulit terlihat lebih cerah dari dalam!"</blockquote><div class="testi-author">Bu Kartini</div><div class="testi-meta">Wirausaha · Sampit</div></div>
+    <div class="testi-card"><div class="stars">★★★★★</div><blockquote>"Cold press-nya terasa — rasa bit-nya pure dan segar, tidak ada after taste langu yang biasanya bikin saya gak mau minum jus bit. Perpaduan dengan jahe dan madu itu genius!"</blockquote><div class="testi-author">dr. Andika S.</div><div class="testi-meta">Dokter & Gym Enthusiast · Surabaya</div></div>
+  </div>
+</section>
+
+<section id="cta">
+  <h2 class="reveal">Boost Dirimu dengan<br><em>Kekuatan Ruby</em></h2>
+  <p class="reveal">Fresh dibuat setiap hari — stok terbatas per batch.</p>
+  <div class="cta-btns reveal">
+    <a href="https://wa.me/6287791299376" class="btn-ruby" style="font-size:1rem;padding:1rem 3rem">💬 Pesan via WhatsApp</a>
+    <a href="#nitrate" class="btn-outline" style="font-size:1rem;padding:1rem 2.5rem">Lihat Nitrat Meter</a>
+  </div>
+</section>
+
+<footer>
+  <div>© 2025 <span>Rumah Sehat Bunda</span> · RSB Wellness · Palangka Raya</div>
+  <div>Ruby Boost · Cold Pressed · Bit · Nanas · Jahe · Madu · UMKM Binaan BI</div>
+</footer>
+
+<script>
+// CURSOR
+const cursor=document.getElementById("cursor"),ring=document.getElementById("cursorRing");
+let cx=0,cy=0,rx=0,ry=0;
+document.addEventListener("mousemove",e=>{cx=e.clientX;cy=e.clientY;cursor.style.left=cx-5+"px";cursor.style.top=cy-5+"px";});
+(function a(){rx+=(cx-rx)*0.1;ry+=(cy-ry)*0.1;ring.style.left=rx-18+"px";ring.style.top=ry-18+"px";requestAnimationFrame(a);})();
+document.querySelectorAll("a,button,.ben-card,.testi-card,.how-card,.ingr-tab").forEach(el=>{
+  el.addEventListener("mouseenter",()=>ring.classList.add("h"));
+  el.addEventListener("mouseleave",()=>ring.classList.remove("h"));
+});
+
+// RUBY PARTICLES
+(function(){
+  const c=document.getElementById("ruby-canvas"),ctx=c.getContext("2d");
+  let W,H,pts=[];
+  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;}
+  resize();window.addEventListener("resize",resize);
+  function pt(){return{x:Math.random()*W,y:H+20,r:1.5+Math.random()*7,vy:-(0.2+Math.random()*0.65),vx:(Math.random()-0.5)*0.3,a:0.06+Math.random()*0.22,rot:Math.random()*Math.PI*2,rotV:(Math.random()-0.5)*0.025};}
+  for(let i=0;i<60;i++){const p=pt();p.y=Math.random()*H;pts.push(p);}
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    pts.forEach((p,i)=>{
+      p.y+=p.vy;p.x+=p.vx;p.rot+=p.rotV;
+      ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);
+      const g=ctx.createRadialGradient(0,0,0,0,0,p.r);
+      g.addColorStop(0,`rgba(244,114,182,${p.a})`);
+      g.addColorStop(0.5,`rgba(192,20,60,${p.a*0.6})`);
+      g.addColorStop(1,`rgba(123,13,94,0)`);
+      ctx.beginPath();ctx.arc(0,0,p.r,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();ctx.restore();
+      if(p.y<-20)pts[i]=pt();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// NAVBAR
+window.addEventListener("scroll",()=>{document.getElementById("navbar").classList.toggle("scrolled",scrollY>60);});
+
+// NITRATE METER
+const nitrateData={
+  ruby:{num:"250",unit:"mg nitrat per 250ml — Ruby Boost RSB",bf1:"78%",bf2:"92%",bf3:"+85% vs baseline",w1:78,w2:92,w3:85,l1:"Aliran Darah (Dengan Ruby Boost)",l2:"Suplai O₂ ke Otot",l3:"Kadar Nitric Oxide Darah"},
+  bayam:{num:"180",unit:"mg nitrat per 100g — Bayam Segar",bf1:"58%",bf2:"68%",bf3:"+55% vs baseline",w1:58,w2:68,w3:55,l1:"Aliran Darah (Dengan Bayam)",l2:"Suplai O₂ ke Otot",l3:"Kadar Nitric Oxide Darah"},
+  seledri:{num:"120",unit:"mg nitrat per 100g — Seledri Segar",bf1:"48%",bf2:"52%",bf3:"+38% vs baseline",w1:48,w2:52,w3:38,l1:"Aliran Darah (Dengan Seledri)",l2:"Suplai O₂ ke Otot",l3:"Kadar Nitric Oxide Darah"},
+  selada:{num:"80",unit:"mg nitrat per 100g — Selada Hijau",bf1:"38%",bf2:"42%",bf3:"+22% vs baseline",w1:38,w2:42,w3:22,l1:"Aliran Darah (Dengan Selada)",l2:"Suplai O₂ ke Otot",l3:"Kadar Nitric Oxide Darah"}
+};
+function setNitrate(k,btn){
+  document.querySelectorAll(".ntoggle").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  const d=nitrateData[k];
+  document.getElementById("nitrateNum").textContent=d.num;
+  document.getElementById("nitrateUnit").textContent=d.unit;
+  document.getElementById("bfLabel1").textContent=d.l1;
+  document.getElementById("bfLabel2").textContent=d.l2;
+  document.getElementById("bfLabel3").textContent=d.l3;
+  document.getElementById("bfVal1").textContent=d.bf1;
+  document.getElementById("bfVal2").textContent=d.bf2;
+  document.getElementById("bfVal3").textContent=d.bf3;
+  document.getElementById("bfFill1").style.width=d.w1+"%";
+  document.getElementById("bfFill2").style.width=d.w2+"%";
+  document.getElementById("bfFill3").style.width=d.w3+"%";
+}
+const nitrateObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      setTimeout(()=>{
+        document.getElementById("bfFill1").style.width="78%";
+        document.getElementById("bfFill2").style.width="92%";
+        document.getElementById("bfFill3").style.width="85%";
+      },300);
+      nitrateObs.unobserve(e.target);
+    }
+  });
+},{threshold:0.2});
+const nitSec=document.getElementById("nitrate");
+if(nitSec)nitrateObs.observe(nitSec);
+
+// INGREDIENT DATA
+const ingrData=[
+  {emoji:"🫀",name:"Buah Bit Merah",origin:"Beta vulgaris · Superfood Eropa",desc:"Bit adalah sumber nitrat alami tertinggi di antara semua sayuran — 250mg per 100g. Nitrat diubah tubuh menjadi nitric oxide (NO) yang melebarkan pembuluh darah, meningkatkan suplai oksigen, dan menurunkan tekanan darah. Betalain, pigmen merah-ungu eksklusif bit, adalah antioksidan yang 3x lebih kuat dari Vitamin C.",compounds:["Betalain","Nitrat Alami","Betaine","Folat","Mangan","Potassium"],bars:[["Nitrat Alami",95],["Betalain (Antioksidan)",90],["Folat",82],["Potassium",78]]},
+  {emoji:"🍍",name:"Nanas Segar",origin:"Ananas comosus · Buah Tropik",desc:"Nanas memberi kesegaran dan keseimbangan rasa pada Ruby Boost. Bromelain — enzim eksklusif nanas — bersifat antiinflamasi dan membantu mencerna protein. Vitamin C nanas melengkapi kerja betalain bit untuk perlindungan antioksidan ganda yang saling menguatkan.",compounds:["Bromelain","Vitamin C","Mangan","Serat","Beta-Karoten"],bars:[["Vitamin C",80],["Bromelain (Enzim)",85],["Anti-Inflamasi",78],["Penyeimbang Rasa",92]]},
+  {emoji:"🫚",name:"Jahe Segar",origin:"Zingiber officinale · Rimpang Asia",desc:"Jahe segar adalah jantung dari efek 'boost' Ruby Boost. Gingerol dan shogaol — senyawa aktif jahe — adalah antiinflamasi yang sudah digunakan ribuan tahun dalam pengobatan Ayurveda dan TCM. Meningkatkan termogenesis (pembakaran lemak), meredakan mual, dan memperlancar sirkulasi darah ke seluruh tubuh.",compounds:["Gingerol","Shogaol","Zingerone","Paradol","Minyak Atsiri"],bars:[["Antiinflamasi (Gingerol)",92],["Sirkulasi Darah",88],["Termogenesis",82],["Antimikroba",80]]},
+  {emoji:"🍯",name:"Madu Murni",origin:"Apis mellifera · Sari Bunga Alam",desc:"Madu menyeimbangkan kepedasan jahe dan rasa tanah dari bit menjadi harmoni rasa yang menyenangkan. Lebih dari sekadar pemanis — madu mengandung flavonoid, hydrogen peroxide alami, dan prebiotik yang mendukung kesehatan usus. Indeks glikemik lebih rendah dari gula putih.",compounds:["Flavonoid","Hydrogen Peroxide","Asam Glukonat","Vitamin B Kompleks","Prebiotik"],bars:[["Antioksidan",85],["Antimikroba",80],["Indeks GI Rendah",72],["Penyeimbang Rasa",95]]}
+];
+function setIngr(i,btn){
+  document.querySelectorAll(".ingr-tab").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  const d=ingrData[i];
+  document.getElementById("ingrDetail").innerHTML=`
+    <div class="ingr-detail-emoji">${d.emoji}</div>
+    <div class="ingr-detail-name">${d.name}</div>
+    <div class="ingr-detail-origin">${d.origin}</div>
+    <div class="ingr-detail-desc">${d.desc}</div>
+    <div class="ingr-compounds">${d.compounds.map(c=>`<span class="cpill">${c}</span>`).join("")}</div>
+    <div class="ingr-bar-group">${d.bars.map(b=>`<div class="ibarlbl"><span>${b[0]}</span></div><div class="ibar"><div class="ifill" style="width:0" data-w="${b[1]}"></div></div>`).join("")}</div>
+  `;
+  setTimeout(()=>{document.querySelectorAll(".ifill").forEach(f=>{f.style.width=f.dataset.w+"%";});},80);
+}
+setIngr(0,document.querySelector(".ingr-tab"));
+
+// HEAT METER
+const heatData={
+  1:{label:"1g Jahe — Sangat Ringan",pct:8,effect:"Hampir tidak terasa. Sedikit aroma jahe tanpa sensasi panas. Cocok untuk yang belum pernah minum jahe sebelumnya.",compounds:["Gingerol Ringan","Aroma Minyak Atsiri"]},
+  2:{label:"2g Jahe — Ringan",pct:18,effect:"Sedikit kehangatan di tenggorokan. Rasa jahe mulai muncul tapi sangat mild. Cocok untuk pemula.",compounds:["Gingerol Ringan","Zingerone"]},
+  3:{label:"3g Jahe — Mild",pct:28,effect:"Kehangatan lembut yang menyenangkan. Aroma jahe jelas terasa. Baik untuk pencernaan dan meredakan mual ringan.",compounds:["Gingerol","Zingerone","Shogaol Ringan"]},
+  4:{label:"4g Jahe — Mild-Medium",pct:38,effect:"Mulai terasa hangat di dada. Efek antiinflamasi mulai signifikan. Meningkatkan sirkulasi darah ringan.",compounds:["Gingerol","Shogaol","Zingerone"]},
+  5:{label:"5g Jahe — Medium (Ruby Boost RSB)",pct:50,effect:"⭐ Ini standar Ruby Boost RSB! Kehangatan seimbang — terasa nyaman dan menyegarkan. Gingerol pada level optimal untuk efek antiinflamasi, sirkulasi, dan termogenesis.",compounds:["Gingerol Optimal","Shogaol","Zingerone","Paradol"]},
+  6:{label:"6g Jahe — Medium-Kuat",pct:60,effect:"Panas mulai kuat di tenggorokan. Efek termogenesis jelas terasa. Berkeringat ringan setelah minum adalah hal normal.",compounds:["Gingerol Tinggi","Shogaol","Paradol","Minyak Atsiri"]},
+  7:{label:"7g Jahe — Kuat",pct:70,effect:"Sensasi panas kuat dan tahan lama. Efek antiinflamasi dan pembakaran lemak sangat signifikan. Hanya untuk yang terbiasa jahe.",compounds:["Gingerol Sangat Tinggi","Shogaol","Paradol"]},
+  8:{label:"8g Jahe — Sangat Kuat",pct:80,effect:"Panas intens — tidak disarankan untuk lambung sensitif. Efek termogenesis maksimal. Berkeringat adalah efek yang diharapkan.",compounds:["Gingerol Intensif","Shogaol Tinggi","Paradol"]},
+  9:{label:"9g Jahe — Ekstrem",pct:90,effect:"⚠️ Terlalu kuat untuk sebagian besar orang. Bisa menyebabkan iritasi lambung. Hanya untuk toleransi jahe yang sangat tinggi.",compounds:["Gingerol Ekstrem","Shogaol Tinggi"]},
+  10:{label:"10g Jahe — Maksimal",pct:100,effect:"⚠️ Tidak disarankan untuk konsumsi harian. Level jahe ini digunakan dalam pengobatan tradisional intensif, bukan minuman kesehatan sehari-hari.",compounds:["Gingerol Maksimal"]}
+};
+function updateHeat(v){
+  const d=heatData[v];
+  document.getElementById("sliderVal").textContent=v+"g Jahe";
+  document.getElementById("heatNum").textContent=v+"g";
+  document.getElementById("heatLabel").textContent=d.label;
+  document.getElementById("thermoMercury").style.height=d.pct+"%";
+  document.getElementById("hsEffect").textContent=d.effect;
+  document.getElementById("hsCompound").innerHTML=d.compounds.map(c=>`<span class="cpill">${c}</span>`).join("");
+}
+updateHeat(5);
+const heatObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      setTimeout(()=>{document.getElementById("thermoMercury").style.height="50%";},300);
+      heatObs.unobserve(e.target);
+    }
+  });
+},{threshold:0.2});
+const heatSec=document.getElementById("heat");
+if(heatSec)heatObs.observe(heatSec);
+
+// QUIZ
+const qData=[
+  {q:"Senyawa apa dalam bit merah yang diubah tubuh menjadi nitric oxide?",opts:["Betaine","Nitrat Alami","Betalain","Folat"],ans:1,exp:"Bit mengandung nitrat inorganik (NO₃⁻) yang diubah oleh bakteri mulut dan tubuh menjadi nitrit (NO₂⁻), kemudian menjadi nitric oxide (NO). NO inilah yang melebarkan pembuluh darah dan meningkatkan aliran darah serta suplai oksigen ke otot."},
+  {q:"Apa keunikan betalain dalam bit yang tidak dimiliki antioksidan lain?",opts:["Betalain hanya ada dalam bit dan beberapa kaktus","Betalain bisa bertahan dalam panas tinggi","Betalain larut dalam lemak","Betalain mengandung kafein alami"],ans:0,exp:"Betalain adalah pigmen merah-ungu yang hanya ditemukan dalam Beta vulgaris (bit) dan beberapa kaktus seperti pitaya. Antioksidan ini tidak ditemukan pada buah atau sayuran lain manapun, menjadikan bit sumber eksklusifnya di dunia."},
+  {q:"Kapan waktu ideal minum Ruby Boost untuk performa olahraga?",opts:["Langsung sebelum olahraga (5 menit)","30-60 menit sebelum olahraga","Sesaat setelah selesai olahraga","Malam sebelum tidur"],ans:1,exp:"Nitrat membutuhkan waktu 1-3 jam untuk diubah menjadi nitric oxide dan mencapai puncak konsentrasi dalam darah. Minum 30-60 menit sebelum olahraga memberikan waktu optimal bagi tubuh untuk memproses nitrat menjadi NO yang aktif melebarkan pembuluh darah."},
+  {q:"Senyawa aktif jahe apa yang bertanggung jawab atas efek antiinflamasi dan rasa pedasnya?",opts:["Capsaicin","Gingerol","Quercetin","Curcumin"],ans:1,exp:"Gingerol adalah senyawa fenolik aktif utama dalam jahe segar. Saat jahe dikeringkan atau dipanaskan, gingerol berubah menjadi shogaol yang lebih kuat. Dalam cold press juice, gingerol tetap aktif dalam bentuk segarnya dan memberikan efek antiinflamasi yang optimal."},
+  {q:"Mengapa kombinasi bit + jahe + nanas + madu dalam Ruby Boost lebih efektif dari masing-masing bahan saja?",opts:["Karena rasanya lebih enak","Karena sinergisme — setiap bahan memperkuat efek bahan lain","Karena lebih murah diproduksi","Karena warnanya lebih menarik"],ans:1,exp:"Sinergisme fitokimia: Vitamin C nanas meningkatkan penyerapan betalain bit; gingerol jahe meningkatkan sirkulasi sehingga nutrisi lebih cepat terserap; madu mendukung kesehatan usus untuk penyerapan optimal. Kombinasi ini menciptakan efek yang jauh melebihi konsumsi masing-masing bahan secara terpisah."}
+];
+let qi=0,qs=0,qA=false;
+function startQuiz(){qi=0;qs=0;qA=false;document.getElementById("qResult").classList.remove("show");document.getElementById("qExp").classList.remove("show");renderQ();}
+function renderQ(){
+  const d=qData[qi];
+  document.getElementById("qProg").innerHTML=qData.map((_,i)=>`<div class="quiz-dot ${i<qi?"done":i===qi?"active":""}"></div>`).join("");
+  document.getElementById("qText").textContent=(qi+1)+". "+d.q;
+  document.getElementById("qOpts").innerHTML=d.opts.map((o,i)=>`<button class="quiz-opt" onclick="ansQ(${i})">${o}</button>`).join("");
+  document.getElementById("qExp").classList.remove("show");
+  qA=false;
+}
+function ansQ(i){
+  if(qA)return;qA=true;
+  const d=qData[qi];
+  document.querySelectorAll(".quiz-opt").forEach((b,idx)=>{
+    if(idx===d.ans)b.classList.add("correct");
+    else if(idx===i&&i!==d.ans)b.classList.add("wrong");
+    b.style.pointerEvents="none";
+  });
+  document.getElementById("qExp").textContent=d.exp;
+  document.getElementById("qExp").classList.add("show");
+  if(i===d.ans)qs++;
+  setTimeout(()=>{qi++;qi<qData.length?renderQ():showResult();},2300);
+}
+function showResult(){
+  document.getElementById("qOpts").innerHTML="";document.getElementById("qText").textContent="";
+  document.getElementById("qProg").innerHTML=qData.map(()=>`<div class="quiz-dot done"></div>`).join("");
+  document.getElementById("qExp").classList.remove("show");
+  const tier=qs<=1?0:qs<=3?1:2;
+  const data=[
+    ["Ruby Newbie 🌱","Mulai dengan 1 botol per hari selama 7 hari pertama. Minum pagi hari setelah sarapan ringan agar tubuh beradaptasi dengan nitrat dan gingerol."],
+    ["Ruby Explorer ❤️","Coba rutinkan 250ml setiap pagi, khususnya 30 menit sebelum olahraga. Dalam 3 minggu kamu akan merasakan perbedaan stamina yang nyata."],
+    ["Ruby Master 💎","Kamu paham ilmu di balik Ruby Boost dengan sangat baik! Coba kombinasi: Ruby Boost pagi (pre-workout) + Kombucha sore (probiotik) untuk kesehatan holistik optimal."]
+  ];
+  document.getElementById("qScore").textContent=qs+"/"+qData.length;
+  document.getElementById("qMsg").textContent=data[tier][0]+" — Skor "+qs+" dari "+qData.length;
+  document.getElementById("qTip").textContent="❤️ "+data[tier][1];
+  document.getElementById("qResult").classList.add("show");
+}
+startQuiz();
+
+// BEN CARD GLOW
+document.querySelectorAll(".ben-card").forEach(card=>{
+  card.addEventListener("mousemove",e=>{
+    const r=card.getBoundingClientRect();
+    card.style.setProperty("--mx",((e.clientX-r.left)/r.width*100)+"%");
+    card.style.setProperty("--my",((e.clientY-r.top)/r.height*100)+"%");
+  });
+});
+
+// SCROLL REVEAL
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add("visible");});},{threshold:0.08});
+document.querySelectorAll(".reveal").forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
