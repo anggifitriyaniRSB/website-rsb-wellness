@@ -170,18 +170,6 @@
     background:var(--lavender); border-radius:999px; padding:6px 0; font-size:0.85rem;
   }
 
-  /* ---------- Radio Toggle Custom ---------- */
-  .radio-toggle-group { display:flex; gap:10px; margin-top:4px; }
-  .radio-toggle-label {
-    flex:1; text-align:center; padding:12px; border:1.5px solid var(--lavender);
-    background:var(--white); border-radius:var(--radius); font-size:0.86rem;
-    font-weight:600; color:var(--ink-soft); transition:all 0.2s ease; cursor:pointer;
-  }
-  .radio-toggle-group input[type="radio"] { display:none; }
-  .radio-toggle-group input[type="radio"]:checked + .radio-toggle-label {
-    background:var(--lavender-soft); border-color:var(--lavender-deep); color:var(--sage-dark); box-shadow:var(--shadow-sm);
-  }
-
   /* ---------- Buttons ---------- */
   .btn{
     display:inline-flex; align-items:center; justify-content:center; gap:8px;
@@ -269,8 +257,6 @@
   .redflag-box h3 svg{ width:19px; height:19px; flex-shrink:0; }
   .redflag-box .rf-sub{ font-size:0.78rem; font-weight:700; color:var(--red-ink); margin-bottom:4px; margin-top:10px; }
   .redflag-box .rf-sub:first-of-type{ margin-top:0; }
-  .redflag-box .rf-bullet-list { padding-left: 14px; list-style-type: disc; margin-bottom: 6px; }
-  .redflag-box .rf-bullet-list li { font-size:0.81rem; line-height:1.45; color:var(--red-ink); margin-bottom: 3px; }
   .redflag-box p.rf-text{ font-size:0.81rem; line-height:1.5; color:var(--red-ink); }
   .redflag-box .action-text{ font-size:0.81rem; font-weight:700; color:var(--red); margin:12px 0 10px; line-height:1.45; }
   .redflag-box .emergency-btn{
@@ -331,6 +317,108 @@
   }
   .cta-banner .wa-btn svg{ width:14px; height:14px; }
 
+  /* ---------- Pregnancy Age Calculator ---------- */
+  .ga-card{
+    background:linear-gradient(145deg, var(--sage-dark) 0%, #2C3A30 100%);
+    border-radius:var(--radius-lg); padding:20px; margin-bottom:16px; color:#fff;
+    box-shadow:var(--shadow-md);
+  }
+  .ga-card .ga-eyebrow{ font-size:0.67rem; text-transform:uppercase; letter-spacing:1.3px; opacity:.75; font-weight:700; margin-bottom:14px; }
+  .ga-input-row{ display:flex; gap:10px; align-items:flex-end; margin-bottom:16px; }
+  .ga-input-row .field{ flex:1; margin-bottom:0; }
+  .ga-input-row .field label{ color:rgba(255,255,255,.85); font-size:0.77rem; }
+  .ga-input-row .field input{
+    background:rgba(255,255,255,.14); border:1.5px solid rgba(255,255,255,.3); color:#fff;
+    border-radius:var(--radius); padding:11px 13px; font-size:0.9rem; width:100%;
+  }
+  .ga-input-row .field input:focus{ outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(212,175,55,.22); }
+  .ga-input-row .field input::placeholder{ color:rgba(255,255,255,.45); }
+  .ga-btn-calc{
+    flex-shrink:0; background:var(--gold); color:#fff; border:none; cursor:pointer;
+    padding:11px 16px; border-radius:var(--radius); font-weight:700; font-size:0.84rem;
+    font-family:inherit; white-space:nowrap; box-shadow:0 4px 14px rgba(212,175,55,.38);
+    transition:transform .15s;
+  }
+  .ga-btn-calc:active{ transform:scale(0.96); }
+  .ga-result{ display:none; animation:fadeIn .3s ease; }
+  .ga-result.show{ display:block; }
+  .ga-main-number{
+    display:flex; align-items:baseline; gap:6px; margin-bottom:4px;
+    font-family:var(--font-display);
+  }
+  .ga-weeks{ font-size:3.2rem; font-weight:700; line-height:1; color:var(--gold); }
+  .ga-weeks-label{ font-size:1rem; opacity:.85; }
+  .ga-days-extra{ font-size:1.1rem; font-weight:600; opacity:.9; }
+  .ga-days-label{ font-size:0.85rem; opacity:.75; }
+  .ga-sub-row{ display:flex; gap:10px; margin-top:10px; flex-wrap:wrap; }
+  .ga-chip{
+    background:rgba(255,255,255,.14); border-radius:999px; padding:7px 14px;
+    font-size:0.77rem; font-weight:600; backdrop-filter:blur(4px);
+    border:1px solid rgba(255,255,255,.18); display:inline-flex; align-items:center; gap:6px;
+  }
+  .ga-chip .chip-dot{ width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .ga-chip.trimester-1 .chip-dot{ background:#A8C5AD; }
+  .ga-chip.trimester-2 .chip-dot{ background:var(--gold); }
+  .ga-chip.trimester-3 .chip-dot{ background:#D4806A; }
+  .ga-hpl{ font-size:0.82rem; opacity:.88; margin-top:8px; }
+  .ga-hpl strong{ color:var(--gold); font-weight:700; }
+  /* Progress bar */
+  .ga-progress-wrap{ margin-top:14px; }
+  .ga-progress-labels{ display:flex; justify-content:space-between; font-size:0.66rem; opacity:.7; margin-bottom:6px; }
+  .ga-progress-track{
+    height:8px; border-radius:999px; background:rgba(255,255,255,.16); overflow:hidden;
+    position:relative;
+  }
+  .ga-progress-fill{
+    height:100%; border-radius:999px;
+    background:linear-gradient(90deg, var(--gold) 0%, #E8C765 100%);
+    transition:width .6s cubic-bezier(.34,1.56,.64,1);
+  }
+  .ga-milestone-markers{ position:absolute; inset:0; pointer-events:none; }
+  .ga-milestone-markers span{
+    position:absolute; top:0; bottom:0; width:2px; background:rgba(255,255,255,.35);
+  }
+  .ga-progress-ticks{ display:flex; justify-content:space-between; font-size:0.62rem; opacity:.6; margin-top:5px; }
+  /* Milestone chips */
+  .ga-milestones{ display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
+  .ga-milestone-item{
+    font-size:0.73rem; padding:6px 12px; border-radius:999px;
+    border:1px solid rgba(255,255,255,.22); font-weight:500; line-height:1.3;
+    transition:background .2s;
+  }
+  .ga-milestone-item.past{ background:rgba(255,255,255,.1); opacity:.7; }
+  .ga-milestone-item.now{ background:var(--gold); border-color:var(--gold); color:#fff; font-weight:700; }
+  .ga-milestone-item.future{ background:transparent; opacity:.65; }
+
+  /* ---------- Goal Toggle (Promil vs Menunda) ---------- */
+  .goal-toggle-wrap{ margin-bottom:18px; }
+  .goal-toggle-label{ font-size:0.72rem; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:1.1px; margin-bottom:10px; }
+  .goal-toggle{ display:flex; gap:0; border-radius:var(--radius-lg); overflow:hidden; border:2px solid var(--lavender); background:var(--lavender); }
+  .goal-btn{
+    flex:1; padding:12px 10px; font-size:0.82rem; font-weight:700; text-align:center;
+    border:none; background:transparent; color:var(--ink-soft); cursor:pointer;
+    transition:background .2s, color .2s; border-radius:calc(var(--radius-lg) - 2px); line-height:1.3;
+    font-family:inherit;
+  }
+  .goal-btn .gb-icon{ display:block; font-size:1.28rem; margin-bottom:3px; }
+  .goal-btn.active.promil{ background:var(--sage); color:#fff; }
+  .goal-btn.active.tunda{ background:var(--lavender-deep); color:#fff; }
+  .goal-banner{
+    border-radius:var(--radius); padding:11px 14px; font-size:0.78rem; font-weight:600;
+    line-height:1.5; margin-top:10px; display:block;
+  }
+  .goal-banner.promil-banner{ background:#E8F2EA; color:var(--sage-dark); border:1px solid rgba(74,93,78,.2); }
+  .goal-banner.tunda-banner{ background:var(--lavender-soft); color:#5A4485; border:1px solid rgba(156,132,201,.3); }
+
+  /* ---------- Tanda Bahaya Kehamilan (collapsible) ---------- */
+  .rf-section{ margin-bottom:0; }
+  .rf-section:not(:first-child){ margin-top:14px; padding-top:14px; border-top:1px solid rgba(179,67,61,.2); }
+  .rf-section-title{ font-size:0.78rem; font-weight:700; color:var(--red-ink); margin-bottom:6px; display:flex; align-items:center; gap:6px; }
+  .rf-section-title svg{ width:15px; height:15px; flex-shrink:0; stroke:var(--red); }
+  .rf-list{ padding-left:2px; }
+  .rf-list li{ font-size:0.8rem; color:var(--red-ink); line-height:1.5; padding:3px 0 3px 18px; position:relative; }
+  .rf-list li::before{ content:'⚠'; position:absolute; left:0; font-size:0.7rem; top:4px; }
+
   /* ---------- Bottom tab bar ---------- */
   .tab-bar{
     display:flex; border-top:1px solid rgba(74,93,78,0.12); background:var(--white);
@@ -381,29 +469,35 @@
       <div class="panel-intro">
         <div class="eyebrow">Masa Subur &amp; Siklus</div>
         <h2>Kenali Ritme Tubuh Anda</h2>
-        <p>Catat Hari Pertama Haid Terakhir (HPHT) untuk melihat perkiraan siklus harian, peta masa subur, serta rancangan pola hidup yang sinkron dengan tujuan reproduksi Anda.</p>
+        <p>Catat Hari Pertama Haid Terakhir (HPHT) Anda untuk melihat perkiraan siklus, masa subur, dan dukungan yang sesuai untuk fase Anda saat ini.</p>
+      </div>
+
+      <!-- ===== GOAL TOGGLE ===== -->
+      <div class="goal-toggle-wrap">
+        <div class="goal-toggle-label">Tujuan Saya Saat Ini</div>
+        <div class="goal-toggle">
+          <button class="goal-btn promil active" id="btn-goal-promil" aria-pressed="true">
+            <span class="gb-icon">🌱</span>Program Hamil
+          </button>
+          <button class="goal-btn tunda" id="btn-goal-tunda" aria-pressed="false">
+            <span class="gb-icon">🛡️</span>Menunda Kehamilan
+          </button>
+        </div>
+        <div class="goal-banner promil-banner" id="goal-banner-promil">
+          💚 Anda sedang dalam <strong>program kehamilan</strong>. Panduan di bawah difokuskan untuk membantu Anda memaksimalkan peluang konsepsi secara alami.
+        </div>
+        <div class="goal-banner tunda-banner" id="goal-banner-tunda" style="display:none;">
+          💜 Anda sedang <strong>menunda kehamilan</strong>. Panduan di bawah akan membantu Anda memahami masa tidak subur dan metode yang tepat agar lebih tenang.
+        </div>
       </div>
 
       <div class="card">
         <h3 class="card-title">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18"/><path d="M8 2.5v4M16 2.5v4"/><circle cx="12" cy="14.5" r="2"/></svg>
-          Data Siklus & Tujuan Anda
+          Data Siklus Anda
         </h3>
-        
-        <!-- FITUR TERBARU: Pilihan Promil / Menunda Hamil -->
         <div class="field">
-          <label>Tujuan Reproduksi Saat Ini</label>
-          <div class="radio-toggle-group">
-            <input type="radio" id="goal-promil" name="user-goal" value="promil" checked>
-            <label for="goal-promil" class="radio-toggle-label">🎯 Program Hamil</label>
-            
-            <input type="radio" id="goal-tunda" name="user-goal" value="tunda">
-            <label for="goal-tunda" class="radio-toggle-label">🛡️ Menunda Kehamilan</label>
-          </div>
-        </div>
-
-        <div class="field">
-          <label for="hpht-input">Tanggal Hari Pertama Haid Terakhir (HPHT)</label>
+          <label for="hpht-input">Hari Pertama Haid Terakhir (HPHT)</label>
           <input type="date" id="hpht-input">
         </div>
         <div class="field">
@@ -419,9 +513,6 @@
           Hitung Siklus Saya
         </button>
       </div>
-
-      <!-- Wadah Otomatis Jika Terdeteksi Kehamilan -->
-      <div id="pregnancy-auto-result"></div>
 
       <div id="siklus-hasil" style="display:none;">
         <div class="wheel-wrap">
@@ -464,47 +555,103 @@
           </div>
         </div>
 
-        <!-- Kartu Rekomendasi Edukasi yang Bersifat Dinamis -->
         <div class="reco-card phase-sage" id="reco-sage">
           <div class="reco-eyebrow">Fase Menstruasi &amp; PMS</div>
-          <h4>Saatnya Meredakan &amp; Menyeimbangkan</h4>
-          <ul class="tips-list" id="tips-sage-list">
-            <!-- Diisi via JavaScript -->
-          </ul>
-          <div class="product-box">
-            <div class="product-name">🌿 RSB Wellness — Varian Bawang Dayak</div>
-            <div class="product-desc">Diramu asli di Palangka Raya dari Bawang Dayak (Eleutherine palmifolia) pilihan, kaya akan antioksidan flavonoid alami yang secara tradisional dipercaya membantu meredakan ketidaknyamanan kram perut, membantu peluruhan darah haid secara bersih, serta menyeimbangkan hormon tubuh wanita.</div>
+          <h4 id="reco-sage-title">Saatnya Meredakan &amp; Menyeimbangkan</h4>
+          <!-- PROMIL content -->
+          <div class="reco-goal-content" data-goal="promil">
+            <ul class="tips-list">
+              <li>Gunakan momen ini untuk beristirahat dan memulihkan energi tubuh Anda.</li>
+              <li>Catat lama dan pola perdarahan — pola yang teratur adalah tanda rahim sehat untuk promil.</li>
+              <li>Konsumsi zat besi dari makanan (daging merah, bayam, kacang-kacangan) untuk mengganti darah yang hilang.</li>
+              <li>Mulai konsumsi asam folat (400 mcg/hari) sejak sekarang — idealnya 3 bulan sebelum berencana hamil.</li>
+            </ul>
+            <div class="product-box">
+              <div class="product-name">🌿 RSB Wellness — Varian Bawang Dayak</div>
+              <div class="product-desc">Secara tradisional dipercaya membantu keteraturan siklus haid dan keseimbangan hormon — fondasi penting sebelum memasuki program hamil aktif.</div>
+            </div>
+          </div>
+          <!-- TUNDA content -->
+          <div class="reco-goal-content" data-goal="tunda" style="display:none;">
+            <ul class="tips-list">
+              <li>Masa menstruasi adalah konfirmasi alami bahwa tidak terjadi kehamilan pada siklus ini.</li>
+              <li>Catat hari pertama haid setiap bulan — data ini krusial untuk menghitung masa tidak subur di siklus berikutnya.</li>
+              <li>Kompres hangat dan istirahat cukup untuk meredakan kram tanpa memerlukan obat berlebihan.</li>
+              <li>Diskusikan dengan Bidan RSB Wellness jika haid sangat tidak teratur — ini bisa memengaruhi keandalan metode kalender.</li>
+            </ul>
+            <div class="product-box">
+              <div class="product-name">🌿 RSB Wellness — Varian Bawang Dayak</div>
+              <div class="product-desc">Mendukung keteraturan siklus haid — siklus yang teratur membuat penghitungan masa tidak subur lebih dapat diandalkan.</div>
+            </div>
           </div>
         </div>
 
         <div class="reco-card phase-gold" id="reco-gold">
           <div class="reco-eyebrow">Fase Ovulasi &amp; Masa Subur</div>
-          <h4>Masa Subur Anda Sedang Berlangsung</h4>
-          <ul class="tips-list" id="tips-gold-list">
-            <!-- Diisi via JavaScript -->
-          </ul>
-          <div class="product-box">
-            <div class="product-name">🌺 RSB Wellness — Varian Rosella</div>
-            <div class="product-desc">Tinggi kandungan antosianin dan Vitamin C organik untuk menangkal paparan radikal bebas. Sangat baik digunakan sebagai antioksidan alami penunjang kesehatan organ reproduksi menjelang dan selama masa ovulasi.</div>
+          <h4 id="reco-gold-title">Jendela Subur Anda Sedang Terbuka</h4>
+          <!-- PROMIL content -->
+          <div class="reco-goal-content" data-goal="promil">
+            <ul class="tips-list">
+              <li>🎯 <strong>Ini jendela terbaik Anda!</strong> Hubungan suami-istri setiap 1–2 hari selama masa subur ini secara signifikan meningkatkan peluang konsepsi.</li>
+              <li>Perhatikan tanda ovulasi alami: lendir serviks bening seperti putih telur mentah adalah tanda paling akurat.</li>
+              <li>Posisi berbaring sejenak setelah hubungan dapat membantu sperma mencapai sel telur lebih efektif.</li>
+              <li>Kelola stres — hormon kortisol tinggi dapat menghambat atau menunda ovulasi.</li>
+              <li>Suami disarankan menjaga suhu skrotum normal (hindari celana terlalu ketat, bak air panas) untuk menjaga kualitas sperma.</li>
+            </ul>
+            <div class="product-box">
+              <div class="product-name">🌺 RSB Wellness — Varian Rosella</div>
+              <div class="product-desc">Kaya antioksidan antosianin dan Vitamin C yang secara tradisional dipercaya membantu melindungi kualitas sel telur dari paparan radikal bebas — dukungan alami untuk program hamil Anda.</div>
+            </div>
+          </div>
+          <!-- TUNDA content -->
+          <div class="reco-goal-content" data-goal="tunda" style="display:none;">
+            <ul class="tips-list">
+              <li>⚠️ <strong>Ini adalah periode paling berisiko</strong> bagi yang ingin menunda kehamilan. Kesuburan sedang di puncaknya.</li>
+              <li>Jika menggunakan metode kalender/pantang berkala, <strong>HINDARI hubungan suami-istri</strong> selama rentang masa subur ini.</li>
+              <li>Metode kalender saja memiliki tingkat kegagalan yang cukup tinggi — diskusikan metode pendukung (kondom, dll.) dengan Bidan.</li>
+              <li>Jika menggunakan kontrasepsi hormonal atau IUD, tetap minum/gunakan sesuai jadwal tanpa jeda.</li>
+            </ul>
+            <div class="product-box">
+              <div class="product-name">🌺 RSB Wellness — Varian Rosella</div>
+              <div class="product-desc">Antioksidan alami untuk menjaga kesehatan hormonal dan vitalitas tubuh Anda secara menyeluruh, terlepas dari pilihan kontrasepsi yang Anda gunakan.</div>
+            </div>
           </div>
         </div>
 
         <div class="reco-card phase-lavender" id="reco-lavender">
-          <div class="reco-eyebrow">Fase Luteal &amp; Pasca-Ovulasi</div>
-          <h4>Fase Tenang, Waktunya Menjaga Mood</h4>
-          <ul class="tips-list" id="tips-lavender-list">
-            <!-- Diisi via JavaScript -->
-          </ul>
-          <div class="product-box">
-            <div class="product-name">💜 RSB Wellness — Varian Telang</div>
-            <div class="product-desc">Ekstrak Bunga Telang dengan kandungan flavonoid tinggi, secara empiris dipercaya memberikan efek relaksasi pada sistem saraf pusat untuk mengurangi kecemasan ringan dan menjaga mood harian tetap stabil menjelang siklus berikutnya.</div>
+          <div class="reco-eyebrow">Fase Luteal &amp; Mood Swing</div>
+          <h4 id="reco-lavender-title">Fase Tenang, Waktunya Menjaga Mood</h4>
+          <!-- PROMIL content -->
+          <div class="reco-goal-content" data-goal="promil">
+            <ul class="tips-list">
+              <li>Ini adalah "masa tunggu" yang sering menjadi paling menantang secara emosional bagi yang sedang promil — dan itu sangat normal.</li>
+              <li>Gejala seperti payudara sensitif dan kelelahan di fase ini bisa menjadi tanda awal kehamilan <em>atau</em> gejala PMS biasa — keduanya terasa mirip secara fisik.</li>
+              <li>Jika siklus lebih panjang dari biasa, lakukan tes kehamilan setelah terlambat haid minimal 1–2 hari.</li>
+              <li>Kurangi konsumsi kafein dan alkohol sepenuhnya sebagai langkah antisipasi jika terjadi kehamilan.</li>
+            </ul>
+            <div class="product-box">
+              <div class="product-name">💜 RSB Wellness — Varian Telang</div>
+              <div class="product-desc">Kaya flavonoid yang secara tradisional dipercaya menenangkan sistem saraf dan menstabilkan mood — sangat membantu melewati "masa tunggu" promil dengan lebih tenang.</div>
+            </div>
+          </div>
+          <!-- TUNDA content -->
+          <div class="reco-goal-content" data-goal="tunda" style="display:none;">
+            <ul class="tips-list">
+              <li>Masa ini relatif aman untuk hubungan suami-istri jika siklus Anda teratur dan Anda sudah melewati masa subur.</li>
+              <li>Jika menggunakan metode KB suntik atau pil, pastikan tidak terlewat jadwal suntik/minum — ini masa krusial untuk konsistensi.</li>
+              <li>Gejala mood swing adalah hal normal — kelola dengan olahraga ringan, tidur cukup, dan waktu untuk diri sendiri.</li>
+              <li>Jika terlambat haid, lakukan tes kehamilan dan segera konsultasikan hasilnya dengan Bidan RSB Wellness.</li>
+            </ul>
+            <div class="product-box">
+              <div class="product-name">💜 RSB Wellness — Varian Telang</div>
+              <div class="product-desc">Menenangkan sistem saraf dan membantu menstabilkan mood secara alami — menemani hari-hari menjelang menstruasi berikutnya dengan lebih nyaman.</div>
+            </div>
           </div>
         </div>
-      </div>
 
       <div class="note-box">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M12 11v5"/></svg>
-        <span>Estimasi pada kalkulator ini bersifat edukatif berdasarkan rata-rata siklus umum dan tidak menggantikan diagnosis medis. Siklus menstruasi normal berkisar antara 21–35 hari dengan lama haid 3–7 hari. Konsultasikan ke Bidan jika siklus Anda tidak teratur.</span>
+        <span>Estimasi pada kalkulator ini bersifat edukatif berdasarkan rata-rata siklus dan tidak menggantikan diagnosis medis. Siklus setiap wanita dapat berbeda — untuk perencanaan kehamilan maupun pemilihan kontrasepsi, tetap konsultasikan dengan Bidan atau Dokter Anda.</span>
       </div>
     </section>
 
@@ -591,30 +738,120 @@
         <p>Rentang waktu kunjungan berikut mengikuti standar Buku KIA terbaru — fleksibel sebagai jendela waktu, bukan tanggal pasti, agar Anda tidak perlu cemas.</p>
       </div>
 
-      <!-- FITUR TERBARU: Penambahan Tanda Bahaya Kehamilan Komprehensif -->
+      <!-- ========== PREGNANCY AGE CALCULATOR CARD ========== -->
+      <div class="ga-card">
+        <div class="ga-eyebrow">🌿 Kalkulator Usia Kehamilan</div>
+        <div class="ga-input-row">
+          <div class="field">
+            <label for="ga-hpht-input">Hari Pertama Haid Terakhir (HPHT)</label>
+            <input type="date" id="ga-hpht-input" placeholder="yyyy-mm-dd">
+          </div>
+          <button class="ga-btn-calc" id="btn-hitung-ga">Hitung</button>
+        </div>
+        <div class="ga-result" id="ga-result-panel">
+          <div class="ga-main-number">
+            <span class="ga-weeks" id="ga-weeks">0</span>
+            <span class="ga-weeks-label">minggu</span>
+            <span class="ga-days-extra" id="ga-days-extra">0</span>
+            <span class="ga-days-label">hari</span>
+          </div>
+          <div class="ga-sub-row">
+            <span class="ga-chip" id="ga-trimester-chip">
+              <span class="chip-dot"></span>
+              <span id="ga-trimester-text">Trimester —</span>
+            </span>
+            <span class="ga-chip">
+              <span>📅</span>
+              <span id="ga-phase-text">—</span>
+            </span>
+          </div>
+          <p class="ga-hpl">Estimasi Hari Perkiraan Lahir (HPL): <strong id="ga-hpl-text">—</strong></p>
+          <!-- Progress bar -->
+          <div class="ga-progress-wrap">
+            <div class="ga-progress-labels">
+              <span>Minggu 1</span>
+              <span>Trimester 1</span>
+              <span>Trimester 2</span>
+              <span>Trimester 3</span>
+              <span>40 Minggu</span>
+            </div>
+            <div class="ga-progress-track">
+              <div class="ga-progress-fill" id="ga-progress-fill" style="width:0%"></div>
+              <div class="ga-milestone-markers">
+                <span style="left:32.5%"></span><!-- wk 13 end -->
+                <span style="left:65%"></span><!-- wk 26 end -->
+              </div>
+            </div>
+            <div class="ga-progress-ticks">
+              <span>0</span><span>10</span><span>20</span><span>30</span><span>40 mgg</span>
+            </div>
+          </div>
+          <!-- Milestones -->
+          <div class="ga-milestones" id="ga-milestones"></div>
+        </div>
+      </div>
+
       <div class="redflag-box">
         <h3>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 21h20L12 2z"/><path d="M12 9v5M12 17v.01"/></svg>
-          Tanda Bahaya (Red Flags)
+          Tanda Bahaya — Kenali &amp; Segera Bertindak
         </h3>
-        
-        <div class="rf-sub">1. Tanda Bahaya Masa Kehamilan</div>
-        <ul class="rf-bullet-list">
-          <li>Muntah terus-menerus hingga tubuh menjadi sangat lemas dan menolak makan.</li>
-          <li>Demam tinggi atau menggigil.</li>
-          <li>Bengkak pada kaki, tangan, atau wajah, yang disertai dengan sakit kepala hebat dan pandangan kabur (gejala preeklamsia).</li>
-          <li>Janin dirasakan kurang bergerak dibandingkan hari biasanya.</li>
-          <li>Perdarahan pada hamil muda atau hamil tua, ataupun keluarnya cairan ketuban sebelum waktunya.</li>
-        </ul>
 
-        <div class="rf-sub">2. Tanda Bahaya Ibu Nifas</div>
-        <p class="rf-text">Perdarahan hebat lewat jalan lahir, demam tinggi, cairan nifas (lochea) berbau busuk, pusing hebat disertai pandangan kabur, atau payudara bengkak, memerah, dan terasa sangat nyeri.</p>
-        
-        <div class="rf-sub">3. Tanda Bahaya Bayi Baru Lahir</div>
-        <p class="rf-text">Bayi tampak kuning (terutama < 24 jam pertama atau menyebar hingga kaki), malas menyusu/tidak mau menetek, tali pusat berbau busuk/bernanah/kemerahan di area sekitarnya, kejang, tubuh dingin, atau napas terasa sangat cepat dan merintih.</p>
-        
-        <p class="action-text">Jika menemukan salah satu tanda di atas, JANGAN MENUNGGU jadwal kunjungan rutin berikutnya. Segera datangi fasilitas kesehatan darurat atau hubungi kami melalui tombol di bawah.</p>
-        <a class="emergency-btn" href="https://wa.me/6287791299376?text=Halo%20Bidan%20RSB%20Wellness%2C%20ini%20kondisi%20DARURAT.%20Saya%20membutuhkan%20bantuan%20segera%20terkait%20gejala%20klinis%20saya." target="_blank" rel="noopener">
+        <!-- Tanda Bahaya Kehamilan -->
+        <div class="rf-section">
+          <div class="rf-section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+            Tanda Bahaya Ibu Hamil (Selama Kehamilan)
+          </div>
+          <ul class="rf-list">
+            <li>Perdarahan dari jalan lahir di usia kehamilan berapapun — baik sedikit maupun banyak.</li>
+            <li>Bengkak mendadak dan berat pada wajah, tangan, dan kaki, terutama disertai sakit kepala hebat.</li>
+            <li>Gangguan penglihatan mendadak: pandangan kabur, berbayang, atau melihat kilatan cahaya (tanda pre-eklampsia).</li>
+            <li>Nyeri perut atas (ulu hati) yang hebat dan tidak hilang — bukan kembung biasa.</li>
+            <li>Gerakan janin berkurang drastis atau tidak terasa sama sekali setelah usia kehamilan 28 minggu.</li>
+            <li>Keluar air ketuban (cairan bening/berbau amis) sebelum usia cukup bulan (sebelum 37 minggu).</li>
+            <li>Demam tinggi (≥38°C) yang tidak kunjung turun dengan kompres maupun obat.</li>
+            <li>Muntah sangat hebat dan terus-menerus hingga tidak bisa makan/minum sama sekali (hiperemesis).</li>
+            <li>Sesak napas mendadak yang tidak wajar untuk aktivitas ringan sehari-hari.</li>
+          </ul>
+        </div>
+
+        <!-- Tanda Bahaya Nifas -->
+        <div class="rf-section">
+          <div class="rf-section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            Tanda Bahaya Ibu Nifas (Pasca-Melahirkan)
+          </div>
+          <ul class="rf-list">
+            <li>Perdarahan hebat dari jalan lahir (membasahi lebih dari 2 pembalut bersalin per jam).</li>
+            <li>Demam tinggi (≥38°C) lebih dari 2 hari setelah persalinan — bisa menandakan infeksi nifas.</li>
+            <li>Pusing hebat, pandangan kabur, atau nyeri kepala luar biasa yang tidak membaik.</li>
+            <li>Luka jahitan perineum berbau, bernanah, atau terbuka kembali.</li>
+            <li>Payudara bengkak, merah, sangat nyeri, dan disertai demam (tanda mastitis).</li>
+            <li>Kaki bengkak satu sisi disertai nyeri dan hangat saat disentuh (kemungkinan trombosis).</li>
+            <li>Perasaan sangat sedih, menangis terus, tidak mau merawat bayi, atau pikiran menyakiti diri sendiri (Baby Blues berat / Postpartum Depression).</li>
+          </ul>
+        </div>
+
+        <!-- Tanda Bahaya BBL -->
+        <div class="rf-section">
+          <div class="rf-section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 1 4 4 4 4 0 0 1-1.5 3.1A6 6 0 0 1 18 15v1H6v-1a6 6 0 0 1 3.5-5.4A4 4 0 0 1 8 6a4 4 0 0 1 4-4z"/></svg>
+            Tanda Bahaya Bayi Baru Lahir
+          </div>
+          <ul class="rf-list">
+            <li>Bayi tampak kuning (ikterus) pada hari pertama atau kuning menyebar ke telapak tangan dan kaki.</li>
+            <li>Malas menyusu, tidak mau menetek, atau hisapan sangat lemah.</li>
+            <li>Tali pusat berbau tidak sedap, bernanah, atau sekitar pusat kemerahan dan mengeras.</li>
+            <li>Napas cepat (≥60x/menit), cuping hidung kembang-kempis, atau terdengar suara merintih saat bernapas.</li>
+            <li>Kejang atau gerakan tubuh yang tidak normal, mata berkedip-kedip berlebihan.</li>
+            <li>Bayi terlihat lemas, tidak responsif, atau kulit terasa sangat dingin/pucat/kebiruan.</li>
+            <li>Suhu tubuh bayi di luar rentang normal (&lt;36,5°C atau &gt;37,5°C).</li>
+          </ul>
+        </div>
+
+        <p class="action-text">Jika menemukan salah satu tanda di atas, <strong>JANGAN MENUNGGU</strong> jadwal kunjungan. Segera bawa ke faskes atau hubungi Bidan langsung.</p>
+        <a class="emergency-btn" href="https://wa.me/6287791299376?text=Halo%20Bidan%20RSB%20Wellness%2C%20ini%20kondisi%20DARURAT.%20Saya%2Fbayi%20saya%20mengalami%20tanda%20bahaya%20dan%20membutuhkan%20bantuan%20segera." target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.87.5 3.62 1.43 5.13L2 22l5.13-1.5a9.8 9.8 0 004.91 1.32h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm5.78 14.1c-.24.68-1.4 1.32-1.92 1.4-.49.08-1.1.11-1.78-.11-.41-.13-.93-.3-1.6-.59-2.82-1.22-4.66-4.04-4.8-4.23-.14-.19-1.15-1.53-1.15-2.91 0-1.39.73-2.07.99-2.35.26-.28.56-.35.75-.35.19 0 .38 0 .54.01.17.01.41-.07.64.49.24.58.81 1.99.88 2.14.07.14.12.31.02.5-.1.19-.15.31-.29.47-.14.17-.3.37-.43.5-.14.13-.28.28-.12.55.16.27.71 1.18 1.53 1.91 1.05.93 1.94 1.22 2.21 1.36.27.14.43.12.59-.05.16-.16.69-.8.87-1.08.18-.27.36-.22.6-.13.24.09 1.55.73 1.81.86.27.13.45.2.51.31.07.11.07.65-.17 1.33z"/></svg>
           Hubungi Darurat via WhatsApp
         </a>
@@ -702,25 +939,30 @@
   "use strict";
 
   /* =========================================================
-     0. STORAGE WRAPPER
+     0. STORAGE WRAPPER (graceful fallback)
+     Catatan: localStorage dapat gagal di lingkungan preview
+     ter-sandbox. Wrapper ini selalu menyimpan juga ke memori
+     in-memory sehingga fitur tetap berjalan walau localStorage
+     tidak tersedia, dan tetap memanfaatkan localStorage penuh
+     ketika file ini dijalankan/di-hosting di browser sungguhan.
   ========================================================= */
   const Store = {
     _mem:{},
     set(key, val){
       this._mem[key] = val;
-      try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){}
+      try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){ /* sandboxed env, ignore */ }
     },
     get(key, fallback=null){
       try{
         const raw = localStorage.getItem(key);
         if(raw !== null){ const parsed = JSON.parse(raw); this._mem[key] = parsed; return parsed; }
-      }catch(e){}
+      }catch(e){ /* ignore, fall through to memory */ }
       return (key in this._mem) ? this._mem[key] : fallback;
     }
   };
 
   /* =========================================================
-     1. UTILITIES & DATA
+     1. UTILITIES
   ========================================================= */
   const BULAN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 
@@ -797,50 +1039,6 @@
     return {cls:'', badge:'badge-upcoming', text:'Akan Datang'};
   }
 
-  // DATA REKOMENDASI DINAMIS (PROMIL VS TUNDA)
-  const DYNAMIC_TIPS = {
-    promil: {
-      sage: [
-        "Fokus utama: pembersihan rahim secara alami dan istirahat total.",
-        "Kompres hangat area perut bawah jika terdapat kram hebat.",
-        "Konsumsi nutrisi kaya zat besi (bayam, daging merah) untuk mengganti sediaan darah.",
-        "Hindari pemicu stres agar tidak mengganggu sinyal hormonal otak awal."
-      ],
-      gold: [
-        "PETA SUBUR TERBUKA: Lakukan hubungan seksual secara teratur di jendela tanggal ini (optimal 2 hari sekali).",
-        "Asup makanan kaya asam folat (alpukat, sayuran hijau) untuk menunjang kualitas sel telur.",
-        "Hindari berendam di air panas bagi suami agar kualitas sperma terjaga tetap prima.",
-        "Pertahankan mood positif dan pikiran yang rileks untuk memudahkan fertilisasi."
-      ],
-      lavender: [
-        "Fokus: persiapan dinding rahim (endometrium) untuk proses nidasi (penempelan janin).",
-        "Kurangi konsumsi kafein berlebih dan hindari angkat beban yang terlalu berat.",
-        "Lanjutkan aktivitas olahraga intensitas ringan/moderat (seperti jalan santai).",
-        "Kelola kecemasan 'tunggu garis dua' dengan latihan pernapasan atau meditasi ringan."
-      ]
-    },
-    tunda: {
-      sage: [
-        "Fokus utama: manajemen nyeri kram haid secara nyaman.",
-        "Perbanyak konsumsi air putih hangat dan hindari makanan terlalu asin.",
-        "Gunakan momen haid ini untuk mencatat keteraturan siklus bulanan Anda.",
-        "Jika menggunakan KB Pil, pastikan tetap diminum rutin pada jam yang sama."
-      ],
-      gold: [
-        "JENDELA SUBUR AKTIF: Tingkat risiko kehamilan sangat tinggi di fase ini.",
-        "Gunakan kontrasepsi pelapis (kondom) atau hindari hubungan seksual penetratif jika ingin perlindungan optimal.",
-        "Pastikan tidak ada keterlambatan jadwal suntik atau putus konsumsi pil KB.",
-        "Diskusikan alternatif kontrasepsi jangka panjang ke Bidan jika dirasa perlu."
-      ],
-      lavender: [
-        "Tubuh memasuki fase progesteron, rentan mengalami gejala PMS (mood swing/kembung).",
-        "Batasi asupan gula berlebih untuk mencegah perubahan suasana hati yang ekstrem.",
-        "Olahraga aerobik ringan secara teratur membantu meredakan ketegangan fisik.",
-        "Tetap catat jika muncul flek di luar jadwal siklus bulanan standar Anda."
-      ]
-    }
-  };
-
   /* =========================================================
      2. TAB NAVIGATION
   ========================================================= */
@@ -855,7 +1053,38 @@
   });
 
   /* =========================================================
-     3. TAB 1 — MASA SUBUR & SIKLUS (MODIFIED LOGIC)
+     2b. GOAL TOGGLE — Promil vs Menunda
+  ========================================================= */
+  let currentGoal = Store.get('userGoal', 'promil'); // persisted across sessions
+
+  function applyGoal(goal){
+    currentGoal = goal;
+    Store.set('userGoal', goal);
+
+    // Toggle button states
+    document.getElementById('btn-goal-promil').classList.toggle('active', goal === 'promil');
+    document.getElementById('btn-goal-promil').setAttribute('aria-pressed', goal === 'promil');
+    document.getElementById('btn-goal-tunda').classList.toggle('active', goal === 'tunda');
+    document.getElementById('btn-goal-tunda').setAttribute('aria-pressed', goal === 'tunda');
+
+    // Banners
+    document.getElementById('goal-banner-promil').style.display = goal === 'promil' ? 'block' : 'none';
+    document.getElementById('goal-banner-tunda').style.display  = goal === 'tunda'  ? 'block' : 'none';
+
+    // Switch content inside every reco-card
+    document.querySelectorAll('.reco-goal-content').forEach(el=>{
+      el.style.display = (el.dataset.goal === goal) ? 'block' : 'none';
+    });
+  }
+
+  document.getElementById('btn-goal-promil').addEventListener('click', ()=> applyGoal('promil'));
+  document.getElementById('btn-goal-tunda').addEventListener('click',  ()=> applyGoal('tunda'));
+
+  // Apply stored/default goal on load
+  applyGoal(currentGoal);
+
+  /* =========================================================
+     3. TAB 1 — MASA SUBUR & SIKLUS
   ========================================================= */
   const hphtInput = document.getElementById('hpht-input');
   const cycleRange = document.getElementById('cycle-length-range');
@@ -877,16 +1106,6 @@
     )`;
   }
 
-  function renderTipsList(elementId, tipsArray) {
-    const ul = document.getElementById(elementId);
-    ul.innerHTML = '';
-    tipsArray.forEach(tip => {
-      const li = document.createElement('li');
-      li.textContent = tip;
-      ul.appendChild(li);
-    });
-  }
-
   function hitungSiklus(){
     const hphtVal = hphtInput.value;
     if(!hphtVal){ showToast('Mohon isi tanggal HPHT terlebih dahulu.', 'error'); return; }
@@ -897,65 +1116,6 @@
     let daysSince = daysBetween(hpht, today);
     if(daysSince < 0){ showToast('Tanggal HPHT tidak boleh di masa depan.', 'error'); return; }
 
-    const goal = document.querySelector('input[name="user-goal"]:checked').value;
-
-    // ----------------=========================================
-    // INTEGRASI LOGIKA SKRINING PINTAR KEHAMILAN OTOMATIS
-    // ----------------=========================================
-    if (daysSince >= 35 && daysSince <= 290) { 
-      const gestWeeks = Math.floor(daysSince / 7);
-      const gestRemDays = daysSince % 7;
-      const eddDate = addDays(hpht, 280);
-
-      siklusHasil.style.display = 'none';
-      showToast('HPHT Anda berada dalam rentang estimasi gestasi kehamilan ✨', 'success');
-      
-      let pregResultBox = document.getElementById('pregnancy-auto-result');
-      if(!pregResultBox) {
-        pregResultBox = document.createElement('div');
-        pregResultBox.id = 'pregnancy-auto-result';
-        siklusHasil.parentNode.insertBefore(pregResultBox, siklusHasil.nextSibling);
-      }
-
-      pregResultBox.innerHTML = `
-        <div class="card" style="margin-top:2px; border: 2px solid var(--lavender-deep); background: var(--lavender-soft);">
-          <h3 class="card-title" style="color: var(--sage-dark);">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
-            Deteksi Usia Kehamilan Otomatis
-          </h3>
-          <p style="font-size:0.84rem; color:var(--ink); line-height:1.5; margin-bottom:12px;">
-            Berdasarkan data input HPHT Anda (${formatDateID(hpht)}), sistem mendeteksi siklus Anda sudah melewati batas normal bulanan dan mengarah pada tanda kehamilan.
-          </p>
-          <div style="background:var(--white); padding:14px; border-radius:var(--radius); border:1px solid rgba(156,132,201,0.25);">
-            <div style="font-size:0.75rem; color:var(--ink-soft); text-transform:uppercase; font-weight:700; letter-spacing:0.5px;">Tafsiran Usia Gestasi Kehamilan:</div>
-            <div style="font-size:1.45rem; font-weight:700; color:var(--sage-dark); margin:6px 0;">
-              ± ${gestWeeks} Minggu ${gestRemDays} Hari
-            </div>
-            <div style="font-size:0.8rem; color:var(--sage); font-weight:600; margin-top:6px; border-top:1px dashed rgba(74,93,78,0.15); padding-top:6px;">
-              Hari Perkiraan Lahir (HPL): ${formatDateID(eddDate)}
-            </div>
-          </div>
-          <button class="btn btn-primary" id="btn-pindah-anc" style="margin-top:14px;">
-            Lihat Jadwal Periksa Kunjungan (ANC) Anda ➔
-          </button>
-        </div>
-      `;
-
-      document.getElementById('btn-pindah-anc').addEventListener('click', () => {
-        document.getElementById('anc-hpht').value = hphtVal;
-        const tabVisitBtn = document.querySelector('[data-tab="panel-visit"]');
-        if(tabVisitBtn) tabVisitBtn.click();
-        document.getElementById('btn-hitung-anc').click();
-      });
-
-      return; 
-    }
-
-    // Jika input normal, bersihkan wadah deteksi kehamilan otomatis
-    const existingPregBox = document.getElementById('pregnancy-auto-result');
-    if(existingPregBox) existingPregBox.remove();
-
-    // JALUR SIKLUS NORMAL (KODE UTAMA DENGAN REKOMENDASI DINAMIS)
     const cycleIndex = Math.floor(daysSince / cycleLen);
     const currentCycleStart = addDays(hpht, cycleIndex * cycleLen);
     const cycleDay = daysSince - cycleIndex * cycleLen + 1;
@@ -981,12 +1141,7 @@
     else if(cycleDay > b2 && cycleDay <= b3){ phase = 'gold'; }
     else { phase = 'lavender'; }
 
-    // Suntik tips dinamis ke UI sesuai pilihan promil/tunda
-    renderTipsList('tips-sage-list', DYNAMIC_TIPS[goal].sage);
-    renderTipsList('tips-gold-list', DYNAMIC_TIPS[goal].gold);
-    renderTipsList('tips-lavender-list', DYNAMIC_TIPS[goal].lavender);
-
-    // Render wheel grafik sirkular
+    // Render wheel
     document.getElementById('wheel-ring').style.background = buildWheelGradient(b1,b2,b3,b4,cycleLen);
     const angle = (cycleDay - 1) / cycleLen * 360;
     document.getElementById('wheel-marker-wrap').style.transform = `rotate(${angle}deg)`;
@@ -996,17 +1151,17 @@
     const phaseTagEl = document.getElementById('wheel-phase-tag');
     const phaseMeta = {
       sage:{ text:'Menstruasi & PMS', bg:'var(--sage)' },
-      gold:{ text: goal === 'promil' ? 'Masa Subur (Optimal Hubungan)' : 'Masa Subur (Risiko Tinggi)', bg:'var(--gold)' },
+      gold:{ text:'Masa Subur', bg:'var(--gold)' },
       lavender:{ text:'Fase Tenang', bg:'var(--lavender-deep)' }
     };
     phaseTagEl.textContent = phaseMeta[phase].text;
     phaseTagEl.style.background = phaseMeta[phase].bg;
 
-    // Tulis teks estimasi rentang tanggal resmi
+    // Render text results
     document.getElementById('hasil-haid-berikutnya').textContent = formatDateID(nextPeriod);
     document.getElementById('hasil-masa-subur').textContent = formatRangeID(fertileStartDate, fertileEndDate);
 
-    // Tampilkan kartu edukasi yang relevan saja
+    // Render recommendation card
     ['sage','gold','lavender'].forEach(p=>{
       document.getElementById('reco-' + p).classList.toggle('show', p === phase);
     });
@@ -1062,7 +1217,7 @@
       const addDaysCount = type === 'suntik1' ? 30 : 90;
       const nextDate = addDays(lastDate, addDaysCount);
       const sisaHari = daysBetween(today, nextDate);
-      kbResultTitle.textContent = 'Jadwal Suntik KB Berikutnya';
+      kbResultTitle.textContent = type === 'suntik1' ? 'Jadwal Suntik KB Berikutnya' : 'Jadwal Suntik KB Berikutnya';
       kbResultDetail.textContent = `${formatDateID(nextDate)}` + (sisaHari >= 0 ? ` (${sisaHari} hari lagi)` : ' (sudah lewat — segera kembali ke Bidan)');
       currentKbCalc = { type, nextDate: nextDate, label: type === 'suntik1' ? 'KB Suntik 1 Bulan' : 'KB Suntik 3 Bulan' };
     } else {
@@ -1109,7 +1264,7 @@
 
   function fireNotif(title, body){
     if('Notification' in window && Notification.permission === 'granted'){
-      try{ new Notification(title, { body }); }catch(e){}
+      try{ new Notification(title, { body }); }catch(e){ /* some mobile browsers restrict this */ }
     }
   }
 
@@ -1122,7 +1277,7 @@
   btnAktifkanAlarm.addEventListener('click', async ()=>{
     if(!currentKbCalc){ showToast('Mohon lengkapi data KB Anda terlebih dahulu.', 'error'); return; }
     if(!('Notification' in window)){
-      showToast('Browser ini tidak mendukung notifikasi otomatis.', 'error');
+      showToast('Browser ini tidak mendukung notifikasi. Gunakan tombol "Tambah ke Kalender" sebagai gantinya.', 'error');
       return;
     }
     let permission = Notification.permission;
@@ -1130,7 +1285,7 @@
       permission = await Notification.requestPermission();
     }
     if(permission !== 'granted'){
-      kbAlarmStatus.textContent = 'Izin notifikasi ditolak. Silakan gunakan tombol kalender.';
+      kbAlarmStatus.textContent = 'Izin notifikasi tidak diberikan. Anda tetap dapat menggunakan tombol "Tambah ke Kalender" agar tidak lupa.';
       showToast('Izin notifikasi ditolak.', 'error');
       return;
     }
@@ -1143,6 +1298,14 @@
     startReminderLoop();
     kbAlarmStatus.textContent = '✅ Alarm pengingat aktif selama halaman ini terbuka di browser Anda.';
     showToast('Alarm pengingat berhasil diaktifkan!', 'success');
+  });
+
+  // Resume reminder loop on load if a config already exists
+  window.addEventListener('load', ()=>{
+    const cfg = Store.get('kbReminderConfig');
+    if(cfg && 'Notification' in window && Notification.permission === 'granted'){
+      startReminderLoop();
+    }
   });
 
   function pad(n){ return String(n).padStart(2,'0'); }
@@ -1175,7 +1338,7 @@
     setTimeout(()=>URL.revokeObjectURL(url), 2000);
   }
 
-  btnTambahKalender.addEventListener('click', () => {
+  btnTambahKalender.addEventListener('click', ()=>{
     if(!currentKbCalc){ showToast('Mohon lengkapi data KB Anda terlebih dahulu.', 'error'); return; }
     if(currentKbCalc.type === 'pil'){
       const [h,m] = currentKbCalc.pillTime.split(':').map(Number);
@@ -1258,7 +1421,7 @@
 
   const KF_SCHEDULE = [
     { code:'KF1', label:'KF 1', dayStart:1, dayEnd:2,  note:null },
-    { code:'KF2', label:'KF 2', dayStart:3, dayEnd:7,  note:'Direkomendasikan RSB Wellness Varian Bawang Dayak untuk membantu mempercepat involusi rahim pasca-melahirkan.' },
+    { code:'KF2', label:'KF 2', dayStart:3, dayEnd:7,  note:'Direkomendasikan RSB Wellness Varian Bawang Dayak untuk membantu mempercepat involusi rahim dan menyeimbangkan hormon pasca-melahirkan.' },
     { code:'KF3', label:'KF 3', dayStart:8, dayEnd:28, note:null },
     { code:'KF4', label:'KF 4', dayStart:29, dayEnd:42, note:null },
   ];
@@ -1314,6 +1477,95 @@
     document.getElementById('kf-divider').style.display = 'flex';
     document.getElementById('kn-divider').style.display = 'flex';
   });
+
+  /* =========================================================
+     6. PREGNANCY AGE CALCULATOR (Tab 3 — top card)
+  ========================================================= */
+  const GA_MILESTONES = [
+    { week:6,  label:'🫀 Detak Jantung' },
+    { week:10, label:'👁️ Fitur Wajah' },
+    { week:13, label:'✅ Akhir Trimester 1' },
+    { week:16, label:'🦴 Tulang Terbentuk' },
+    { week:20, label:'🔊 USG Anatomi' },
+    { week:24, label:'👂 Pendengaran Aktif' },
+    { week:28, label:'✅ Akhir Trimester 2' },
+    { week:32, label:'💪 Paru-paru Matang' },
+    { week:36, label:'🧠 Otak Berkembang' },
+    { week:40, label:'🎉 Cukup Bulan' },
+  ];
+
+  const gaHphtInput  = document.getElementById('ga-hpht-input');
+  const gaResultPanel = document.getElementById('ga-result-panel');
+  const gaWeeksEl    = document.getElementById('ga-weeks');
+  const gaDaysEl     = document.getElementById('ga-days-extra');
+  const gaTrimChip   = document.getElementById('ga-trimester-chip');
+  const gaTrimText   = document.getElementById('ga-trimester-text');
+  const gaPhaseText  = document.getElementById('ga-phase-text');
+  const gaHplText    = document.getElementById('ga-hpl-text');
+  const gaProgressEl = document.getElementById('ga-progress-fill');
+  const gaMilestones = document.getElementById('ga-milestones');
+
+  setMaxToday(gaHphtInput);
+
+  function trimesterInfo(weeks){
+    if(weeks < 14) return { label:'Trimester 1', cls:'trimester-1', color:'#A8C5AD', phase:'Organogenesis & Pembentukan Organ' };
+    if(weeks < 28) return { label:'Trimester 2', cls:'trimester-2', color:'#D4AF37', phase:'Pertumbuhan & Gerak Janin' };
+    if(weeks < 42) return { label:'Trimester 3', cls:'trimester-3', color:'#D4806A', phase:'Pematangan & Persiapan Lahir' };
+    return { label:'Cukup Bulan / Lebih', cls:'trimester-3', color:'#D4806A', phase:'Siap Persalinan' };
+  }
+
+  function hitungGA(){
+    const val = gaHphtInput.value;
+    if(!val){ showToast('Mohon isi tanggal HPHT terlebih dahulu.', 'error'); return; }
+    const hpht = parseDateInput(val);
+    const today = todayStripped();
+    const totalDays = daysBetween(hpht, today);
+    if(totalDays < 0){ showToast('Tanggal HPHT tidak boleh di masa depan.', 'error'); return; }
+
+    const weeks    = Math.floor(totalDays / 7);
+    const remDays  = totalDays % 7;
+    const hpl      = addDays(hpht, 280);
+    const progress = Math.min(100, (totalDays / 280) * 100);
+    const info     = trimesterInfo(weeks);
+
+    // Update big number
+    gaWeeksEl.textContent  = weeks;
+    gaDaysEl.textContent   = remDays + ' hari';
+
+    // Update trimester chip
+    gaTrimChip.className = 'ga-chip ' + info.cls;
+    gaTrimChip.querySelector('.chip-dot').style.background = info.color;
+    gaTrimText.textContent  = info.label;
+    gaPhaseText.textContent = info.phase;
+
+    // HPL
+    gaHplText.textContent = formatDateID(hpl);
+
+    // Progress bar
+    gaProgressEl.style.width = progress.toFixed(1) + '%';
+
+    // Milestones
+    gaMilestones.innerHTML = '';
+    GA_MILESTONES.forEach(ms=>{
+      const el = document.createElement('span');
+      el.className = 'ga-milestone-item';
+      if(weeks > ms.week){ el.classList.add('past'); }
+      else if(weeks === ms.week || (weeks < ms.week && ms.week - weeks <= 1)){ el.classList.add('now'); }
+      else { el.classList.add('future'); }
+      el.textContent = `${ms.label} (mgg ${ms.week})`;
+      gaMilestones.appendChild(el);
+    });
+
+    // Auto-sync: fill the ANC HPHT input so the user doesn't have to type it twice
+    const ancHphtEl = document.getElementById('anc-hpht');
+    if(ancHphtEl && !ancHphtEl.value){ ancHphtEl.value = val; }
+
+    gaResultPanel.classList.add('show');
+  }
+
+  document.getElementById('btn-hitung-ga').addEventListener('click', hitungGA);
+  // Also calculate on date change for instant feedback
+  gaHphtInput.addEventListener('change', hitungGA);
 
 })();
 </script>
