@@ -442,7 +442,7 @@ footer span{color:var(--honey)}
   <div class="reveal" style="text-align:center">
     <p class="section-eyebrow">Personalisasi</p>
     <h2 class="section-heading" style="max-width:none">Kalkulator Konsumsi<br><em>Idealmu</em></h2>
-    <p style="color:var(--muted);font-size:0.88rem;margin-top:1rem;max-width:500px;margin-left:auto;margin-right:auto">Temukan takaran dan jadwal minum kombucha yang paling tepat sesuai kondisi tubuh dan tujuanmu</p>
+    <p style="color:var(--muted);font-size:0.88rem;margin-top:1rem;max-width:540px;margin-left:auto;margin-right:auto">Temukan takaran dan jadwal minum kombucha yang paling tepat sesuai kondisi tubuh dan tujuanmu. Berat badan digunakan untuk menyesuaikan dosis dalam rentang yang direkomendasikan.</p>
   </div>
   <div class="calc-wrapper reveal reveal-d1">
     <div class="calc-row">
@@ -458,9 +458,9 @@ footer span{color:var(--honey)}
         <select class="calc-select" id="goalSelect" onchange="updateCalc()">
           <option value="digest">Kesehatan Pencernaan</option>
           <option value="immune">Tingkatkan Imunitas</option>
-          <option value="detox">Detoksifikasi</option>
+          <option value="detox">Mendukung Fungsi Hati</option>
           <option value="energy">Tingkatkan Energi</option>
-          <option value="sugar">Kontrol Gula Darah</option>
+          <option value="sugar">Pola Makan Sehat</option>
         </select>
       </div>
     </div>
@@ -470,7 +470,9 @@ footer span{color:var(--honey)}
         <select class="calc-select" id="stomachSelect" onchange="updateCalc()">
           <option value="normal">Normal / Sehat</option>
           <option value="sensitive">Agak Sensitif</option>
-          <option value="gastritis">Riwayat Gastritis</option>
+          <option value="gastritis_history">Riwayat Gastritis (Stabil)</option>
+          <option value="gastritis_active">Gastritis Aktif (ada keluhan)</option>
+          <option value="gerd">GERD</option>
         </select>
       </div>
       <div class="calc-field">
@@ -482,24 +484,39 @@ footer span{color:var(--honey)}
         </select>
       </div>
     </div>
-    <div class="calc-result">
+
+    <!-- PERINGATAN untuk kondisi yang tidak direkomendasikan -->
+    <div id="calcWarning" style="display:none;margin-bottom:1.2rem;padding:1.2rem 1.5rem;border-radius:16px;background:rgba(229,57,53,0.1);border:1px solid rgba(229,57,53,0.35)">
+      <div style="display:flex;align-items:flex-start;gap:0.8rem">
+        <span style="font-size:1.3rem;flex-shrink:0">⚠️</span>
+        <div id="calcWarningText" style="font-size:0.84rem;color:rgba(255,200,200,0.9);line-height:1.7"></div>
+      </div>
+    </div>
+
+    <div class="calc-result" id="calcResultBox">
       <div class="calc-result-title">Rekomendasi Personalmu</div>
+      <div style="font-size:0.7rem;color:var(--muted);margin-bottom:1rem;text-align:center;letter-spacing:0.05em">Dosis disesuaikan berdasarkan berat badan <span id="calcBBNote"></span></div>
       <div class="calc-grid">
         <div class="calc-item">
-          <div class="calc-num" id="calcDose">125</div>
+          <div class="calc-num" id="calcDose">—</div>
           <div class="calc-unit">ml per sesi</div>
         </div>
         <div class="calc-item">
-          <div class="calc-num" id="calcFreq">1x</div>
+          <div class="calc-num" id="calcFreq">—</div>
           <div class="calc-unit">per hari</div>
         </div>
         <div class="calc-item">
-          <div class="calc-num" id="calcBottle">3–4</div>
+          <div class="calc-num" id="calcBottle">—</div>
           <div class="calc-unit">botol/minggu</div>
         </div>
       </div>
-      <div class="calc-tip" id="calcTip">Minum setelah makan pagi. Mulai dengan setengah botol selama 3 hari pertama untuk adaptasi.</div>
+      <div style="margin-top:1rem;padding:0.7rem 1rem;border-radius:10px;background:rgba(240,165,0,0.08);border:1px solid rgba(240,165,0,0.2);font-size:0.75rem;color:var(--honey);text-align:center" id="calcTiming"></div>
+      <div class="calc-tip" id="calcTip"></div>
     </div>
+
+    <p style="margin-top:1.2rem;font-size:0.72rem;color:var(--muted);text-align:center;line-height:1.6">
+      ⓘ Kalkulator ini merupakan panduan umum berbasis kondisi fungsional, bukan pengganti konsultasi tenaga kesehatan. Hentikan konsumsi dan konsultasikan ke dokter bila muncul keluhan setelah minum.
+    </p>
   </div>
 </section>
 
@@ -527,13 +544,13 @@ footer span{color:var(--honey)}
     </div>
     <div class="ben-card reveal">
       <div class="ben-icon">🌿</div>
-      <h3>Detoks Hati</h3>
-      <p>Asam glukonat membantu proses detoksifikasi alami hati dengan mengikat racun dan membantu ekskresi lewat empedu.</p>
+      <h3>Mendukung Fungsi Hati</h3>
+      <p>Asam glukonat dalam kombucha berperan dalam mendukung fungsi hati dan kesehatan pencernaan secara umum sebagai bagian dari pola konsumsi pangan fungsional yang seimbang.</p>
     </div>
     <div class="ben-card reveal reveal-d1">
-      <div class="ben-icon">😊</div>
-      <h3>Mood & Gut-Brain Axis</h3>
-      <p>Microbiome sehat mendukung produksi serotonin. Probiotik membantu menstabilkan mood dan mengurangi kecemasan ringan.</p>
+      <div class="ben-icon">🍬</div>
+      <h3>Bagian dari Pola Makan Sehat</h3>
+      <p>Kombucha original tanpa gula tambahan dapat menjadi bagian dari pola makan sehat yang mendukung kesehatan diabetesi, dalam kombinasi dengan pola makan seimbang dan pengawasan tenaga kesehatan.</p>
     </div>
     <div class="ben-card reveal reveal-d2">
       <div class="ben-icon">✨</div>
@@ -789,40 +806,129 @@ startQuiz();
 
 // ─── CALCULATOR ───────────────────────────────────────────────────
 function updateCalc(){
-  const w = +document.getElementById("weightRange").value;
-  const goal = document.getElementById("goalSelect").value;
+  const w       = +document.getElementById("weightRange").value;
+  const goal    = document.getElementById("goalSelect").value;
   const stomach = document.getElementById("stomachSelect").value;
-  const exp = document.getElementById("expSelect").value;
+  const exp     = document.getElementById("expSelect").value;
   document.getElementById("weightVal").textContent = w;
 
-  let baseDose = 250;
-  if(exp==="new") baseDose=125;
-  else if(exp==="occasional") baseDose=175;
-  if(stomach==="sensitive") baseDose=Math.min(baseDose,150);
-  if(stomach==="gastritis") baseDose=Math.min(baseDose,100);
+  const warning   = document.getElementById("calcWarning");
+  const resultBox = document.getElementById("calcResultBox");
 
-  let freq = exp==="regular"?"2x":"1x";
-  if(stomach==="gastritis") freq="1x";
-
-  const totalPerDay = baseDose * (freq==="2x"?2:1);
-  const bottles = Math.round((totalPerDay * 7) / 250 * 10)/10;
-  const bottleRange = bottles<=3?"2–3":bottles<=5?"3–4":bottles<=7?"5–6":"7+";
-
-  const tips = {
-    digest: "Minum 30 menit sebelum makan untuk mendukung enzim pencernaan dan mempersiapkan usus menerima nutrisi.",
-    immune: "Konsumsi di pagi hari saat perut masih sedikit kosong untuk penyerapan probiotik optimal.",
-    detox: "Minum segelas air putih setelah kombucha untuk mendukung proses detoksifikasi dan hidrasi.",
-    energy: "Konsumsi di pagi hari sebagai pengganti minuman berkafein. Vitamin B alami memberikan energi tanpa crash.",
-    sugar: "Minum sebelum makan untuk membantu respons insulin. Hindari konsumsi bersamaan dengan makanan manis berlebih."
-  };
-  if(stomach==="gastritis") {
-    document.getElementById("calcTip").textContent = "⚠️ Dengan riwayat gastritis, mulai sangat perlahan (50ml/hari) dan tingkatkan bertahap. Konsultasikan dengan dokter sebelum rutin mengonsumsi.";
-  } else {
-    document.getElementById("calcTip").textContent = tips[goal] + (exp==="new" ? " Minggu pertama: setengah dosis dulu untuk adaptasi." : "");
+  // ── 1. Kondisi yang TIDAK direkomendasikan ────────────────────────
+  if(stomach === "gastritis_active"){
+    warning.style.display = "block";
+    document.getElementById("calcWarningText").innerHTML =
+      "<strong>Saat ini Anda memiliki keluhan lambung aktif.</strong><br>" +
+      "Tunda konsumsi kombucha sampai gejala membaik atau konsultasikan dengan tenaga kesehatan. " +
+      "Kombucha bersifat asam (pH 3–4) yang dapat memperburuk iritasi lambung yang sedang aktif.";
+    resultBox.style.display = "none";
+    return;
   }
-  document.getElementById("calcDose").textContent = baseDose + "ml";
-  document.getElementById("calcFreq").textContent = freq;
-  document.getElementById("calcBottle").textContent = bottleRange;
+  if(stomach === "gerd" && exp === "new"){
+    // GERD berat (pemula) → tampilkan peringatan + dosis khusus GERD
+  }
+
+  warning.style.display = "none";
+  resultBox.style.display = "block";
+
+  // ── 2. BB digunakan untuk scaling dalam rentang dosis ────────────
+  // BB <50kg → batas bawah rentang, BB >80kg → batas atas rentang
+  // Formula: faktor = (BB - 40) / (120 - 40) → 0..1 → dimap ke batas dosis
+  const bbFactor = Math.max(0, Math.min(1, (w - 40) / 80)); // 0 = 40kg, 1 = 120kg
+
+  let doseMin, doseMax, freqText, timingText, tipText, bbNote;
+
+  // ── 3. Matriks dosis per kondisi × pengalaman ────────────────────
+  if(stomach === "gastritis_history"){
+    // Riwayat gastritis stabil — hanya boleh mulai rendah, tidak ada rutin tinggi
+    doseMin = 30; doseMax = 50;
+    freqText = "1x";
+    timingText = "⏰ Waktu minum: Setelah makan saja — jangan minum saat perut kosong.";
+    tipText = "Mulai dengan 30 mL/hari selama 1–2 minggu pertama. Tingkatkan hanya jika tidak ada keluhan. " +
+              "Hentikan dan konsultasikan ke dokter bila muncul rasa perih, kembung, atau tidak nyaman di lambung.";
+    bbNote = "(dosis tetap di rentang aman untuk riwayat gastritis, tidak dipengaruhi BB)";
+  } else if(stomach === "gerd"){
+    doseMin = 30; doseMax = 50;
+    freqText = "1x";
+    timingText = "⏰ Waktu minum: Setelah makan saja. Jangan konsumsi dalam posisi berbaring.";
+    tipText = "Mulai 30–50 mL setelah makan. Hentikan bila muncul rasa panas di dada (heartburn), " +
+              "regurgitasi (rasa asam naik ke tenggorokan), atau nyeri ulu hati. Konsultasikan ke dokter sebelum melanjutkan.";
+    bbNote = "(dosis tetap di rentang aman untuk GERD, tidak dipengaruhi BB)";
+  } else if(stomach === "sensitive"){
+    // Lambung sensitif
+    if(exp === "new"){
+      doseMin = 50; doseMax = 100;
+    } else if(exp === "occasional"){
+      doseMin = 100; doseMax = 150;
+    } else {
+      doseMin = 150; doseMax = 250;
+    }
+    freqText = "1x";
+    timingText = "⏰ Waktu minum: Setelah makan — hindari konsumsi saat perut kosong.";
+    tipText = "Mulai dari dosis terendah dan tingkatkan bertahap tiap 3–5 hari jika tidak ada keluhan. " +
+              "Perhatikan respons tubuh seperti kembung, mual, atau rasa tidak nyaman di perut.";
+    bbNote = `(BB ${w} kg → sekitar batas ${bbFactor < 0.4 ? "bawah" : bbFactor > 0.7 ? "atas" : "tengah"} rentang)`;
+  } else {
+    // Lambung normal
+    if(exp === "new"){
+      doseMin = 100; doseMax = 125;
+    } else if(exp === "occasional"){
+      doseMin = 150; doseMax = 250;
+    } else {
+      doseMin = 250; doseMax = 500;
+    }
+    freqText = exp === "regular" ? "1–2x" : "1x";
+    timingText = "⏰ Waktu minum: 15–30 menit sebelum makan atau 30 menit setelah makan.";
+    tipText = exp === "new"
+      ? "Minggu pertama: mulai dengan dosis bawah rentang (100 mL). Tingkatkan bertahap setelah tubuh beradaptasi."
+      : exp === "occasional"
+      ? "Konsumsi rutin 1x sehari memberikan manfaat probiotik yang lebih konsisten."
+      : "Bisa dibagi menjadi 2 sesi (pagi dan sore) untuk distribusi probiotik lebih merata sepanjang hari.";
+    bbNote = `(BB ${w} kg → sekitar batas ${bbFactor < 0.4 ? "bawah" : bbFactor > 0.7 ? "atas" : "tengah"} rentang)`;
+  }
+
+  // ── 4. Hitung dosis aktual berdasarkan BB (scaling dalam rentang) ─
+  let dose;
+  if(stomach === "gastritis_history" || stomach === "gerd"){
+    // Kondisi khusus: dosis TIDAK dipengaruhi BB, tetap di rentang aman
+    dose = doseMin;
+  } else {
+    dose = Math.round(doseMin + bbFactor * (doseMax - doseMin));
+    // Bulatkan ke kelipatan 25ml yang paling dekat untuk kemudahan praktis
+    dose = Math.round(dose / 25) * 25;
+    dose = Math.max(doseMin, Math.min(doseMax, dose));
+  }
+
+  // ── 5. Tips per tujuan (khusus lambung normal & sensitif) ────────
+  if(stomach !== "gastritis_history" && stomach !== "gerd"){
+    const goalTips = {
+      digest : "Probiotik dalam kombucha mendukung keseimbangan mikrobioma usus dan membantu mendukung fungsi pencernaan secara umum.",
+      immune : "Konsumsi konsisten lebih penting dari dosis besar. Probiotik bekerja optimal bila dikonsumsi secara rutin dan teratur.",
+      detox  : "Sebagai bagian dari pola makan sehat, kombucha dapat mendukung fungsi hati dan kesehatan pencernaan secara umum.",
+      energy : "Vitamin B kompleks hasil fermentasi mendukung metabolisme energi. Konsumsi di pagi hari sebagai alternatif minuman berkafein.",
+      sugar  : "Kombucha original tanpa gula tambahan dapat menjadi bagian dari pola makan sehat yang mendukung kesehatan metabolik. Tetap dalam pengawasan tenaga kesehatan jika memiliki kondisi diabetes."
+    };
+    tipText = goalTips[goal] + " " + tipText;
+  }
+
+  // ── 6. Hitung perkiraan botol per minggu ─────────────────────────
+  const sessionsPerDay = freqText === "1–2x" ? 1.5 : 1;
+  const totalMlPerWeek = dose * sessionsPerDay * 7;
+  const bottlesPerWeek = totalMlPerWeek / 250;
+  const bottleRange = bottlesPerWeek <= 2 ? "1–2"
+                    : bottlesPerWeek <= 3.5 ? "2–3"
+                    : bottlesPerWeek <= 5 ? "3–5"
+                    : bottlesPerWeek <= 7 ? "5–7"
+                    : "7+";
+
+  // ── 7. Tampilkan hasil ───────────────────────────────────────────
+  document.getElementById("calcDose").textContent    = dose + " ml";
+  document.getElementById("calcFreq").textContent    = freqText;
+  document.getElementById("calcBottle").textContent  = bottleRange;
+  document.getElementById("calcTiming").textContent  = timingText;
+  document.getElementById("calcTip").textContent     = tipText;
+  document.getElementById("calcBBNote").textContent  = bbNote;
 }
 updateCalc();
 
